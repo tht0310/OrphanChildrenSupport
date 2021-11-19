@@ -34,7 +34,7 @@ const LoginPage: React.FC<Props> = (props: Props) => {
 
         <div id="loginContainer">
 
-            <p className="text-center">Type any login and password to enter.</p>
+            <p className="text-center"> Type any login and password to enter.</p>
 
             <Formik
                 enableReinitialize

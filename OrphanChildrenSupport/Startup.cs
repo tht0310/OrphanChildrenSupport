@@ -164,7 +164,7 @@ namespace OrphanChildrenSupport
                     services.ConfigureRepositoryServices();
 
                     //ADFS settings
-                    services.ConfigureADFSServices(Configuration);
+                    //services.ConfigureADFSServices(Configuration);
 
                     //DbContext
                     services.ConfigureDbContexts(Configuration);

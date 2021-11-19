@@ -43,38 +43,38 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
             }
         }
 
-        public static void ConfigureADFSServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            if (services != null)
-            {
-                var Wtrealm = configuration.GetValue<string>("ADFS:Wtrealm");
-                var MetadataAddress = configuration.GetValue<string>("ADFS:MetadataAddress");
-                services.AddAuthentication(sharedOptions =>
-                {
-                    sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
-                    //sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                }).AddWsFederation(options =>
-                {
-                    options.Wtrealm = Wtrealm;
-                    options.MetadataAddress = MetadataAddress;
+        //public static void ConfigureADFSServices(this IServiceCollection services, IConfiguration configuration)
+        //{
+        //    if (services != null)
+        //    {
+        //        var Wtrealm = configuration.GetValue<string>("ADFS:Wtrealm");
+        //        var MetadataAddress = configuration.GetValue<string>("ADFS:MetadataAddress");
+        //        services.AddAuthentication(sharedOptions =>
+        //        {
+        //            sharedOptions.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        //            sharedOptions.DefaultChallengeScheme = WsFederationDefaults.AuthenticationScheme;
+        //            //sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        //        }).AddWsFederation(options =>
+        //        {
+        //            options.Wtrealm = Wtrealm;
+        //            options.MetadataAddress = MetadataAddress;
 
-                    options.Events.OnRemoteFailure = context =>
-                    {
-                        Console.WriteLine(context.Failure);
-                        if (context.Failure.Message.Contains("Correlation failed."))
-                        {
-                            context.HandleResponse();
-                            context.Response.Redirect("/");
-                        }
+        //            options.Events.OnRemoteFailure = context =>
+        //            {
+        //                Console.WriteLine(context.Failure);
+        //                if (context.Failure.Message.Contains("Correlation failed."))
+        //                {
+        //                    context.HandleResponse();
+        //                    context.Response.Redirect("/");
+        //                }
 
-                        return Task.FromResult(0);
-                    };
-                }).AddCookie();
+        //                return Task.FromResult(0);
+        //            };
+        //        }).AddCookie();
 
-                services.AddHttpContextAccessor();
-            }
-        }
+        //        services.AddHttpContextAccessor();
+        //    }
+        //}
 
         public static void ConfigureMappings(this IServiceCollection services)
         {
