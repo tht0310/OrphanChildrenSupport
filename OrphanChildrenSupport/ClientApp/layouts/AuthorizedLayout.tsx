@@ -8,7 +8,8 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
-import ExamplesPage from "@Pages/ExamplesPage";
+
+import PersonalProfilePage from "@Pages/PersonalProfilePage";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -73,9 +74,11 @@ const AuthorizedLayout: any = ({ children }: Props) => {
               style={{
                 padding: 24,
                 margin: 0,
-                minHeight: 500,
+                minHeight: 580,
               }}
-            ></Content>
+            >
+              <PersonalProfilePage />
+            </Content>
           </Layout>
         </Layout>
       </Layout>

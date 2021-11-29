@@ -67,6 +67,8 @@ $text-color: #000000d9;
 }
 
 .custom-table__pagination {
+  float: right;
+  padding-top: 10px;
   margin: 10px 0;
   .ant-pagination-item {
     border-radius: 100%;
