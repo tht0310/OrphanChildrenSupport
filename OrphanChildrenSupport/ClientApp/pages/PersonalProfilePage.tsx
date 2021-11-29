@@ -1,13 +1,16 @@
-import Table, { CustomColumnType } from "@Components/forms/Table";
-import AddPersonalProfileModal from "@Components/modals/AddPersonalProfileModal";
+import { CustomColumnType } from "@Components/forms/Table";
+import PersonalProfileModal from "@Components/modals/PersonalProfileModal";
 import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
+import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
 import PersonalProfileService from "@Services/PersonalProfileService";
 import PersonService from "@Services/PersonService";
+import { Button, Input, message, Popconfirm, Space, Table } from "antd";
+import Search from "antd/lib/input/Search";
 
 import * as React from "react";
 import { useEffect } from "react";
-import { Plus, UserPlus } from "react-feather";
-
+import { PencilFill } from "react-bootstrap-icons";
+import { Edit2, Plus, Trash2, UserPlus } from "react-feather";
 type Props = {};
 
 const personalProfileService = new PersonalProfileService();
@@ -18,30 +21,16 @@ const PersonalProfilePage: React.FC<Props> = () => {
   const [personalProfiles, setpersonalProfiles] = React.useState<
     IPersonalProfileModel[]
   >([]);
-  const [isAddPersonModal, setAddPersonModal] = React.useState<boolean>(false);
+
+  const [isPersonModal, setPersonModal] = React.useState<boolean>(false);
+  const [modelForEdit, setmodelForEdit] =
+    React.useState<IPersonalProfileModel>();
 
   useEffect(() => {
     document.title = "Dashboard - Quy trình";
     fetchData();
   }, []);
 
-  // const tempData: IPersonalProfileModel[] = [
-  //   {
-  //     accountName: "tht0310",
-  //     fullName: "Tran Hoang Tien",
-  //     gender: true,
-  //     birthDay: null,
-  //     address: "",
-  //     mobile: "0373831808",
-  //     email: "thtien0310@gmail.com",
-  //     id: 2,
-  //     createdBy: "",
-  //     createdTime: "2021-07-13T02:12:06.4666667",
-  //     lastModified: null,
-  //     modifiedBy: null,
-  //     isDeleted: false,
-  //   },
-  // ];
   const requestColumns: CustomColumnType[] = [
     {
       title: "STT",
@@ -57,11 +46,16 @@ const PersonalProfilePage: React.FC<Props> = () => {
       ellipsis: true,
       width: "15%",
       columnSearchDataIndex: "fullName",
+      render: (text: string) => (
+        <a className="item-title" onClick={togglePersonModal}>
+          {text}
+        </a>
+      ),
     },
     {
       title: "Giới tính",
       dataIndex: "gender",
-      width: "8%",
+      width: "7%",
       key: "gender",
       columnSearchDataIndex: "gender",
       render: (text, row, index) => (text ? "Nam" : "Nữ"),
@@ -73,6 +67,7 @@ const PersonalProfilePage: React.FC<Props> = () => {
       key: "birthDay",
       width: "10%",
       columnSearchDataIndex: "birthDay",
+      render: (date: string) => displayDate(new Date(date)),
     },
     {
       title: "Tài khoản",
@@ -85,19 +80,21 @@ const PersonalProfilePage: React.FC<Props> = () => {
       title: "Email",
       columnSearchDataIndex: "email",
       dataIndex: "email",
+      width: "15%",
       key: "email",
     },
     {
       title: "Điện thoại",
-      columnSearchDataIndex: "phone",
-      dataIndex: "phone",
-      width: "10%",
+      columnSearchDataIndex: "mobile",
+      dataIndex: "mobile",
+      width: "11%",
       key: "phone",
     },
     {
       title: "Địa chỉ",
       columnSearchDataIndex: "address",
       dataIndex: "address",
+      width: "17%",
       key: "address",
     },
     {
@@ -105,6 +102,31 @@ const PersonalProfilePage: React.FC<Props> = () => {
       columnSearchDataIndex: "address",
       dataIndex: "address",
       key: "address",
+      render: (text, record, index) => (
+        <Space className="actions">
+          <Button
+            icon={<PencilFill size={16} />}
+            type="primary"
+            ghost
+            onClick={() => togglePersonModal()}
+            size="small"
+          />
+          <Popconfirm
+            title="Bạn có chắc chắn muốn xóa tài khoản này？"
+            okText="Xóa"
+            cancelText="Hủy"
+            onConfirm={() => onDelete(record.id)}
+          >
+            <Button
+              icon={<Trash2 size={16} />}
+              type="primary"
+              ghost
+              danger
+              className="button-custom"
+            ></Button>
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
@@ -112,8 +134,23 @@ const PersonalProfilePage: React.FC<Props> = () => {
     fetchPersonalProfile();
   }
 
-  async function toggleAddPersonModal() {
-    setAddPersonModal(!isAddPersonModal);
+  async function onDelete(id: number) {
+    const res = await personalProfileService.delete(id);
+    if (!res.hasErrors) {
+      message.success("Xóa tài khoản thành công");
+      fetchData();
+    }
+  }
+
+  async function togglePersonModal() {
+    setPersonModal(!isPersonModal);
+  }
+
+  async function onSearch(value: string) {
+    const res = await personalProfileService.search(value);
+    if (!res.hasErrors) {
+      setpersonalProfiles(res.value.items);
+    }
   }
 
   async function fetchPersonalProfile() {
@@ -122,26 +159,50 @@ const PersonalProfilePage: React.FC<Props> = () => {
     if (!dataRes.hasErrors) {
       setpersonalProfiles(dataRes.value.items);
     }
-    // const ssd = new PersonService();
-    // const dataa = await ssd.search();
-    // console.log(dataa);
-    // if (!dataRes.hasErrors) {
-    //   setpersonalProfiles(dataRes.value.items);
-    // }
   }
 
   return (
     <div>
-      <h4 className="title-common">Thông tin cá nhân</h4>
+      <h4 className="title-common">Thông Tin Cá Nhân</h4>
       <div className="option-panel">
-        <div className="add" onClick={() => toggleAddPersonModal()}>
-          <UserPlus size={25} color="#1890ff" /> Thêm mới
+        <div className="search-pannel">
+          <Search
+            placeholder="Tìm kiếm"
+            className="input-custom"
+            style={{ width: 200, color: "red" }}
+            onChange={(e) => onSearch(e.target.value)}
+          />
+        </div>
+        <div className="add">
+          <div
+            onClick={() => {
+              togglePersonModal(), setmodelForEdit(null);
+            }}
+          >
+            <UserPlus size={25} color="#1890ff" /> Thêm mới
+          </div>
         </div>
       </div>
-      <Table columns={requestColumns} dataSource={personalProfiles} />
-      <AddPersonalProfileModal
-        visible={isAddPersonModal}
-        onCancel={toggleAddPersonModal}
+      <Table
+        columns={requestColumns}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              setmodelForEdit(record);
+            },
+          };
+        }}
+        dataSource={personalProfiles}
+        pagination={{ pageSize: 10 }}
+        onChange={(e) => {
+          setPage(e.current);
+        }}
+      />
+      <PersonalProfileModal
+        visible={isPersonModal}
+        onCancel={togglePersonModal}
+        data={modelForEdit}
+        fetchData={fetchData}
       />
     </div>
   );

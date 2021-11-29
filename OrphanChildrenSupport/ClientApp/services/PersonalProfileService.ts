@@ -1,6 +1,9 @@
 import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
-import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
+import {
+  IAddPersonProfileModel,
+  IPersonalProfileModel,
+} from "@Models/IPersonalProfileModel";
 import { IQueryResult } from "@Models/IQueryResult";
 
 export default class PersonalProfileService extends ServiceBase {
@@ -12,16 +15,21 @@ export default class PersonalProfileService extends ServiceBase {
     return result;
   }
 
-  public async search(): Promise<Result<IQueryResult<IPersonalProfileModel>>> {
+  public async search(
+    fullNameOrEmail: string
+  ): Promise<Result<IQueryResult<IPersonalProfileModel>>> {
     const result = await this.requestJson<IQueryResult<IPersonalProfileModel>>({
       url: `/api/personalProfiles`,
       method: "GET",
+      data: {
+        fullNameOrEmail,
+      },
     });
-    console.log(result);
+
     return result;
   }
 
-  public async update(model: IPersonalProfileModel): Promise<Result<{}>> {
+  public async update(model: IAddPersonProfileModel): Promise<Result<{}>> {
     var result = await this.requestJson({
       url: `/api/personalProfiles/${model.id}`,
       method: "PUT",
@@ -38,9 +46,11 @@ export default class PersonalProfileService extends ServiceBase {
     return result;
   }
 
-  public async add(model: IPersonalProfileModel): Promise<Result<number>> {
-    var result = await this.requestJson<number>({
-      url: "/api/personalProfiles/Add",
+  public async add(
+    model: IAddPersonProfileModel
+  ): Promise<Result<IAddPersonProfileModel>> {
+    var result = await this.requestJson<IPersonProfileModel>({
+      url: "/api/personalProfiles",
       method: "POST",
       data: model,
     });

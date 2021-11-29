@@ -5,6 +5,8 @@ import { transformUrl } from "domain-wait";
 import queryString from "query-string";
 import { isNode, showErrors } from "@Utils";
 import SessionManager from "./session";
+import moment from "moment";
+import { momentToPost } from "@Services/FormatDateTimeService";
 
 export interface IRequestOptions {
   url: string;
@@ -32,6 +34,14 @@ export abstract class ServiceBase {
     try {
       opts.url = transformUrl(opts.url); // Allow requests also for the Node.
 
+      if (opts.data) {
+        for (const [key, value] of Object.entries(opts.data)) {
+          if (moment.isMoment(value)) {
+            const dateData = momentToPost(value);
+            opts.data[key] = dateData;
+          }
+        }
+      }
       const processQuery = (url: string, data: any): string => {
         if (data) {
           return `${url}?${queryString.stringify(data)}`;
