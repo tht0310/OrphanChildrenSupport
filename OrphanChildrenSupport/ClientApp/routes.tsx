@@ -1,16 +1,28 @@
-import * as React from 'react';
+import DefaultLayout from "@Layouts/DefaultLayout";
 import GuestLayout from "@Layouts/GuestLayout";
-import AuthorizedLayout from '@Layouts/AuthorizedLayout';
-import LoginPage from '@Pages/LoginPage';
-import AppRoute from "@Components/shared/AppRoute";
-import HomePage from '@Pages/HomePage';
-import ExamplesPage from '@Pages/ExamplesPage';
-import { Switch } from 'react-router-dom';
-import NotFoundPage from '@Pages/NotFoundPage';
+import AboutUsPage from "@Pages/Guest/AboutUsPage";
+import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
-export const routes = <Switch>
-    <AppRoute layout={GuestLayout} exact path="/login" component={LoginPage} />
-    <AppRoute layout={AuthorizedLayout} exact path="/" component={HomePage} />
-    <AppRoute layout={AuthorizedLayout} exact path="/example" component={ExamplesPage} />
-    <AppRoute layout={GuestLayout} path="*" component={NotFoundPage} statusCode={404} />
-</Switch>;
+import LoginPage from "@Pages/LoginPage";
+import PersonalProfilePage from "@Pages/PersonalProfilePage";
+import SignInPage from "@Pages/SignInPage";
+import * as React from "react";
+import { Switch } from "react-router-dom";
+import AppRoute from "./components/shared/AppRoute";
+import AuthorizedLayout from "./layouts/AuthorizedLayout";
+import Dashboard from "./pages/Dashboard";
+
+
+export const routes = (
+  <Switch>
+    <AppRoute layout={AuthorizedLayout} exact path="/admin" component={Dashboard} />
+    <AppRoute layout={AuthorizedLayout} exact path="/admin/dashboard" component={Dashboard}/>
+    <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage}/>
+    <AppRoute layout={DefaultLayout} exact path="/login" component={LoginPage}/>
+    <AppRoute layout={AuthorizedLayout} exact path="/admin/children" component={PersonalProfilePage}/>
+    <AppRoute layout={GuestLayout} exact path="/home" component={GuestHomePage}/>
+    <AppRoute layout={GuestLayout} exact path="/aboutUs" component={AboutUsPage}/>
+    <AppRoute layout={DefaultLayout} exact path="/signin" component={SignInPage}/>
+  </Switch>
+  
+);

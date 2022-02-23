@@ -1,4 +1,6 @@
-﻿import "@Styles/guestLayout.scss";
+﻿import Footer from "@Components/shared/Guest/Footer";
+import GuestTopMenu from "@Components/shared/Guest/GuestTopMenu";
+import "@Styles/guestLayout.scss";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { ToastContainer } from "react-toastify";
@@ -13,10 +15,11 @@ export default class GuestLayout extends React.Component<Props, {}> {
   public render() {
     return (
       <div id="guestLayout" className="layout">
-        <div className="container container-content">{this.props.children}</div>
+        <GuestTopMenu />
+        <div className="">{this.props.children}</div>
         <ToastContainer />
+        <Footer />
       </div>
     );
   }
-  s;
 }

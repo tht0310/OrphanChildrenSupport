@@ -49,7 +49,7 @@ export default class PersonalProfileService extends ServiceBase {
   public async add(
     model: IAddPersonProfileModel
   ): Promise<Result<IAddPersonProfileModel>> {
-    var result = await this.requestJson<IPersonProfileModel>({
+    var result = await this.requestJson<IAddPersonProfileModel>({
       url: "/api/personalProfiles",
       method: "POST",
       data: model,

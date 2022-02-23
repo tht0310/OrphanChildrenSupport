@@ -9,7 +9,7 @@ export interface IPersonalProfileModel extends IEngineEntity {
   email: string;
 }
 
-export interface IAddPersonProfileModel {
+export interface IAddPersonProfileModel extends IEngineEntity  {
   accountName: string;
   fullName: string;
   gender: boolean;

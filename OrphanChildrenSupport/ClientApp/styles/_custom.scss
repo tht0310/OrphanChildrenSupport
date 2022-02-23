@@ -1,0 +1,209 @@
+// Here you can add other styles
+.mb-4 {
+  margin-bottom: 0px !important;
+  border-bottom: none !important;
+}
+.logo {
+  font-size: 18px;
+  font-family: cursive;
+}
+.card-body {
+  min-height: 120px;
+}
+.custom-widget {
+  margin: 20px 0px 20px 0px;
+}
+.sidebar-nav {
+  display: table-column;
+}
+.ant-layout-header {
+  padding: 0 10px !important;
+}
+.carousel {
+  margin-top: 15px;
+  h3 {
+    background: gray;
+    color: white;
+  }
+}
+.ant-carousel .slick-slide {
+  height: auto !important;
+}
+img {
+  max-height: 250px;
+  width: 1100px;
+}
+.page3 {
+  margin-top: 100px;
+}
+.page2-component {
+  background-color: red;
+}
+.page2-components {
+  padding: 25px !important;
+}
+.ant-carousel .slick-dots-bottom {
+  bottom: 15px !important;
+}
+.page2-product {
+  margin: auto;
+  width: 90%;
+  padding: 10px;
+}
+.page2-product .product-block:last-child .block-text-wrapper {
+  padding-top: 4%;
+}
+.page2-product .product-block .block-text-wrapper {
+  padding-left: 30px;
+}
+.slogan {
+  padding: 5px 3px;
+  border-radius: 4px;
+  background-color: #88181b;
+  max-width: 80px;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+}
+.slogan:hover {
+  cursor: pointer;
+}
+.sidebar-nav .nav-link {
+  font-size: 15px;
+}
+.nav-group-items .nav-link {
+  font-size: 14px;
+}
+.ant-row-rtl #components-layout-demo-top-side-2 .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+.title-common {
+  text-align: center;
+}
+.antd-modal-custom {
+  .ant-modal-body {
+    padding-top: 5px;
+  }
+}
+.custom-table__pagination {
+  float: right;
+  padding-top: 10px;
+}
+
+.label-custom label {
+  padding-right: 25px;
+}
+
+.ant-form-item-label {
+  text-align: left;
+  white-space: unset;
+  > label {
+    height: unset;
+    min-height: 32px;
+  }
+  label::before,
+  label::after {
+    display: none !important;
+  }
+  .ant-form-item-required::after {
+    display: inline-block !important;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: RobotoRegular, Arial;
+    line-height: 1;
+    content: "*";
+  }
+}
+.ant-form-item-label {
+  text-align: left !important;
+  label {
+    font-family: RobotoRegular, Arial;
+    font-size: 13px;
+    padding-right: 15px;
+  }
+}
+.ant-form {
+  padding: 20px 0px 0px 25px !important;
+}
+.ant-modal-title {
+  font-size: 18px !important;
+}
+.ant-modal-close-x {
+  padding-top: 8px;
+}
+.modal-actions {
+  text-align: center;
+  background-color: red;
+  max-width: 20%;
+  margin: auto;
+  font-size: 16px;
+  button {
+    color: white !important;
+  }
+  padding: 3px;
+  border-radius: 3px;
+}
+.ant-modal-header {
+  padding: 20px 0px 20px 30px !important;
+}
+.ant-btn-text:hover {
+  color: white !important;
+}
+.modal-actions:hover {
+  background-color: #1e90ff !important;
+}
+.ant-table-tbody td {
+  font-size: 15px;
+}
+.ant-btn-icon-only {
+  width: 28px !important;
+  height: 28px !important;
+}
+.actions .ant-space-item {
+  padding-right: 5px;
+}
+.search-pannel {
+  float: left;
+}
+.input-custom .ant-input {
+  border-top-style: hidden !important;
+  border-right-style: hidden !important;
+  border-left-style: hidden !important;
+}
+.search-pannel .ant-input-search-button {
+  padding: 0;
+  border: none !important;
+  background: none !important;
+  color: #d63226 !important;
+}
+.item-title {
+  color: #1867b2;
+}
+// .sidebar {
+//   background-color: white;
+//   .nav-title {
+//     color: var(--cui-header-color, rgba(44, 56, 74, 0.95)) !important;
+//     font-weight: 700;
+//     font-size: 13px !important;
+//   }
+//   .nav-link {
+//     color: var(--cui-header-color, rgba(44, 56, 74, 0.681)) !important;
+//     font-size: 16px !important;
+//   }
+//   .nav-icon {
+//     color: rgba(44, 56, 74, 0.681) !important;
+//   }
+// }
+// .sidebar-nav .nav-title {
+//   padding: 0 1rem 0.6rem 1rem !important;
+// }
+.text-register {
+  margin-top: 20px !important;
+}

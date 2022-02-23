@@ -243,3 +243,86 @@
     width: 170px;
   }
 }
+.red-button {
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #88181b;
+}
+.red-button:hover {
+  background-color: #e95b4d;
+}
+.section {
+  min-height: 250px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-color: #8f191c;
+  background-image: url("../images/map.jpg");
+  background-position: 50% 50%;
+  background-size: cover;
+  background-attachment: fixed;
+  -webkit-transform: translate(0px, 0px);
+  -ms-transform: translate(0px, 0px);
+  transform: translate(0px, 0px);
+  div {
+    padding: 0% 11% 0% 11%;
+    color: #fff;
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+.select-control {
+  width: 100%;
+  padding: 1%;
+  border: 1px solid #dbdbdb;
+  height: 40px;
+  border-radius: 4px;
+}
+.custom-label {
+  width: 30% !important;
+}
+.control-checkbox {
+  margin-top: 0px;
+  font-size: 22px;
+}
+.form-group-divide-custom {
+  display: flex;
+  .form-group {
+    width: 50%;
+  }
+  label {
+    width: 45%;
+    max-width: 52%;
+  }
+  .right-side label {
+    padding-left: 15px;
+  }
+}
+
+.modelTitle-custom {
+  height: 80px;
+  background-color: yellow;
+}
+.model-header-custom {
+  border-bottom: none;
+  padding-bottom: 5px;
+}
+.control-div {
+  padding-top: 7px;
+}
+.item-wrapper {
+  padding: 8px 0px 8px 0px;
+  label {
+    width: 170px;
+  }
+}
+
+.form-label {
+  margin: 15px 0px;
+}
+.add {
+  float: right;
+}

@@ -35,7 +35,7 @@ const PersonalProfilePage: React.FC<Props> = () => {
     {
       title: "STT",
       ellipsis: true,
-      width: "5%",
+      width: "10%",
       align: "center",
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
@@ -44,7 +44,7 @@ const PersonalProfilePage: React.FC<Props> = () => {
       dataIndex: "fullName",
       key: "fullName",
       ellipsis: true,
-      width: "15%",
+      width: "20%",
       columnSearchDataIndex: "fullName",
       render: (text: string) => (
         <a className="item-title" onClick={togglePersonModal}>
@@ -55,7 +55,7 @@ const PersonalProfilePage: React.FC<Props> = () => {
     {
       title: "Giới tính",
       dataIndex: "gender",
-      width: "7%",
+      width: "10%",
       key: "gender",
       columnSearchDataIndex: "gender",
       render: (text, row, index) => (text ? "Nam" : "Nữ"),
@@ -65,30 +65,9 @@ const PersonalProfilePage: React.FC<Props> = () => {
       title: "Ngày sinh",
       dataIndex: "birthDay",
       key: "birthDay",
-      width: "10%",
+      width: "15%",
       columnSearchDataIndex: "birthDay",
       render: (date: string) => displayDate(new Date(date)),
-    },
-    {
-      title: "Tài khoản",
-      columnSearchDataIndex: "accountName",
-      dataIndex: "accountName",
-      width: "12%",
-      key: "accountName",
-    },
-    {
-      title: "Email",
-      columnSearchDataIndex: "email",
-      dataIndex: "email",
-      width: "15%",
-      key: "email",
-    },
-    {
-      title: "Điện thoại",
-      columnSearchDataIndex: "mobile",
-      dataIndex: "mobile",
-      width: "11%",
-      key: "phone",
     },
     {
       title: "Địa chỉ",
@@ -98,7 +77,6 @@ const PersonalProfilePage: React.FC<Props> = () => {
       key: "address",
     },
     {
-      title: "",
       columnSearchDataIndex: "address",
       dataIndex: "address",
       key: "address",
