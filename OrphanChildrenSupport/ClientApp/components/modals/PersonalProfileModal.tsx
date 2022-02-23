@@ -210,7 +210,7 @@ const PersonalProfileModal: React.FC<IProps> = ({
                   <Input disabled defaultValue={data.createdBy} />
                 </Form.Item>
               </Col>
-              <Col xs={24} lg={12}>
+              {/* <Col xs={24} lg={12}>
                 <Form.Item
                   label="Created time"
                   name="createdTime"
@@ -223,10 +223,10 @@ const PersonalProfileModal: React.FC<IProps> = ({
                     }
                   />
                 </Form.Item>
-              </Col>
+              </Col> */}
             </Row>
             <Row>
-              <Col xs={24} lg={12}>
+              {/* <Col xs={24} lg={12}>
                 <Form.Item
                   label="Last Modified"
                   name="lastModified"
@@ -241,7 +241,7 @@ const PersonalProfileModal: React.FC<IProps> = ({
                     }
                   />
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col xs={24} lg={12}>
                 <Form.Item
                   label="Modified By"

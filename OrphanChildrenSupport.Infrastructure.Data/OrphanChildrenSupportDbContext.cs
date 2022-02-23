@@ -14,6 +14,7 @@ namespace OrphanChildrenSupport.Infrastructure.Data
         public OrphanChildrenSupportDbContext(DbContextOptions options) : base(options)
         { }
         public DbSet<PersonalProfile> PersonalProfiles { get; set; }
+        public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                     => optionsBuilder.LogTo(Console.WriteLine);
         protected override void OnModelCreating(ModelBuilder builder)
@@ -23,6 +24,7 @@ namespace OrphanChildrenSupport.Infrastructure.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
             builder.Entity<PersonalProfile>().ToTable("PersonalProfile");
+            builder.Entity<ChildrenProfile>().ToTable("ChildrenProfile");
         }
     }
 }

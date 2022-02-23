@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using OrphanChildrenSupport.DataContracts;
+﻿using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
+using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
 {

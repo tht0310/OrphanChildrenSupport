@@ -10,6 +10,7 @@ namespace OrphanChildrenSupport.IoC.Configuration.AutoMapper.Profiles
         public APIMappingProfile()
         {
             CreateMap<PersonalProfile, PersonalProfileResource>().ReverseMap();
+            CreateMap<ChildrenProfile, ChildrenProfileResource>().ReverseMap();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
         }
     }

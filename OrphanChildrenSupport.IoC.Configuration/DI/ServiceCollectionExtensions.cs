@@ -24,6 +24,7 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
             if (services != null)
             {
                 services.AddTransient<IPersonalProfileService, PersonalProfileService>();
+                services.AddTransient<IChildrenProfileService, ChildrenProfileService>();
             }
         }
 
