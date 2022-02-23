@@ -2,7 +2,8 @@ import * as React from "react";
 import "@Styles/custom.scss";
 import { FC } from "react";
 import { Layout } from "antd";
-import CustomSideBar from "@Components/shared/CustomSideBar";
+import SideBar from "@Components/shared/SideBar";
+
 
 const { Content } = Layout;
 
@@ -20,7 +21,7 @@ const AuthorizedSubLayout: FC<Props> = ({
   return (
     <div className="body-layout">
       <Layout>
-        <CustomSideBar isCollapsed={isCollapsed} isAdmin={isAdmin} />
+       
         <Content
           className={"body-content " + `${isCollapsed ? "isCollapsed" : ""}`}
         >
