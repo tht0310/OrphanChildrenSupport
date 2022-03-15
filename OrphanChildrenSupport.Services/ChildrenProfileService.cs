@@ -10,6 +10,7 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
@@ -17,7 +18,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OrphanChildrenSupport.Servicess
+namespace OrphanChildrenSupport.Services
 {
     public class ChildrenProfileService : IChildrenProfileService
     {
@@ -56,7 +57,6 @@ namespace OrphanChildrenSupport.Servicess
                 {
                     childrenProfile.CreatedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.CreatedTime = DateTime.UtcNow;
-                    childrenProfile.FullName = childrenProfile.LastName + " " + childrenProfile.MiddleName + " " + childrenProfile.FirstName;
                     await unitOfWork.ChildrenProfileRepository.Add(childrenProfile);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Add new ChildrenProfile successfully with Id: {childrenProfile.Id}");
@@ -91,9 +91,12 @@ namespace OrphanChildrenSupport.Servicess
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id);
                     childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - Start to update ChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
-                    childrenProfile.FullName = childrenProfile.LastName + " " + childrenProfile.MiddleName + " " + childrenProfile.FirstName;
                     childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.LastModified = DateTime.UtcNow;
+
+                    childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
+
+
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Update ChildrenProfile successfully with Id: {childrenProfile.Id}");

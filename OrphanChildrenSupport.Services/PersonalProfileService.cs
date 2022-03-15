@@ -18,7 +18,7 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using Microsoft.EntityFrameworkCore;
 
-namespace OrphanChildrenSupport.Servicess
+namespace OrphanChildrenSupport.Services
 {
     public class PersonalProfileService : IPersonalProfileService
     {

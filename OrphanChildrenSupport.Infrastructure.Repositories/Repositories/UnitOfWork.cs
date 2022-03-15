@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OrphanChildrenSupport.Infrastructure.Data;
 using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Services.Models.DBSets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,9 +22,13 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         #region DBSet Repotiory
         private IAsyncRepository<PersonalProfile> _personalProfileRepository;
         private IAsyncRepository<ChildrenProfile> _childrenProfileRepository;
+        private IAsyncRepository<SupportCategory> _childrenCategoryRepository;
+        private IAsyncRepository<Account> _accountRepository;
 
         public IAsyncRepository<PersonalProfile> PersonalProfileRepository => _personalProfileRepository ?? (_personalProfileRepository = new EfRepository<PersonalProfile>(_context));
         public IAsyncRepository<ChildrenProfile> ChildrenProfileRepository => _childrenProfileRepository ?? (_childrenProfileRepository = new EfRepository<ChildrenProfile>(_context));
+        public IAsyncRepository<SupportCategory> ChildrenCategoryRepository => _childrenCategoryRepository ?? (_childrenCategoryRepository = new EfRepository<SupportCategory>(_context));
+        public IAsyncRepository<Account> AccountRepository => _accountRepository ?? (_accountRepository = new EfRepository<Account>(_context));
         #endregion
 
         public UnitOfWork(string connectionString)
