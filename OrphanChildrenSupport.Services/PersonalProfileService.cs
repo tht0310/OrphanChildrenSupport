@@ -214,19 +214,7 @@ namespace OrphanChildrenSupport.Services
                         ["fullname"] = s => s.FullName,
                     };
 
-                    var query = await unitOfWork.PersonalProfileRepository.FindAll(predicate: d => d.IsDeleted == false
-                                                                                                && ((String.IsNullOrEmpty(queryObj.AccountName) || EF.Functions.Like(d.AccountName, $"%{queryObj.AccountName}%")))
-                                                                                                && ((String.IsNullOrEmpty(queryObj.FullName) || EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%")))
-                                                                                                && (
-                                                                                                        (
-                                                                                                            (String.IsNullOrEmpty(queryObj.FullNameOrEmail) || EF.Functions.Like(d.FullName, $"%{queryObj.FullNameOrEmail}%"))
-                                                                                                        )
-                                                                                                        ||
-                                                                                                        (
-                                                                                                            (String.IsNullOrEmpty(queryObj.FullNameOrEmail) || EF.Functions.Like(d.Email, $"%{queryObj.FullNameOrEmail}%"))
-                                                                                                        )
-                                                                                                    )
-                                                                                                ,
+                    var query = await unitOfWork.PersonalProfileRepository.FindAll(predicate: d => d.IsDeleted == false,
                                                                         include: null,
                                                                         orderBy: source => String.IsNullOrEmpty(queryObj.SortBy) ? source.OrderByDescending(d => d.Id)
                                                                                                                                  : queryObj.IsSortAscending ?

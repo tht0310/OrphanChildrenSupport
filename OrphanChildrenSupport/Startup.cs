@@ -27,6 +27,7 @@ using OrphanChildrenSupport.Infrastructure;
 using OrphanChildrenSupport.Services;
 using OrphanChildrenSupport.Swagger;
 using OrphanChildrenSupport.IoC.Configuration.DI;
+using OrphanChildrenSupport.Middleware;
 
 namespace OrphanChildrenSupport
 {
@@ -72,8 +73,8 @@ namespace OrphanChildrenSupport
 #pragma warning restore CS0618 // Type or member is obsolete
 
                     // Add your own services here.
-                    services.AddScoped<AccountService>();
-                    services.AddScoped<PersonService>();
+                    services.AddScoped<IAccountService, AccountService>();
+                    services.AddScoped<IEmailService, EmailService>();
 
                     services.AddMvcCore().AddApiExplorer();
                     services.AddCors();
@@ -206,17 +207,17 @@ namespace OrphanChildrenSupport
                 });
 
                 // Build your own authorization system or use Identity.
-                app.Use(async (context, next) =>
-                {
-                    var accountService = (AccountService)context.RequestServices.GetService(typeof(AccountService));
-                    var verifyResult = accountService.Verify(context);
-                    if (!verifyResult.HasErrors)
-                    {
-                        context.Items.Add(Constants.HttpContextServiceUserItemKey, verifyResult.Value);
-                    }
-                    await next.Invoke();
-                    // Do logging or other work that doesn't write to the Response.
-                });
+                //app.Use(async (context, next) =>
+                //{
+                //    var accountService = (AccountService)context.RequestServices.GetService(typeof(AccountService));
+                //    var verifyResult = accountService.Verify(context);
+                //    if (!verifyResult.HasErrors)
+                //    {
+                //        context.Items.Add(Constants.HttpContextServiceUserItemKey, verifyResult.Value);
+                //    }
+                //    await next.Invoke();
+                //    // Do logging or other work that doesn't write to the Response.
+                //});
 
                 if (env.IsDevelopment())
                 {
@@ -291,7 +292,12 @@ namespace OrphanChildrenSupport
                             options.DisplayRequestDuration();
                         });
                     }
-                }
+                } 
+                // global error handler
+                app.UseMiddleware<ErrorHandlerMiddleware>();
+
+                // custom jwt auth middleware
+                app.UseMiddleware<JwtMiddleware>();
 
                 app.UseEndpoints(endpoints =>
                 {

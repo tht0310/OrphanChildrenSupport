@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using OrphanChildrenSupport.Services.Models;
 
@@ -6,14 +7,17 @@ namespace OrphanChildrenSupport.Models.Accounts
     public class CreateRequest
     {
         [Required]
-        public string Title { get; set; }
-
+        public string FullName { get; set; }
         [Required]
-        public string FirstName { get; set; }
-
+        public bool Gender { get; set; }
         [Required]
-        public string LastName { get; set; }
-
+        public DateTime DOB { get; set; }
+        [Required]
+        public string GuardianPhoneNumber { get; set; }
+        [Required]
+        public string DetailAddress { get; set; }
+        [Required]
+        public string PublicAddress { get; set; }
         [Required]
         [EnumDataType(typeof(Role))]
         public string Role { get; set; }

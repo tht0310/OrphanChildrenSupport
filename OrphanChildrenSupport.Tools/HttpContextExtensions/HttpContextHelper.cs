@@ -18,7 +18,9 @@ namespace OrphanChildrenSupport.Tools
         {
             try
             {
-                return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+                //return _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+
+                return "Admin";
             }
             catch (Exception)
             {

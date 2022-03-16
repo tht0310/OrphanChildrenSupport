@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Services.Models
     public class RefreshToken
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public Account Account { get; set; }
         public string Token { get; set; }
         public DateTime Expires { get; set; }

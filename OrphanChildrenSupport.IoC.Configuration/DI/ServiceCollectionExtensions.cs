@@ -19,6 +19,8 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
             {
                 services.AddTransient<IPersonalProfileService, PersonalProfileService>();
                 services.AddTransient<IChildrenProfileService, ChildrenProfileService>();
+                services.AddTransient<ISupportCategoryService, SupportCategoryService>();
+                services.AddTransient<IChildrenSupportCategoryService, ChildrenSupportCategoryService>();
             }
         }
 
