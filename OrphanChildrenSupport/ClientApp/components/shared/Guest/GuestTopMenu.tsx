@@ -23,37 +23,29 @@ function GuestTopMenu() {
         </div>
         <ul className={click ? "nav-menu active" : "nav-menu"}>
           <li className="nav-item">
-            <Link
-              to="/home"
-              className="nav-links"
-              onClick={closeMobileMenu}
-            >
+            <Link to="/home" className="nav-links" onClick={closeMobileMenu}>
               Home <i className="fas fa-caret-down" />
             </Link>
             {dropdown && <Dropdown />}
           </li>
           <li className="nav-item">
-            <Link
-              to="/aboutUs"
-              className="nav-links"
-              onClick={closeMobileMenu}
-            >
+            <Link to="/aboutUs" className="nav-links" onClick={closeMobileMenu}>
               About us
             </Link>
           </li>
           <li className="nav-item">
             <Link
-              to="/services"
+              to="/children"
               className="nav-links"
               onClick={closeMobileMenu}
             >
-              Service <i className="fas fa-caret-down" />
+              Children
             </Link>
             {dropdown && <Dropdown />}
           </li>
           <li className="nav-item">
             <Link
-              to="/contact-us"
+              to="/contactUs"
               className="nav-links"
               onClick={closeMobileMenu}
             >
@@ -62,7 +54,7 @@ function GuestTopMenu() {
           </li>
           <li className="nav-item">
             <Link to="/signin" className="nav-links" onClick={closeMobileMenu}>
-                <span className="red-button">Sign in</span>
+              <span className="red-button">Sign in</span>
             </Link>
           </li>
         </ul>
