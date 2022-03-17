@@ -17,7 +17,7 @@ namespace OrphanChildrenSupport.IoC.Configuration.AutoMapper.Profiles
             CreateMap<ChildrenSupportCategory, ChildrenSupportCategoryResource>().ReverseMap();
             CreateMap<Account, RegisterRequest>().ReverseMap();
             CreateMap<Account, AuthenticateResponse>().ReverseMap();
-
+            CreateMap<Account, AccountResponse>().ReverseMap();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OrphanChildrenSupport.Infrastructure.Data;
@@ -49,7 +50,7 @@ namespace OrphanChildrenSupport.Middleware
                 var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
                 // attach account to context on successful jwt validation
-                context.Items["Account"] = await OrphanChildrenSupportDbContext.Accounts.FindAsync(accountId);
+                context.Items["Account"] = await OrphanChildrenSupportDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
             }
             catch
             {

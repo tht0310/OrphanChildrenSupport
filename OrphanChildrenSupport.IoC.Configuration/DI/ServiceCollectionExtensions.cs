@@ -56,7 +56,11 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
                 //DbContext settings
                 services.AddControllersWithViews();
                 services.AddDbContext<OrphanChildrenSupportDbContext>(options =>
-                       options.UseSqlServer(configuration.GetConnectionString("OrphanChildrenSupportConnection")), ServiceLifetime.Transient);
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("OrphanChildrenSupportConnection"));
+                    options.EnableSensitiveDataLogging();
+                }
+                       , ServiceLifetime.Transient);
             }
         }
     }
