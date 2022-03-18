@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Services.Models.DBSets;
 using System;
 using System.Linq;
 
@@ -15,6 +16,8 @@ namespace OrphanChildrenSupport.Infrastructure.Data
         { }
         public DbSet<PersonalProfile> PersonalProfiles { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
+        public DbSet<SupportCategory> SupportCategory { get; set; }
+        public DbSet<Account> Accounts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                     => optionsBuilder.LogTo(Console.WriteLine);
         protected override void OnModelCreating(ModelBuilder builder)
@@ -25,6 +28,8 @@ namespace OrphanChildrenSupport.Infrastructure.Data
             }
             builder.Entity<PersonalProfile>().ToTable("PersonalProfile");
             builder.Entity<ChildrenProfile>().ToTable("ChildrenProfile");
+            builder.Entity<SupportCategory>().ToTable("SupportCategory");
+            builder.Entity<Account>().ToTable("Account");
         }
     }
 }

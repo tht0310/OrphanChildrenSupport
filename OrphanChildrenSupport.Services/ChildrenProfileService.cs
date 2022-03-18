@@ -10,6 +10,7 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
@@ -17,7 +18,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OrphanChildrenSupport.Servicess
+namespace OrphanChildrenSupport.Services
 {
     public class ChildrenProfileService : IChildrenProfileService
     {
@@ -56,11 +57,11 @@ namespace OrphanChildrenSupport.Servicess
                 {
                     childrenProfile.CreatedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.CreatedTime = DateTime.UtcNow;
-                    childrenProfile.FullName = childrenProfile.LastName + " " + childrenProfile.MiddleName + " " + childrenProfile.FirstName;
                     await unitOfWork.ChildrenProfileRepository.Add(childrenProfile);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Add new ChildrenProfile successfully with Id: {childrenProfile.Id}");
-                    childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id);
+                    childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                 }
                 catch (Exception ex)
@@ -88,17 +89,22 @@ namespace OrphanChildrenSupport.Servicess
             {
                 try
                 {
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id);
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - Start to update ChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
-                    childrenProfile.FullName = childrenProfile.LastName + " " + childrenProfile.MiddleName + " " + childrenProfile.FirstName;
                     childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.LastModified = DateTime.UtcNow;
+
+                    childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
+
+
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Update ChildrenProfile successfully with Id: {childrenProfile.Id}");
 
-                    childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id);
+                    childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                 }
                 catch (Exception ex)
@@ -128,7 +134,8 @@ namespace OrphanChildrenSupport.Servicess
             {
                 try
                 {
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id);
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     if (removeFromDB)
                     {
                         unitOfWork.ChildrenProfileRepository.Remove(childrenProfile);
@@ -173,7 +180,8 @@ namespace OrphanChildrenSupport.Servicess
             {
                 try
                 {
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id);
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - Get ChildrenProfile successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -204,13 +212,11 @@ namespace OrphanChildrenSupport.Servicess
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
-
                 try
                 {
-                    var query = await unitOfWork.ChildrenProfileRepository.FindAll(predicate: d => d.IsDeleted == false
-                                                                                                && ((String.IsNullOrEmpty(queryObj.FullName) || EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%")))
-                                                                                                ,
-                                                                        include: null,
+                    var query = await unitOfWork.ChildrenProfileRepository.FindAll(predicate: d => d.IsDeleted == false 
+                                                                            && (d.Gender == queryObj.Gender),
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories),
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
@@ -277,7 +283,8 @@ namespace OrphanChildrenSupport.Servicess
                             await file.CopyToAsync(stream);
                         }
 
-                        var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id);
+                        var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                         var oldPath = childrenProfile.ImagePath;
                         _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
                         if (File.Exists(oldPath))
@@ -339,7 +346,8 @@ namespace OrphanChildrenSupport.Servicess
                         stream.Write(imageBytes, 0, imageBytes.Length);
                     }
 
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id);
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
 
                     var oldPath = childrenProfile.ImagePath;
                     _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
@@ -381,7 +389,8 @@ namespace OrphanChildrenSupport.Servicess
             {
                 try
                 {
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id);
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ChildrenSupportCategories));
                     var image = File.OpenRead(childrenProfile.ImagePath);
                     apiResponse.Data = image;
                     _logger.LogDebug($"{loggerHeader} - Get ChildrenProfileImage successfully with Id: {childrenProfile.Id}");
