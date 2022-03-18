@@ -1,8 +1,29 @@
-import { MenuOutlined } from "@ant-design/icons";
+import { DownOutlined, MenuOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./Button";
+
+import { Menu, Dropdown as AntdDropdown } from "antd";
 import Dropdown from "./Dropdown";
+
+const menu = (
+  <Menu>
+    <Menu.Item>
+      <Link to="/children" className="nav-links">
+        Children
+      </Link>
+    </Menu.Item>
+    <Menu.Item>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://www.antgroup.com"
+      >
+        2st menu item
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 
 function GuestTopMenu() {
   const [click, setClick] = useState(false);
@@ -34,13 +55,11 @@ function GuestTopMenu() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link
-              to="/children"
-              className="nav-links"
-              onClick={closeMobileMenu}
-            >
-              Children
-            </Link>
+            <AntdDropdown overlay={menu}>
+              <a className="nav-links" onClick={(e) => e.preventDefault()}>
+                Children <DownOutlined />
+              </a>
+            </AntdDropdown>
             {dropdown && <Dropdown />}
           </li>
           <li className="nav-item">

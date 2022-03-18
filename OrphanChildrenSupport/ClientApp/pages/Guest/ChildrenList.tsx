@@ -23,6 +23,7 @@ import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
 import { DatePicker, Space } from "antd";
 
 import FallBackImage from "@Images/children-default.png";
+import Search from "antd/lib/input/Search";
 
 const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
@@ -69,7 +70,10 @@ const ChildrenList: React.FC<Props> = () => {
           </nav>
         </Col>
         <Col span={19}>
-          <h3>Children Information</h3>
+          <Search
+            placeholder="Search by name"
+            style={{ width: 250, float: "right", paddingRight: "20px" }}
+          />
         </Col>
       </Row>
 

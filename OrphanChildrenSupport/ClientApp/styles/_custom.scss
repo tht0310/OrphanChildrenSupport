@@ -183,6 +183,12 @@ img {
   border-right-style: hidden !important;
   border-left-style: hidden !important;
 }
+.ant-input {
+  padding: 2px 8px !important;
+}
+.ant-input-search {
+  font-style: italic;
+}
 .search-pannel .ant-input-search-button {
   padding: 0;
   border: none !important;
