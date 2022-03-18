@@ -8,25 +8,14 @@ interface Props {}
 
 const Slider: FC<Props> = () => {
   return (
-    <div>
+    <div >
       <Carousel autoplay className="carousel">
         <div>
-          <h3
-            style={{
-              height: "70%",
-              fontSize: "60px",
-              color: "#fff",
-              lineHeight: "400px",
-              textAlign: "center",
-              backgroundImage: `url(${Children2})`,
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            FOR THE CHILDREN
-          </h3>
+          <img className="custombanner" src={Children2} />
         </div>
+        {/* <div>
+          <img className="custombanner" src={Children2} />
+        </div> */}
       </Carousel>
 
       <br />

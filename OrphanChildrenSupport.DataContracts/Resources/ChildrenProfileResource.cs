@@ -8,7 +8,6 @@ namespace OrphanChildrenSupport.DataContracts
     {
         public string FullName { get; set; }
         public bool Gender { get; set; }
-
         public DateTime DOB { get; set; }
         public string GuardianPhoneNumber { get; set; }
         public string GuardianName { get; set; }
@@ -17,6 +16,5 @@ namespace OrphanChildrenSupport.DataContracts
         public string Circumstance { get; set; }
         public string ImagePath { get; set; }
         public ICollection<ChildrenSupportCategoryResource> ChildrenSupportCategories { get; set; }
-
     }
 }

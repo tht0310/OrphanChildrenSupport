@@ -499,7 +499,7 @@ export default class Page1 extends React.PureComponent {
     return (
       <div className="home-page-wrapper page1">
         <div className="page">
-          <h3 className="topic-name">Our response</h3>
+        <h3 className="topic-name">Our response</h3>
           <ScrollOverPack playScale="0.3">
             <QueueAnim
               component={Row}
