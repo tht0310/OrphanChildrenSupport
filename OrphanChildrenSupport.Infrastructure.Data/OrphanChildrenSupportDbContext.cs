@@ -16,7 +16,7 @@ namespace OrphanChildrenSupport.Infrastructure.Data
         { }
         public DbSet<PersonalProfile> PersonalProfiles { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
-        public DbSet<SupportCategory> SupportCategory { get; set; }
+        public DbSet<SupportCategory> SupportCategories { get; set; }
         public DbSet<Account> Accounts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                     => optionsBuilder.LogTo(Console.WriteLine);
