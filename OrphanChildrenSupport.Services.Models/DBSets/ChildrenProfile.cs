@@ -15,6 +15,7 @@ namespace OrphanChildrenSupport.Services.Models
         public string PublicAddress { get; set; }
         public string Circumstance { get; set; }
         public string ImagePath { get; set; }
+        public string Description { get; set; }
         public ICollection<ChildrenSupportCategory> ChildrenSupportCategories { get; set; }
     }
 }

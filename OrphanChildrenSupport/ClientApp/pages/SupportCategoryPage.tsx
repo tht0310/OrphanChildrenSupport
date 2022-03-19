@@ -1,23 +1,12 @@
-import {
-  EyeOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
-import ChildrenProfileModal from "@Components/modals/ChildrenProfileModal";
-
-import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
+import SupportCategoryModal from "@Components/modals/SupportCategoryModal";
 import { IFilterType } from "@Models/IFilterType";
-import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
+import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import PersonalProfileService from "@Services/PersonalProfileService";
-import PersonService from "@Services/PersonService";
+import SupportCategoryService from "@Services/SupportCategoryService";
 import {
-  AutoComplete,
   Button,
-  Checkbox,
   Col,
   Input,
   message,
@@ -27,35 +16,33 @@ import {
   Space,
   Table,
 } from "antd";
-import Search from "antd/lib/input/Search";
+import React, { useEffect } from "react";
+import { PencilFill, Trash2 } from "react-bootstrap-icons";
 
-import * as React from "react";
-import { useEffect } from "react";
-import { PencilFill } from "react-bootstrap-icons";
-import { Edit2, Plus, Trash2, UserPlus } from "react-feather";
 type Props = {};
 
-const childrenProfileService = new ChildrenProfileService();
+const supportCategoriesService = new SupportCategoryService();
 
-const ChildrenProfilePage: React.FC<Props> = () => {
+const SupportCategoryPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
-  const [childrenProfiles, setchildrenProfiles] = React.useState<
-    IChildrenProfileModel[]
+  const [supportCategories, setSupportCategories] = React.useState<
+    ISupportCategoryModel[]
   >([]);
-  const [filterBy, setFilterBy] = React.useState<string>("fullName");
   const [filterValue, setFilterValue] = React.useState<string>();
-  const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
+  const [isSupportCategoriesModal, setSupportCategoriesModal] =
+    React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] =
-    React.useState<IChildrenProfileModel>();
+    React.useState<ISupportCategoryModel>();
+  const [filterBy, setFilterBy] = React.useState<string>("title");
 
   useEffect(() => {
-    document.title = "Dashboard - Quy trình";
+    document.title = "Support Categories";
     fetchData();
   }, []);
   useEffect(() => {
     onSearch();
-  }, [filterBy, filterValue]);
+  }, [filterValue]);
 
   const requestColumns: CustomColumnType[] = [
     {
@@ -66,59 +53,42 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
     {
-      title: "Name",
-      dataIndex: "fullName",
+      title: "Title",
+      dataIndex: "title",
       key: "fullName",
       ellipsis: true,
-      width: "20%",
+      width: "45%",
       columnSearchDataIndex: "fullName",
       render: (text: string) => (
-        <a className="item-title" onClick={toggleChildrenModal}>
+        <a className="item-title" onClick={toggleSupportCategoryModal}>
           {text}
         </a>
       ),
     },
     {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      width: "9%",
-      columnSearchDataIndex: "dob",
-      render: (gender: string) => (gender === "0" ? "Girl" : "Boy"),
-    },
-
-    {
-      title: "Birthday",
-      dataIndex: "dob",
-      key: "dob",
-      width: "11%",
-      columnSearchDataIndex: "dob",
-      render: (date: string) => displayDate(new Date(date)),
+      title: "Created By",
+      dataIndex: "createdBy",
+      key: "createdBy",
+      ellipsis: true,
+      width: "20%",
+      render: (text: Date, row, index) => <>{text ? text : row.modifiedBy}</>,
     },
     {
-      title: "Address",
-      columnSearchDataIndex: "detailAddress",
-      dataIndex: "detailAddress",
-      width: "25%",
-      key: "detailAddress",
-      render: (text: string) => convertAddressToString(text),
+      title: "Created time",
+      dataIndex: "createdTime",
+      key: "createdTime",
+      ellipsis: true,
+      width: "20%",
+      render: (text: Date, row, index) => (
+        <>{text ? displayDateTime(text) : displayDateTime(row.lastModified)}</>
+      ),
     },
     {
-      title: "Guardian Phone",
-      dataIndex: "guardianPhoneNumber",
-      width: "14%",
-      key: "guardianPhoneNumber",
-      columnSearchDataIndex: "guardianPhoneNumber",
-    },
-    {
-      columnSearchDataIndex: "address",
       align: "center",
-      dataIndex: "address",
-      key: "address",
       render: (text, record, index) => (
         <Space className="actions">
           <Button
-            onClick={toggleChildrenModal}
+            onClick={toggleSupportCategoryModal}
             className="btn-custom-2 blue-action-btn"
             icon={<PencilFill size={14} style={{ color: "#40A9FF" }} />}
           />
@@ -137,48 +107,35 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       ),
     },
   ];
-
   async function fetchData() {
-    fetchchildrenProfile();
-  }
-
-  function convertAddressToString(address: string) {
-    const tempAddress = address.split("-");
-    let result = "";
-    tempAddress.reverse();
-    tempAddress.map((v) => {
-      result += v + " ";
-    });
-
-    return result;
+    fetchSupportCategories();
   }
 
   async function onDelete(id: number) {
-    const res = await childrenProfileService.delete(id);
+    const res = await supportCategoriesService.delete(id);
     if (!res.hasErrors) {
       message.success("Xóa tài khoản thành công");
       fetchData();
     }
   }
 
-  async function toggleChildrenModal() {
-    setChildrenModal(!isChildrenModal);
+  async function toggleSupportCategoryModal() {
+    setSupportCategoriesModal(!isSupportCategoriesModal);
     setmodelForEdit(null);
   }
 
   async function onSearch() {
     const value: IFilterType = { [filterBy]: filterValue };
-    const res = await childrenProfileService.search(value);
-    console.log(value);
+    const res = await supportCategoriesService.search(value);
     if (!res.hasErrors) {
-      setchildrenProfiles(res.value.items);
+      setSupportCategories(res.value.items);
     }
   }
 
-  async function fetchchildrenProfile() {
-    const dataRes = await childrenProfileService.getAll();
+  async function fetchSupportCategories() {
+    const dataRes = await supportCategoriesService.getAll();
     if (!dataRes.hasErrors) {
-      setchildrenProfiles(dataRes.value.items);
+      setSupportCategories(dataRes.value.items);
     }
   }
 
@@ -187,7 +144,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={12} className="table-title">
-            Children Information
+            Support Category
           </Col>
           <Col span={12}>
             <div className="option-pannel">
@@ -200,9 +157,6 @@ const ChildrenProfilePage: React.FC<Props> = () => {
                   }}
                 >
                   <Select.Option value="fullName">Name</Select.Option>
-                  <Select.Option value="address">Address</Select.Option>
-                  <Select.Option value="status">Status</Select.Option>
-                  <Select.Option value="gender">Gender</Select.Option>
                 </Select>
                 <Input
                   style={{ width: "50%" }}
@@ -211,7 +165,10 @@ const ChildrenProfilePage: React.FC<Props> = () => {
                     setFilterValue(e.target.value);
                   }}
                 />
-                <Button className="new-button" onClick={toggleChildrenModal}>
+                <Button
+                  className="new-button"
+                  onClick={toggleSupportCategoryModal}
+                >
                   Add New
                 </Button>
               </Input.Group>
@@ -230,15 +187,15 @@ const ChildrenProfilePage: React.FC<Props> = () => {
             },
           };
         }}
-        dataSource={childrenProfiles}
+        dataSource={supportCategories}
         pagination={{ pageSize: 10 }}
         onChange={(e) => {
           setPage(e.current);
         }}
       />
-      <ChildrenProfileModal
-        visible={isChildrenModal}
-        onCancel={toggleChildrenModal}
+      <SupportCategoryModal
+        visible={isSupportCategoriesModal}
+        onCancel={toggleSupportCategoryModal}
         data={modelForEdit}
         fetchData={fetchData}
       />
@@ -246,4 +203,4 @@ const ChildrenProfilePage: React.FC<Props> = () => {
   );
 };
 
-export default ChildrenProfilePage;
+export default SupportCategoryPage;

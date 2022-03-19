@@ -22,6 +22,10 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { DataServices } from "@Services/DataServices";
 import { useState } from "react";
 import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
+import SupportCategoryService from "@Services/SupportCategoryService";
+import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
+import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
+import { IChildrenSupportCategoryModel } from "@Models/IChildrenSupportCategoryModel";
 
 const { TextArea } = Input;
 
@@ -34,7 +38,7 @@ export interface IProps {
 
 const inlineCol2FormLayout = {
   labelCol: {
-    span: 6,
+    span: 8,
   },
   wrapperCol: {
     span: 14,
@@ -43,7 +47,7 @@ const inlineCol2FormLayout = {
 
 const inlineFormLayout = {
   labelCol: {
-    span: 3,
+    span: 4,
   },
   wrapperCol: {
     span: 19,
@@ -51,8 +55,10 @@ const inlineFormLayout = {
 };
 
 const childrenProfileService = new ChildrenProfileService();
+const supportCategoriesService = new SupportCategoryService();
+const childrenSupportCategoryService = new ChildrenSupportCategoryService();
 
-const childrenProfileModal: React.FC<IProps> = ({
+const ChildrenProfileModal: React.FC<IProps> = ({
   fetchData,
   visible,
   onCancel,
@@ -63,6 +69,9 @@ const childrenProfileModal: React.FC<IProps> = ({
   const [imageFile, setImageFile] = useState<UploadFile<any>>();
   const [imageUrlTmp, setImageUrlTmp] = useState<string>();
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
+  const [supportCategories, setSupportCategories] = React.useState<
+    ISupportCategoryModel[]
+  >([]);
 
   React.useEffect(() => {
     if (visible) {
@@ -79,10 +88,21 @@ const childrenProfileModal: React.FC<IProps> = ({
     }
   }, [data]);
 
+  React.useEffect(() => {
+    fetchSupportCategories();
+  }, [visible === true]);
+
   const handleCancel = () => {
     onCancel();
     form.resetFields();
   };
+
+  async function fetchSupportCategories() {
+    const dataRes = await supportCategoriesService.getAll();
+    if (!dataRes.hasErrors) {
+      setSupportCategories(dataRes.value.items);
+    }
+  }
 
   function onSubmit() {
     form.submit();
@@ -124,8 +144,23 @@ const childrenProfileModal: React.FC<IProps> = ({
     </div>
   );
 
-  async function onFinish(values: IChildrenProfileModel) {
+  async function onFinish(values: IChildrenProfileModel | any) {
+    //Prepare value
+    values.detailAddress =
+      values.city + "-" + values.province + "-" + values.houseNumber;
+    values.publicAddress = values.city + "-" + values.province;
     if (data) {
+      const tempList = [];
+      // if (values.childrenCategoryGroup) {
+      //   values.childrenCategoryGroup.map((v) => {
+      //     tempList.push({
+      //       supportCategoryId: v,
+      //       childrenProfileId: values.id,
+      //     });
+      //   });
+      //   values.childrenSupportCategories = [];
+      // }
+
       const res = await childrenProfileService.updateWithFile(
         values,
         imageFile?.originFileObj
@@ -141,6 +176,15 @@ const childrenProfileModal: React.FC<IProps> = ({
         imageFile?.originFileObj
       );
       if (!res.hasErrors) {
+        if (values.childrenCategoryGroup) {
+          values.childrenCategoryGroup.map((v) => {
+            childrenSupportCategoryService.addChildrenCategory({
+              supportCategoryId: v,
+              childrenProfileId: res.value.id,
+            });
+          });
+        }
+
         message.success("Thêm mới thành công");
         onCancel();
         fetchData();
@@ -151,17 +195,24 @@ const childrenProfileModal: React.FC<IProps> = ({
   function innitialValue() {
     form.setFieldsValue({
       id: data.id,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      middleName: data.middleName,
+      fullName: data.fullName,
       gender: data.gender ? "true" : "false",
       dob: moment(data.dob),
-      address: data.address,
+      city: data.detailAddress.split("-")[0],
+      province: data.detailAddress.split("-")[1],
+      houseNumber: data.detailAddress.split("-")[2],
       description: data.description,
-      isNeedToBeAdopted: data.isNeedToBeAdopted,
-      phoneNumber: data.phoneNumber,
-      status: data.status,
+      circumstance: data.circumstance,
+      guardianPhoneNumber: data.guardianPhoneNumber,
+      guardianName: data.guardianName,
     });
+    if (data.childrenSupportCategories) {
+      const tempList = [];
+      data.childrenSupportCategories.map((v) => {
+        tempList.push(v.supportCategoryId);
+      });
+      form.setFieldsValue({ childrenCategoryGroup: tempList });
+    }
   }
 
   return (
@@ -211,39 +262,14 @@ const childrenProfileModal: React.FC<IProps> = ({
             </Upload>
           </Col>
           <Col span={18}>
-            <Form.Item label="Name" style={{ marginBottom: 0 }} required>
-              <Form.Item
-                name="firstName"
-                style={{ display: "inline-block", width: "calc(32.05% - 8px)" }}
-                rules={[
-                  { required: true, message: "Please enter first name." },
-                ]}
-              >
-                <Input placeholder="Enter first name" />
-              </Form.Item>
-              <Form.Item
-                name="lastName"
-                rules={[{ required: true, message: "Please enter last name." }]}
-                style={{
-                  display: "inline-block",
-                  width: "calc(32.05% - 8px)",
-                  margin: "0 8px",
-                }}
-              >
-                <Input placeholder="Enter last name" />
-              </Form.Item>
-              <Form.Item
-                name="middleName"
-                rules={[
-                  { required: true, message: "Please enter middle name." },
-                ]}
-                style={{
-                  display: "inline-block",
-                  width: "calc(32.05% - 8px)",
-                }}
-              >
-                <Input placeholder="Enter middle name" />
-              </Form.Item>
+            <Form.Item
+              name="fullName"
+              label="Full name"
+              className="label-custom"
+              {...inlineFormLayout}
+              rules={[{ required: true, message: "Please enter full name." }]}
+            >
+              <Input />
             </Form.Item>
             <Row>
               <Col xs={24} lg={12}>
@@ -276,25 +302,66 @@ const childrenProfileModal: React.FC<IProps> = ({
                 </Form.Item>
               </Col>
             </Row>
-
             <Form.Item
-              name="phoneNumber"
-              label="Phone"
-              className="label-custom"
               {...inlineFormLayout}
-              rules={[{ required: true, message: "Please enter phone." }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="address"
               label="Address"
-              className="label-custom"
-              {...inlineFormLayout}
-              rules={[{ required: true, message: "Please enter address." }]}
+              style={{ marginBottom: "8px" }}
+              required
             >
-              <Input />
+              <Form.Item
+                name="city"
+                style={{ display: "inline-block", width: "25%" }}
+                rules={[{ required: true, message: "Please enter city" }]}
+              >
+                <Input placeholder="Enter city" />
+              </Form.Item>
+              <Form.Item
+                name="province"
+                rules={[{ required: true, message: "Please enter province ." }]}
+                style={{
+                  display: "inline-block",
+                  width: "25%",
+                }}
+              >
+                <Input placeholder="Enter province" />
+              </Form.Item>
+              <Form.Item
+                name="houseNumber"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter street name, house number...",
+                  },
+                ]}
+                style={{
+                  display: "inline-block",
+                  width: "50%",
+                }}
+              >
+                <Input placeholder="Enter street name, house number..." />
+              </Form.Item>
             </Form.Item>
+            <Row>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  label="Guardian Name"
+                  name="guardianName"
+                  {...inlineCol2FormLayout}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  label="Guardian Phone"
+                  name="guardianPhoneNumber"
+                  {...inlineCol2FormLayout}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+            </Row>
+
             <Form.Item
               name="description"
               label="Description"
@@ -303,42 +370,45 @@ const childrenProfileModal: React.FC<IProps> = ({
             >
               <TextArea rows={3} style={{ width: "100%" }} />
             </Form.Item>
-            <Row>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Status"
-                  name="status"
-                  {...inlineCol2FormLayout}
-                  rules={[{ required: true, message: "Please enter status." }]}
-                >
-                  <Select>
-                    <Select.Option value="Waiting for support" key="1">
-                      Waiting for support
-                    </Select.Option>
-                    <Select.Option value="Supported" key="0">
-                      Supported
-                    </Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Need adopted"
-                  name="isNeedToBeAdopted"
-                  {...inlineCol2FormLayout}
-                >
-                  <Checkbox
-                    checked={data?.isNeedToBeAdopted}
-                    style={{ lineHeight: "32px", marginLeft: "20px" }}
-                    onChange={(e) => {
-                      form.setFieldsValue({
-                        isNeedToBeAdopted: !data.isNeedToBeAdopted,
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+
+            <Form.Item
+              name="childrenCategoryGroup"
+              {...inlineFormLayout}
+              label="Need support"
+            >
+              <Checkbox.Group>
+                <Row>
+                  {supportCategories.map((s) => {
+                    return (
+                      <Col span={6}>
+                        <Checkbox value={s.id} style={{ lineHeight: "32px" }}>
+                          {s.title}
+                        </Checkbox>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </Checkbox.Group>
+            </Form.Item>
+            <Form.Item
+              label="Circumstance"
+              name="circumstance"
+              {...inlineFormLayout}
+              style={{ marginTop: "30px" }}
+              rules={[
+                { required: true, message: "Please enter circumstance." },
+              ]}
+            >
+              <Select>
+                <Select.Option value="Waiting for support" key="1">
+                  Waiting for support
+                </Select.Option>
+                <Select.Option value="Supported" key="0">
+                  Supported
+                </Select.Option>
+              </Select>
+            </Form.Item>
+
             {data && (
               <>
                 <Row>
@@ -415,4 +485,4 @@ const childrenProfileModal: React.FC<IProps> = ({
   );
 };
 
-export default childrenProfileModal;
+export default ChildrenProfileModal;

@@ -9,6 +9,7 @@ import GuestHomePage from "@Pages/Guest/GuestHomePage";
 import LoginPage from "@Pages/LoginPage";
 import PersonalProfilePage from "@Pages/PersonalProfilePage";
 import SignInPage from "@Pages/SignInPage";
+import SupportCategoryPage from "@Pages/SupportCategoryPage";
 import * as React from "react";
 import { Switch } from "react-router-dom";
 import AppRoute from "./components/shared/AppRoute";
@@ -30,12 +31,7 @@ export const routes = (
       component={Dashboard}
     />
     <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage} />
-    <AppRoute
-      layout={DefaultLayout}
-      exact
-      path="/login"
-      component={LoginPage}
-    />
+
     <AppRoute
       layout={AuthorizedLayout}
       exact
@@ -77,6 +73,12 @@ export const routes = (
       layout={GuestLayout}
       path="/children/detail/:id"
       component={ChildrenDetailPage}
+    />
+
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/supportCategory"
+      component={SupportCategoryPage}
     />
   </Switch>
 );

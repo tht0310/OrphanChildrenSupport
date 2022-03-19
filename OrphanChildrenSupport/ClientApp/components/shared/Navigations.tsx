@@ -1,103 +1,101 @@
-import React from 'react'
-import CIcon from '@coreui/icons-react'
+import React from "react";
+import CIcon from "@coreui/icons-react";
 import {
   cilBaby,
   cilBell,
   cilCalculator,
-  cilChartPie,
-  cilChatBubble,
-  cilChild,
-  cilContact,
-  cilCursor,
-  cilDrop,
-  cilHeart,
-  cilMoney,
-  cilNotes,
-  cilPencil,
   cilPeople,
   cilPhone,
-  cilPregnant,
-  cilPuzzle,
+  cilSettings,
   cilSpeedometer,
-  cilStar,
   cilUser,
-} from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+} from "@coreui/icons";
+import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 
 const navigations = [
   {
     component: CNavItem,
-    name: 'Dashboard',
-    to: '/admin/dashboard',
+    name: "Dashboard",
+    to: "/admin/dashboard",
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
-      color: 'info',
-      text: 'NEW',
+      color: "info",
+      text: "NEW",
     },
   },
   {
     component: CNavTitle,
-    name: 'User Management',
+    name: "User Management",
   },
   {
     component: CNavItem,
-    name: 'Volunteer',
-    to: '/admin/volunteer',
+    name: "Volunteer",
+    to: "/admin/volunteer",
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Registered User',
-    to: '/user',
+    name: "Registered User",
+    to: "/user",
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Children',
-    to: '/admin/children',
+    name: "Children",
+    to: "/admin/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
   },
-  
+
   {
     component: CNavTitle,
-    name: 'Other',
+    name: "Other",
   },
   {
     component: CNavGroup,
-    name: 'Statistic',
+    name: "Statistic",
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'User',
-        to: '/admin/statistic/user',
+        name: "User",
+        to: "/admin/statistic/user",
       },
       {
         component: CNavItem,
-        name: 'Donation',
-        to: '/admin/statistic/donation',
+        name: "Donation",
+        to: "/admin/statistic/donation",
       },
       {
         component: CNavItem,
-        name: 'Adopt Registration',
-        to: '/admin/adopt',
+        name: "Adopt Registration",
+        to: "/admin/adopt",
       },
     ],
   },
-
+  {
+    component: CNavGroup,
+    name: "Setting",
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Configure support category",
+        to: "/admin/supportCategory",
+      },
+    ],
+  },
   {
     component: CNavItem,
-    name: 'Notification',
-    to: '/notification',
+    name: "Notification",
+    to: "/notification",
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Contact',
-    to: '/contact',
+    name: "Contact",
+    to: "/contact",
     icon: <CIcon icon={cilPhone} customClassName="nav-icon" />,
   },
+];
 
-]
-
-export default navigations 
+export default navigations;

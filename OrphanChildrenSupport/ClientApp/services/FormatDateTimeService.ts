@@ -48,7 +48,7 @@ export const momentSubtractMonths = (date: Date, months: number) => {
   return moment(date).subtract(months, "months");
 };
 
-export const displayDateTime = (date: Date) => {
+export const displayDateTime = (date: Date |string) => {
   return moment(date).format("DD/MM/YYYY HH:mm");
 };
 

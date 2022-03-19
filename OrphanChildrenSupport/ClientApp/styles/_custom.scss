@@ -183,9 +183,7 @@ img {
   border-right-style: hidden !important;
   border-left-style: hidden !important;
 }
-.ant-input {
-  padding: 2px 8px !important;
-}
+
 .ant-input-search {
   font-style: italic;
 }
@@ -280,12 +278,15 @@ img {
   .breadcrumb {
     padding-left: 38px;
   }
+  .ant-input {
+    padding: 2px 8px !important;
+  }
   .wrap {
     padding: 0px 2%;
     margin: 0 auto;
   }
   .items {
-    margin-top: 20px;
+    margin-top: 25px;
   }
 
   /*Menu !!!!*/
@@ -297,15 +298,14 @@ img {
   .menu-item {
     background-color: #fefefe;
     width: 220px;
-    max-height: 150px;
     margin: 10px;
     border-radius: 3px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
   }
   .item {
     vertical-align: top;
-    width: 190px;
-    height: 220px;
+    width: 170px;
+    height: 190px;
     margin: 8px;
     background: #fefefe;
     display: inline-block;
@@ -325,15 +325,17 @@ img {
     padding-top: -5px;
     margin-right: 5px;
     font-size: 22px;
+    margin-bottom: 0px !important;
   }
 
   .header-item {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #3c3d41;
-    font-size: 11px;
+    font-size: 13px;
     padding: 15px 15px;
     border-bottom: 1.5px solid #eaeaea;
+    font-weight: 600;
   }
 
   .color-row1,
@@ -362,12 +364,8 @@ img {
     margin: 6px 8px;
   }
   img {
-    width: 150px;
-    height: 130px;
-    margin-top: 15px;
     vertical-align: top;
     position: relative;
-    left: 18px;
   }
   .item:hover {
     transform: scale(1.05);
@@ -819,4 +817,18 @@ section {
 }
 .sq_box span.wishlist i:hover {
   color: #fd7f34;
+}
+.checkbox-container {
+  padding: 8px 15px !important;
+
+  font-weight: 300 !important;
+  .ant-checkbox-inner {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .ant-row {
+    padding-bottom: 7px !important;
+    color: #3c3d41;
+    letter-spacing: 1px;
+  }
 }

@@ -1,21 +1,22 @@
+import { IChildrenSupportCategoryModel } from './IChildrenSupportCategoryModel';
+import { IEngineEntity } from "./IEngineEntity";
 
-export interface IChildrenProfileModel{
-        id: number;
-        firstName: string,
-        lastName: string,
-        middleName: string,
+export interface IChildrenProfileModel extends IEngineEntity {
         fullName: string,
         description:string,
         gender: boolean,
         dob: Date | null,
         address: string,
-        phoneNumber: string,
+        guardianPhoneNumber?: string,
+        guardianName?: string,
         status: string,
-        isNeedToBeAdopted: boolean,
-        createdBy: string;
-        createdTime: Date ;
-        lastModified: Date;
-        modifiedBy: string;
-        isDeleted: boolean;
+        detailAddress:string,
+        publicAddress: string,
+        circumstance: string,
+        imagePath: string,
+        city?:string,
+        province?:string,
+        houseNumber?:string
+        childrenSupportCategories?:IChildrenSupportCategoryModel[]
 }
 
