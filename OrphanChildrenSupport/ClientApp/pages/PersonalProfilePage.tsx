@@ -1,5 +1,8 @@
 import { CustomColumnType } from "@Components/forms/Table";
-import PersonalProfileModal from "@Components/modals/PersonalProfileModal";
+import ChildrenProfileModal from "@Components/modals/ChildrenProfileModal";
+
+import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
+import { IFilterType } from "@Models/IFilterType";
 import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
 import PersonalProfileService from "@Services/PersonalProfileService";
@@ -53,12 +56,12 @@ const PersonalProfilePage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Giới tính",
+      title: "Gender",
       dataIndex: "gender",
-      width: "10%",
       key: "gender",
-      columnSearchDataIndex: "gender",
-      render: (text, row, index) => (text ? "Nam" : "Nữ"),
+      width: "9%",
+      columnSearchDataIndex: "dob",
+      render: (gender: string) => (gender === "0" ? "Girl" : "Boy"),
     },
 
     {
@@ -70,11 +73,19 @@ const PersonalProfilePage: React.FC<Props> = () => {
       render: (date: string) => displayDate(new Date(date)),
     },
     {
-      title: "Địa chỉ",
-      columnSearchDataIndex: "address",
-      dataIndex: "address",
-      width: "17%",
-      key: "address",
+      title: "Address",
+      columnSearchDataIndex: "detailAddress",
+      dataIndex: "detailAddress",
+      width: "25%",
+      key: "detailAddress",
+      render: (text: string) => convertAddressToString(text),
+    },
+    {
+      title: "Guardian Phone",
+      dataIndex: "guardianPhoneNumber",
+      width: "14%",
+      key: "guardianPhoneNumber",
+      columnSearchDataIndex: "guardianPhoneNumber",
     },
     {
       columnSearchDataIndex: "address",
@@ -110,6 +121,17 @@ const PersonalProfilePage: React.FC<Props> = () => {
 
   async function fetchData() {
     fetchPersonalProfile();
+  }
+
+  function convertAddressToString(address: string) {
+    const tempAddress = address.split("-");
+    let result = "";
+    tempAddress.reverse();
+    tempAddress.map((v) => {
+      result += v + " ";
+    });
+
+    return result;
   }
 
   async function onDelete(id: number) {
