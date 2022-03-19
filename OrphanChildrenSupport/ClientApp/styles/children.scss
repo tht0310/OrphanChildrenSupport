@@ -1,0 +1,151 @@
+.breadcrumb {
+  padding-left: 13px;
+}
+.children-detail-page {
+  background-color: #fff;
+  padding: 3%;
+  margin: 2% 2%;
+  vertical-align: middle;
+
+  img {
+    max-width: 90%;
+  }
+  .btn-primary {
+    background-color: #88181b !important;
+    color: #fff !important;
+    font-size: 14px;
+    min-width: 16%;
+  }
+  .btn-outline-secondary {
+    border: 1px solid #82868b !important;
+    background-color: transparent;
+    color: #82868b;
+    font-size: 14px;
+    min-width: 16%;
+  }
+  .img-item {
+    width: 500px !important;
+    height: 300px !important;
+  }
+}
+.contact-page {
+  .content-wrapper {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 50px;
+  }
+  h3 {
+    font-family: "Playfair Display", serif !important;
+    text-align: center;
+    font-size: 3.25rem;
+    font-weight: 700;
+    margin: 50px 80px 0;
+  }
+  p {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 60px;
+  }
+  .first-block {
+    background-color: #88181b;
+    min-height: 200px;
+  }
+  .second-block {
+    background-color: #767676;
+    min-height: 200px;
+  }
+
+  .main-content {
+    font-weight: 600 !important;
+  }
+  .third-block {
+    background-color: #e8b14c;
+    min-height: 200px;
+  }
+  .map-container {
+    background-color: #88181b;
+    margin: 2% 7%;
+    padding: 2% 3%;
+  }
+  .map {
+    background-color: white;
+    text-align: center;
+    padding: 2% 3%;
+  }
+}
+
+.hero-inner {
+  /* Split hero in two half */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero-copy {
+  padding-right: 64px;
+  min-width: 552px;
+  width: 552px;
+}
+
+.hero-cta {
+  margin: 0;
+
+  .button {
+    min-width: 170px;
+
+    &:first-child {
+      margin-right: 16px;
+    }
+  }
+}
+.aboutus-page {
+  img {
+    max-height: 400px !important;
+  }
+
+  .counter {
+    font-size: 60px;
+    color: #88181b !important;
+    line-height: 60px;
+    font-weight: 600 !important;
+    line-height: 70px;
+    margin: 10px 0px;
+  }
+
+  .counter-stat h5 {
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .counter-block span {
+    font-size: 25px;
+  }
+
+  #counter .dark-overlay {
+    opacity: 0.95;
+  }
+
+  #counter {
+    position: relative;
+    -webkit-background-size: cover;
+    background-size: cover;
+    padding-top: 87px;
+    padding-bottom: 95px;
+  }
+  .mt-2 {
+    font-size: 16px !important;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    margin-bottom: 0px;
+    color: #232323;
+  }
+  h3 {
+    text-align: center;
+    font-size: 28px !important;
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 600 !important;
+    margin-bottom: 0px;
+    color: #232323;
+    margin: 15px 0px 50px 0px;
+  }
+}

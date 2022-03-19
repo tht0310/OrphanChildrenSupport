@@ -1,6 +1,9 @@
 import DefaultLayout from "@Layouts/DefaultLayout";
 import GuestLayout from "@Layouts/GuestLayout";
+import ChildrenDetailPage from "@Pages/ChildrenDetailPage";
 import AboutUsPage from "@Pages/Guest/AboutUsPage";
+import ChildrenList from "@Pages/Guest/ChildrenList";
+import ContactUsPage from "@Pages/Guest/ContactUs";
 import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
 import LoginPage from "@Pages/LoginPage";
