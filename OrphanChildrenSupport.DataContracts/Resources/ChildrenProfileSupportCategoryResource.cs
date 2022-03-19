@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OrphanChildrenSupport.DataContracts
 {
-    public class ChildrenSupportCategoryResource : EngineEntity
+    public class ChildrenProfileSupportCategoryResource : EngineEntity
     {
         [Required]
         public long ChildrenProfileId { get; set; }

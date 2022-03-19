@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrphanChildrenSupport.Services.Models.DBSets
 {
-    public class ChildrenSupportCategory : EngineEntity
+    public class ChildrenProfileSupportCategory : EngineEntity
     {
         [ForeignKey("ChildrenProfile")]
         [Required]

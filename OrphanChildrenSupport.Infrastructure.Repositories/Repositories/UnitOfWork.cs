@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
+using WorkFlow.API.DataContracts.Constants;
 
 namespace OrphanChildrenSupport.Infrastructure.Repositories
 {
@@ -23,13 +24,13 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         private IAsyncRepository<PersonalProfile> _personalProfileRepository;
         private IAsyncRepository<ChildrenProfile> _childrenProfileRepository;
         private IAsyncRepository<SupportCategory> _supportCategoryRepository;
-        private IAsyncRepository<ChildrenSupportCategory> _childrenSupportCategoryRepository;
+        private IAsyncRepository<ChildrenProfileSupportCategory> _childrenProfileSupportCategoryRepository;
         private IAsyncRepository<Account> _accountRepository;
 
         public IAsyncRepository<PersonalProfile> PersonalProfileRepository => _personalProfileRepository ?? (_personalProfileRepository = new EfRepository<PersonalProfile>(_context));
         public IAsyncRepository<ChildrenProfile> ChildrenProfileRepository => _childrenProfileRepository ?? (_childrenProfileRepository = new EfRepository<ChildrenProfile>(_context));
         public IAsyncRepository<SupportCategory> SupportCategoryRepository => _supportCategoryRepository ?? (_supportCategoryRepository = new EfRepository<SupportCategory>(_context));
-        public IAsyncRepository<ChildrenSupportCategory> ChildrenSupportCategoryRepository => _childrenSupportCategoryRepository ?? (_childrenSupportCategoryRepository = new EfRepository<ChildrenSupportCategory>(_context));
+        public IAsyncRepository<ChildrenProfileSupportCategory> ChildrenProfileSupportCategoryRepository => _childrenProfileSupportCategoryRepository ?? (_childrenProfileSupportCategoryRepository = new EfRepository<ChildrenProfileSupportCategory>(_context));
         public IAsyncRepository<Account> AccountRepository => _accountRepository ?? (_accountRepository = new EfRepository<Account>(_context));
         #endregion
 
@@ -60,6 +61,55 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
                     await SaveErrorLog(ex);
                     throw;
                 }
+            }
+        }
+
+        public async Task ExecuteCommonStoreProcedure(string spName, SqlParameter[] sqlParameters)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand comm = new SqlCommand("SET ARITHABORT ON", conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+                SqlCommand cmd = new SqlCommand(spName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                foreach (var para in sqlParameters)
+                {
+                    cmd.Parameters.Add(para);
+                }
+
+                // execute the command
+                using (var rdr = await cmd.ExecuteReaderAsync())
+                { }
+
+                conn.Dispose();
+            }
+        }
+
+        public async Task DeleteChildrenProfileSupportCategiry(long childrenProfileId)
+        {
+            string spName = StoreProcedureConstants.SP_DeleteChildrenProfileSuportCategory;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand comm = new SqlCommand("SET ARITHABORT ON", conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+                SqlCommand cmd = new SqlCommand(spName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                cmd.Parameters.Add(new SqlParameter("@ChildrenProfileId", childrenProfileId));
+
+                // execute the command
+                await cmd.ExecuteReaderAsync();
+
+                await conn.DisposeAsync();
             }
         }
 
