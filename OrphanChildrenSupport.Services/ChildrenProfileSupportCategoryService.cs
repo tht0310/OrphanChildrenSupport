@@ -208,9 +208,8 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
 
-                    var query = await unitOfWork.ChildrenProfileSupportCategoryRepository.FindAll(predicate: d => d.IsDeleted == false
-                                                                                                ,
-                                                                        include: null,
+                    var query = await unitOfWork.ChildrenProfileSupportCategoryRepository.FindAll(predicate: d => d.IsDeleted == false,
+                                                                        include: source => source.Include(d => d.SupportCategory),
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);

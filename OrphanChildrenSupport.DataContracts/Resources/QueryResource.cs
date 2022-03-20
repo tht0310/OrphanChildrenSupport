@@ -1,4 +1,6 @@
-﻿namespace OrphanChildrenSupport.DataContracts.Resources
+﻿using OrphanChildrenSupport.Services.Models;
+
+namespace OrphanChildrenSupport.DataContracts.Resources
 {
     public class QueryResource
     {
@@ -10,6 +12,9 @@
         public string FullName { get; set; }
         public string Email { get; set; }
         public string FullNameOrEmail { get; set; }
-        public bool Gender { get; set; }
+        public bool? Gender { get; set; }
+        public int? FromAge { get; set; }
+        public int? ToAge { get; set; }
+        public ChildrenProfileStatus? ChildrenProfileStatus { get; set; }
     }
 }

@@ -11,5 +11,9 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("SupportCategory")]
         [Required]
         public long SupportCategoryId { get; set; }
+        #region  Foreign
+        public ChildrenProfile ChildrenProfile { get; set; }
+        public SupportCategory SupportCategory { get; set; }
+        #endregion
     }
 }
