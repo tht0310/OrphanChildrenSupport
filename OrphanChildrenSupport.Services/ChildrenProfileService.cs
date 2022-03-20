@@ -10,7 +10,6 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
@@ -18,7 +17,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WorkFlow.API.DataContracts.Constants;
 
 namespace OrphanChildrenSupport.Services
 {
@@ -59,6 +57,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     childrenProfile.CreatedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.CreatedTime = DateTime.UtcNow;
+                    childrenProfile.Age = GetAge(childrenProfile.DOB);
                     await unitOfWork.ChildrenProfileRepository.Add(childrenProfile);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Add new ChildrenProfile successfully with Id: {childrenProfile.Id}");
@@ -101,9 +100,7 @@ namespace OrphanChildrenSupport.Services
                     _logger.LogDebug($"{loggerHeader} - Start to update ChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
                     childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
                     childrenProfile.LastModified = DateTime.UtcNow;
-
-                    childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
-
+                    childrenProfile.Age = GetAge(childrenProfile.DOB);
 
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
@@ -221,8 +218,12 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var query = await unitOfWork.ChildrenProfileRepository.FindAll(predicate: d => d.IsDeleted == false,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)),
+                    var query = await unitOfWork.ChildrenProfileRepository.FindAll(predicate: d => d.IsDeleted == false
+                                                                            && ((!queryObj.Gender.HasValue ? (d.Gender == true || d.Gender == false) : d.Gender == queryObj.Gender))
+                                                                            && (!queryObj.FromAge.HasValue || d.Age >= queryObj.FromAge)
+                                                                            && (!queryObj.ToAge.HasValue || d.Age <= queryObj.ToAge)
+                                                                            && (!queryObj.ChildrenProfileStatus.HasValue || d.Status == queryObj.ChildrenProfileStatus),
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory),
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
@@ -414,6 +415,14 @@ namespace OrphanChildrenSupport.Services
                 }
             }
             return apiResponse;
+        }
+
+        public int GetAge(DateTime dateOfBirth)
+        {
+            var today = DateTime.Today;
+            var a = (today.Year * 100 + today.Month) * 100 + today.Day;
+            var b = (dateOfBirth.Year * 100 + dateOfBirth.Month) * 100 + dateOfBirth.Day;
+            return (a - b) / 10000;
         }
     }
 }
