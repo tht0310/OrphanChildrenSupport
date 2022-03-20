@@ -96,7 +96,7 @@ const ContactUsPage: React.FC<Props> = () => {
           <Col span={12}>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.8079981344804!2d106.66398021377069!3d11.053017357052177!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1d7df763eaf%3A0xf4323e44f2867057!2sEastern%20International%20University!5e0!3m2!1sen!2s!4v1647087588750!5m2!1sen!2s"
-              width="600"
+              width="110%"
               height="450"
             ></iframe>
           </Col>

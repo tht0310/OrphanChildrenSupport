@@ -84,7 +84,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       key: "gender",
       width: "9%",
       columnSearchDataIndex: "dob",
-      render: (gender: string) => (gender === "0" ? "Girl" : "Boy"),
+      render: (gender: string) => (!gender ? "Girl" : "Boy"),
     },
 
     {

@@ -9,18 +9,14 @@ import Dropdown from "./Dropdown";
 const menu = (
   <Menu>
     <Menu.Item>
-      <Link to="/children" className="nav-links">
-        Children
+      <Link to="/childrenSupported" className="nav-links">
+        Children supported
       </Link>
     </Menu.Item>
     <Menu.Item>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.antgroup.com"
-      >
-        2st menu item
-      </a>
+      <Link to="/childrenWaitingForSupport" className="nav-links">
+        Children waiting for support
+      </Link>
     </Menu.Item>
   </Menu>
 );

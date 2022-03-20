@@ -39,9 +39,23 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
+  function convertAddressToString(address: string) {
+    let result = "";
+    if (address) {
+      const tempAddress = address.split("-");
+
+      tempAddress.reverse();
+      tempAddress.map((v) => {
+        result += v + " ";
+      });
+    }
+
+    return result;
+  }
+
   return (
     <>
-      <div className="container">
+      {/* <div className="container">
         <nav className="breadcrumb" aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
@@ -116,6 +130,185 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               </div>
             </Col>
           </Row>
+        </div>
+      </div> */}
+      <div className="children-detail-container">
+        <div className="wrapper row">
+          <div className="preview col-md-6">
+            <div className="preview-pic tab-content">
+              <div className="tab-pane active" id="pic-1">
+                <Image
+                  preview={false}
+                  className="img-item"
+                  src={
+                    children?.id
+                      ? childrenService.getImageUrl(children.id)
+                      : null
+                  }
+                  style={{ width: "500px", height: "400px" }}
+                  fallback={FallBackImage}
+                />
+              </div>
+              <div className="tab-pane" id="pic-2">
+                <Image
+                  preview={false}
+                  className="img-item"
+                  src={
+                    children?.id
+                      ? childrenService.getImageUrl(children.id)
+                      : null
+                  }
+                  fallback={FallBackImage}
+                />
+              </div>
+              <div className="tab-pane" id="pic-3">
+                <Image
+                  preview={false}
+                  className="img-item"
+                  src={
+                    children?.id
+                      ? childrenService.getImageUrl(children.id)
+                      : null
+                  }
+                  fallback={FallBackImage}
+                />
+              </div>
+              <div className="tab-pane" id="pic-4">
+                <Image
+                  preview={false}
+                  className="img-item"
+                  src={
+                    children?.id
+                      ? childrenService.getImageUrl(children.id)
+                      : null
+                  }
+                  fallback={FallBackImage}
+                />
+              </div>
+              <div className="tab-pane" id="pic-5">
+                <Image
+                  preview={false}
+                  className="img-item"
+                  src={
+                    children?.id
+                      ? childrenService.getImageUrl(children.id)
+                      : null
+                  }
+                  fallback={FallBackImage}
+                />
+              </div>
+            </div>
+            <ul className="preview-thumbnail nav nav-tabs">
+              <li className="active">
+                <a data-target="#pic-1" data-toggle="tab">
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                    fallback={FallBackImage}
+                  />
+                </a>
+              </li>
+              <li>
+                <a data-target="#pic-2" data-toggle="tab">
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                    fallback={FallBackImage}
+                  />
+                </a>
+              </li>
+              <li>
+                <a data-target="#pic-3" data-toggle="tab">
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                    fallback={FallBackImage}
+                  />
+                </a>
+              </li>
+              <li>
+                <a data-target="#pic-4" data-toggle="tab">
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                    fallback={FallBackImage}
+                  />
+                </a>
+              </li>
+              <li>
+                <a data-target="#pic-5" data-toggle="tab">
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                    fallback={FallBackImage}
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="details col-md-6">
+            <h3 className="product-title">{children?.fullName}</h3>
+            <div className="rating">
+              <span className="review-no">
+                <span className="sub-title">Birthday: </span>{" "}
+                {displayDate(children?.dob)} |{" "}
+                <span className="sub-title">Gender: </span>{" "}
+                {children?.gender ? "Boy" : "Girl"}
+                <div>
+                  <span className="sub-title">Address:</span>{" "}
+                  {convertAddressToString(children?.publicAddress)}
+                </div>
+              </span>
+            </div>
+            <p className="product-description">
+              <span className="sub-title">Circumstance:</span> All children need
+              a nurturing and supportive family and community to enable them to
+              achieve their full potential. For vulnerable children who are
+              exposed to child abuse and neglect, we need to ensure they are
+              protected and supported so they can have the best chance in life.
+            </p>
+
+            <div className="rating">
+              <span className="sub-title">Need support: </span>
+              <p>
+                <span className="sub-title">Status: </span>{" "}
+              </p>
+            </div>
+
+            <div className="action">
+              <button className="add-to-cart btn btn-default" type="button">
+                Donate
+              </button>
+              <button className="add-to-cart btn btn-primary" type="button">
+                Report
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>

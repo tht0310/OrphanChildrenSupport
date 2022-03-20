@@ -85,6 +85,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   React.useEffect(() => {
     if (data) {
       getImage(data.id);
+    } else {
+      setImageUrl(null);
     }
   }, [data]);
 
@@ -151,20 +153,21 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     values.publicAddress = values.city + "-" + values.province;
     if (data) {
       const tempList = [];
-      // if (values.childrenCategoryGroup) {
-      //   values.childrenCategoryGroup.map((v) => {
-      //     tempList.push({
-      //       supportCategoryId: v,
-      //       childrenProfileId: values.id,
-      //     });
-      //   });
-      //   values.childrenSupportCategories = [];
-      // }
-
+      if (values.childrenCategoryGroup) {
+        values.childrenCategoryGroup.map((v) => {
+          tempList.push({
+            supportCategoryId: v,
+            childrenProfileId: values.id,
+          });
+        });
+        values.childrenProfileSupportCategories = tempList;
+      }
+      console.log(imageFile?.originFileObj);
       const res = await childrenProfileService.updateWithFile(
         values,
         imageFile?.originFileObj
       );
+
       if (!res.hasErrors) {
         message.success("Cập nhật thành công");
         onCancel();
@@ -175,14 +178,17 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         values,
         imageFile?.originFileObj
       );
+
       if (!res.hasErrors) {
         if (values.childrenCategoryGroup) {
+          const tempList = [];
           values.childrenCategoryGroup.map((v) => {
-            childrenSupportCategoryService.addChildrenCategory({
+            tempList.push({
               supportCategoryId: v,
               childrenProfileId: res.value.id,
             });
           });
+          values.childrenProfileSupportCategories = tempList;
         }
 
         message.success("Thêm mới thành công");
@@ -206,9 +212,9 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       guardianPhoneNumber: data.guardianPhoneNumber,
       guardianName: data.guardianName,
     });
-    if (data.childrenSupportCategories) {
+    if (data.childrenProfileSupportCategories) {
       const tempList = [];
-      data.childrenSupportCategories.map((v) => {
+      data.childrenProfileSupportCategories.map((v) => {
         tempList.push(v.supportCategoryId);
       });
       form.setFieldsValue({ childrenCategoryGroup: tempList });
@@ -381,7 +387,10 @@ const ChildrenProfileModal: React.FC<IProps> = ({
                   {supportCategories.map((s) => {
                     return (
                       <Col span={6}>
-                        <Checkbox value={s.id} style={{ lineHeight: "32px" }}>
+                        <Checkbox
+                          value={s.id}
+                          style={{ lineHeight: "32px", paddingRight: "20px" }}
+                        >
                           {s.title}
                         </Checkbox>
                       </Col>

@@ -2,7 +2,8 @@ import DefaultLayout from "@Layouts/DefaultLayout";
 import GuestLayout from "@Layouts/GuestLayout";
 import ChildrenDetailPage from "@Pages/ChildrenDetailPage";
 import AboutUsPage from "@Pages/Guest/AboutUsPage";
-import ChildrenList from "@Pages/Guest/ChildrenList";
+import ChildrenSupportedPage from "@Pages/Guest/ChildrenSupportedPage";
+import ChildrenWaitingForSupportPage from "@Pages/Guest/ChildrenWaitingForSupportPage";
 import ContactUsPage from "@Pages/Guest/ContactUs";
 import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
@@ -65,8 +66,15 @@ export const routes = (
     <AppRoute
       layout={GuestLayout}
       exact
-      path="/children"
-      component={ChildrenList}
+      path="/childrenSupported"
+      component={ChildrenSupportedPage}
+    />
+
+    <AppRoute
+      layout={GuestLayout}
+      exact
+      path="/childrenWaitingForSupport"
+      component={ChildrenWaitingForSupportPage}
     />
 
     <AppRoute

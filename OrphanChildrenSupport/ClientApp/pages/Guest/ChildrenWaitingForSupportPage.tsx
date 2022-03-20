@@ -35,7 +35,7 @@ const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children/detail";
 const supportCategoriesService = new SupportCategoryService();
 
-const ChildrenList: React.FC<Props> = () => {
+const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [childrenProfiles, setChildrenProfiles] = React.useState<
@@ -72,6 +72,17 @@ const ChildrenList: React.FC<Props> = () => {
     }
   }
 
+  function convertAddressToString(address: string) {
+    const tempAddress = address.split("-");
+    let result = "";
+    tempAddress.reverse();
+    tempAddress.map((v) => {
+      result += v + " ";
+    });
+
+    return result;
+  }
+
   return (
     <>
       <Carousel autoplay className="carousel banner-custom">
@@ -91,8 +102,27 @@ const ChildrenList: React.FC<Props> = () => {
           ></h3>
         </div>
       </Carousel>
+
       <div className="content-wrapper-custom">
-        <div className="table-title"></div>
+        <Row>
+          <Col
+            span={12}
+            style={{
+              paddingLeft: "40px",
+              fontSize: "18px",
+            }}
+            className="title-page"
+          >
+            Children waiting for support
+          </Col>
+          <Col span={12}>
+            <Search
+              placeholder="Search by name"
+              style={{ width: 250, float: "right", paddingRight: "20px" }}
+            />
+          </Col>
+        </Row>
+
         <Row>
           <Col span={6}>
             <div className="wrap">
@@ -131,14 +161,6 @@ const ChildrenList: React.FC<Props> = () => {
             </div>
           </Col>
           <Col span={18} className="items">
-            <Row>
-              <Col span={24}>
-                <Search
-                  placeholder="Search by name"
-                  style={{ width: 250, float: "right", paddingRight: "20px" }}
-                />
-              </Col>
-            </Row>
             <List
               grid={{ gutter: 18, column: 4 }}
               dataSource={childrenProfiles}
@@ -157,7 +179,10 @@ const ChildrenList: React.FC<Props> = () => {
                         <h3>{item.fullName}</h3>
                         <p className="descroption">
                           {displayDate(item.dob)} | Gender:
-                          {!item.gender ? " Boy" : " Girl"}
+                          {item.gender ? " Boy" : " Girl"}
+                        </p>
+                        <p className="descroption">
+                          {convertAddressToString(item.publicAddress)}
                         </p>
                       </div>
                     </div>
@@ -173,4 +198,4 @@ const ChildrenList: React.FC<Props> = () => {
   );
 };
 
-export default ChildrenList;
+export default ChildrenWaitingForSupportPage;

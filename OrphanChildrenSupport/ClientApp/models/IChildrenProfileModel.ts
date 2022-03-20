@@ -17,6 +17,6 @@ export interface IChildrenProfileModel extends IEngineEntity {
         city?:string,
         province?:string,
         houseNumber?:string
-        childrenSupportCategories?:IChildrenSupportCategoryModel[]
+        childrenProfileSupportCategories?:IChildrenSupportCategoryModel[]
 }
 

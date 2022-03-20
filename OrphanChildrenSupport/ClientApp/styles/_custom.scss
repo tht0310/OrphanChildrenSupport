@@ -286,7 +286,7 @@ img {
     margin: 0 auto;
   }
   .items {
-    margin-top: 25px;
+    margin-top: 21px;
   }
 
   /*Menu !!!!*/
@@ -304,8 +304,8 @@ img {
   }
   .item {
     vertical-align: top;
-    width: 170px;
-    height: 190px;
+    width: 175px;
+    height: 195px;
     margin: 8px;
     background: #fefefe;
     display: inline-block;
@@ -366,6 +366,8 @@ img {
   img {
     vertical-align: top;
     position: relative;
+    width: 100%;
+    height: auto;
   }
   .item:hover {
     transform: scale(1.05);
@@ -384,7 +386,6 @@ img {
     margin: 0;
     text-align: center;
     font-size: 11px;
-    font-style: italic;
     color: grey;
     font-family: sans-serif;
   }
