@@ -62,7 +62,7 @@ namespace OrphanChildrenSupport.Services
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Add new ChildrenProfile successfully with Id: {childrenProfile.Id}");
                     childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                 }
                 catch (Exception ex)
@@ -91,7 +91,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
 
                     childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
 
@@ -107,7 +107,7 @@ namespace OrphanChildrenSupport.Services
                     _logger.LogDebug($"{loggerHeader} - Update ChildrenProfile successfully with Id: {childrenProfile.Id}");
 
                     childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                 }
                 catch (Exception ex)
@@ -138,7 +138,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
                     if (removeFromDB)
                     {
                         unitOfWork.ChildrenProfileRepository.Remove(childrenProfile);
@@ -172,11 +172,11 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<ChildrenProfileResource>> GetChildrenProfile(long id)
+        public async Task<ApiResponse<ChildrenProfileResponse>> GetChildrenProfile(long id)
         {
             const string loggerHeader = "GetChildrenProfile";
 
-            var apiResponse = new ApiResponse<ChildrenProfileResource>();
+            var apiResponse = new ApiResponse<ChildrenProfileResponse>();
 
             _logger.LogDebug($"{loggerHeader} - Start to get ChildrenProfile with Id: {id}");
 
@@ -185,8 +185,8 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
+                    apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResponse>(childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - Get ChildrenProfile successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
@@ -205,11 +205,11 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<QueryResultResource<ChildrenProfileResource>>> GetChildrenProfiles(QueryResource queryObj)
+        public async Task<ApiResponse<QueryResultResource<ChildrenProfileResponse>>> GetChildrenProfiles(QueryResource queryObj)
         {
             const string loggerHeader = "GetChildrenProfiles";
 
-            var apiResponse = new ApiResponse<QueryResultResource<ChildrenProfileResource>>();
+            var apiResponse = new ApiResponse<QueryResultResource<ChildrenProfileResponse>>();
             var pagingSpecification = new PagingSpecification(queryObj);
 
             _logger.LogDebug($"{loggerHeader} - Start to get ChildrenProfiles with");
@@ -222,12 +222,13 @@ namespace OrphanChildrenSupport.Services
                                                                             && ((!queryObj.Gender.HasValue ? (d.Gender == true || d.Gender == false) : d.Gender == queryObj.Gender))
                                                                             && (!queryObj.FromAge.HasValue || d.Age >= queryObj.FromAge)
                                                                             && (!queryObj.ToAge.HasValue || d.Age <= queryObj.ToAge)
-                                                                            && (!queryObj.ChildrenProfileStatus.HasValue || d.Status == queryObj.ChildrenProfileStatus),
+                                                                            && (!queryObj.ChildrenProfileStatus.HasValue || d.Status == queryObj.ChildrenProfileStatus)
+                                                                            && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory),
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
-                    apiResponse.Data = _mapper.Map<QueryResult<ChildrenProfile>, QueryResultResource<ChildrenProfileResource>>(query);
+                    apiResponse.Data = _mapper.Map<QueryResult<ChildrenProfile>, QueryResultResource<ChildrenProfileResponse>>(query);
                     _logger.LogDebug($"{loggerHeader} - Get ChildrenProfiles successfully");
                 }
                 catch (Exception ex)
@@ -291,7 +292,7 @@ namespace OrphanChildrenSupport.Services
                         }
 
                         var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
                         var oldPath = childrenProfile.ImagePath;
                         _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
                         if (File.Exists(oldPath))
@@ -354,7 +355,7 @@ namespace OrphanChildrenSupport.Services
                     }
 
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
 
                     var oldPath = childrenProfile.ImagePath;
                     _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
@@ -397,7 +398,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
                     var image = File.OpenRead(childrenProfile.ImagePath);
                     apiResponse.Data = image;
                     _logger.LogDebug($"{loggerHeader} - Get ChildrenProfileImage successfully with Id: {childrenProfile.Id}");
