@@ -25,12 +25,17 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         private IAsyncRepository<ChildrenProfile> _childrenProfileRepository;
         private IAsyncRepository<SupportCategory> _supportCategoryRepository;
         private IAsyncRepository<ChildrenProfileSupportCategory> _childrenProfileSupportCategoryRepository;
+        private IAsyncRepository<Support> _supportRepository;
+        private IAsyncRepository<SupportDetail> _supportDetailRepository;
         private IAsyncRepository<Account> _accountRepository;
 
         public IAsyncRepository<PersonalProfile> PersonalProfileRepository => _personalProfileRepository ?? (_personalProfileRepository = new EfRepository<PersonalProfile>(_context));
         public IAsyncRepository<ChildrenProfile> ChildrenProfileRepository => _childrenProfileRepository ?? (_childrenProfileRepository = new EfRepository<ChildrenProfile>(_context));
         public IAsyncRepository<SupportCategory> SupportCategoryRepository => _supportCategoryRepository ?? (_supportCategoryRepository = new EfRepository<SupportCategory>(_context));
         public IAsyncRepository<ChildrenProfileSupportCategory> ChildrenProfileSupportCategoryRepository => _childrenProfileSupportCategoryRepository ?? (_childrenProfileSupportCategoryRepository = new EfRepository<ChildrenProfileSupportCategory>(_context));
+        public IAsyncRepository<Support> SupportRepository => _supportRepository ?? (_supportRepository = new EfRepository<Support>(_context));
+        public IAsyncRepository<SupportDetail> SupportDetailRepository => _supportDetailRepository ?? (_supportDetailRepository = new EfRepository<SupportDetail>(_context));
+
         public IAsyncRepository<Account> AccountRepository => _accountRepository ?? (_accountRepository = new EfRepository<Account>(_context));
         #endregion
 

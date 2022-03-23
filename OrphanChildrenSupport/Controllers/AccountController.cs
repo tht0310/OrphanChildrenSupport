@@ -10,14 +10,15 @@ using OrphanChildrenSupport.Models.Accounts;
 namespace OrphanChildrenSupport.Controllers
 {
     [ApiVersion("1.0")]
+    [Route("api/accounts")]
+    [Route("api/v{version:apiVersion}/accounts")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class AccountsController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
-        public AccountsController(
+        public AccountController(
             IAccountService accountService,
             IMapper mapper)
         {

@@ -17,6 +17,8 @@ namespace OrphanChildrenSupport.Infrastructure.Data
         public DbSet<PersonalProfile> PersonalProfiles { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
         public DbSet<SupportCategory> SupportCategories { get; set; }
+        public DbSet<Support> Supports { get; set; }
+        public DbSet<SupportDetail> SupportDetails { get; set; }
         public DbSet<Account> Accounts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                     => optionsBuilder.LogTo(Console.WriteLine);
@@ -29,6 +31,8 @@ namespace OrphanChildrenSupport.Infrastructure.Data
             builder.Entity<PersonalProfile>().ToTable("PersonalProfile");
             builder.Entity<ChildrenProfile>().ToTable("ChildrenProfile");
             builder.Entity<SupportCategory>().ToTable("SupportCategory");
+            builder.Entity<Support>().ToTable("Support");
+            builder.Entity<SupportDetail>().ToTable("SupportDetail");
             builder.Entity<Account>().ToTable("Account");
         }
     }
