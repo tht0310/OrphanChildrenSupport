@@ -10,6 +10,6 @@ namespace OrphanChildrenSupport.DataContracts
         public long ChildrenProfileId { get; set; }
         [Required]
         public long SupportCategoryId { get; set; }
-        public string SupportCategoryTitle { get; set; }
+        // public string SupportCategoryTitle { get; set; }
     }
 }

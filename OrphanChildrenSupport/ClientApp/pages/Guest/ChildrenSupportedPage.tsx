@@ -1,5 +1,7 @@
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
+import ChildrenProfileService, {
+  ChildrenParams,
+} from "@Services/ChildrenProfileService";
 import {
   Avatar,
   Button,
@@ -14,6 +16,9 @@ import {
   Image,
   Checkbox,
   Carousel,
+  Form,
+  Input,
+  Slider,
 } from "antd";
 import Meta from "antd/lib/card/Meta";
 import * as React from "react";
@@ -27,6 +32,9 @@ import FallBackImage from "@Images/children-default.png";
 import Search from "antd/lib/input/Search";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import SupportCategoryService from "@Services/SupportCategoryService";
+import { FilterParams } from "@Models/IFilterType";
+import { DataServices } from "@Services/DataServices";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
@@ -41,6 +49,8 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
+  const [form] = Form.useForm();
+  const [filterParams, setFilterParams] = React.useState<FilterParams>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   useEffect(() => {
     document.title = "Children list";
@@ -52,10 +62,15 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
 
   React.useEffect(() => {
     fetchSupportCategories();
+    fetchData();
   }, []);
 
+  React.useEffect(() => {
+    fetchChildrenProfile(filterParams);
+  }, [filterParams]);
+
   async function fetchData() {
-    fetchChildrenProfile();
+    fetchChildrenProfile({ childrenProfileStatus: 0 });
   }
 
   async function fetchSupportCategories() {
@@ -65,11 +80,23 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
     }
   }
 
-  async function fetchChildrenProfile() {
-    const dataRes = await childrenProfileService.getAll();
+  async function fetchChildrenProfile(filterParams) {
+    const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
     }
+  }
+
+  async function onSearchGender(value) {
+    fetchChildrenProfile({ gender: value, childrenProfileStatus: 0 });
+  }
+
+  async function onSearchAge(value) {
+    fetchChildrenProfile({
+      fromAge: value[0],
+      toAge: value[1],
+      childrenProfileStatus: 0,
+    });
   }
 
   function convertAddressToString(address: string) {
@@ -102,98 +129,126 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
           ></h3>
         </div>
       </Carousel>
+      <Form form={form} name="filter-form" autoComplete="off">
+        <div className="content-wrapper-custom">
+          <Row>
+            <Col
+              span={12}
+              style={{
+                paddingLeft: "40px",
+                fontSize: "18px",
+              }}
+              className="title-page"
+            >
+              Children supported
+            </Col>
+            <Col span={12}>
+              <Input
+                placeholder="Seach by name"
+                style={{ width: "40%", float: "right", paddingRight: "10px" }}
+                prefix={<SearchOutlined className="site-form-item-icon" />}
+                onChange={(e) => {
+                  //onSearch(e.target.value, "fullNameOrEmail");
+                }}
+              />
+            </Col>
+          </Row>
 
-      <div className="content-wrapper-custom">
-        <Row>
-          <Col
-            span={12}
-            style={{
-              paddingLeft: "40px",
-              fontSize: "18px",
-            }}
-            className="title-page"
-          >
-            Children supported
-          </Col>
-          <Col span={12}>
-            <Search
-              placeholder="Search by name"
-              style={{ width: 250, float: "right", paddingRight: "20px" }}
-            />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col span={6}>
-            <div className="wrap">
-              <div className="menu">
-                <div className="mini-menu">
-                  <ul>
-                    <li className="sub">
-                      <a href="#">All</a>
-                    </li>
-                    <li className="sub">
-                      <a href="#">Boys</a>
-                    </li>
-                    <li className="sub">
-                      <a href="#">Girls</a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="menu-colors menu-item">
-                  <div className="header-item">Birthday</div>
-                  <RangePicker picker="year" style={{ margin: "5%" }} />
-                </div>
-                <div className="menu-size menu-item">
-                  <div className="header-item ">Filter By</div>
-                  <Checkbox.Group
-                    style={{ width: "100%" }}
-                    className="checkbox-container"
-                  >
-                    {supportCategories.map((a) => (
-                      <Row>
-                        <Checkbox value={a.title}>{a.title}</Checkbox>
-                      </Row>
-                    ))}
-                  </Checkbox.Group>
+          <Row>
+            <Col span={6}>
+              <div className="wrap">
+                <div className="menu">
+                  <div className="mini-menu">
+                    <ul>
+                      <li className="sub">
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => onSearchGender(null)}
+                        >
+                          All
+                        </a>
+                      </li>
+                      <li className="sub">
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => onSearchGender(true)}
+                        >
+                          Boys
+                        </a>
+                      </li>
+                      <li className="sub">
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => onSearchGender(false)}
+                        >
+                          Girls
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="menu-colors menu-item">
+                    <div className="header-item">Age</div>
+                    <Slider
+                      range
+                      defaultValue={[0, 100]}
+                      onChange={(e) => onSearchAge(e)}
+                    />
+                  </div>
+                  <div className="menu-size menu-item">
+                    <div className="header-item ">Filter By</div>
+                    <Checkbox.Group
+                      name="childrenCategory"
+                      style={{ width: "100%" }}
+                      className="checkbox-container"
+                    >
+                      {supportCategories.map((a) => (
+                        <Row>
+                          <Checkbox value={a.title}>{a.title}</Checkbox>
+                        </Row>
+                      ))}
+                    </Checkbox.Group>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Col>
-          <Col span={18} className="items">
-            <List
-              grid={{ gutter: 18, column: 4 }}
-              dataSource={childrenProfiles}
-              renderItem={(item) => (
-                <List.Item>
-                  <Link to={`${childrenDetailUrl}/${item.id}`} target="_blank">
-                    <div className="item">
-                      <Image
-                        preview={false}
-                        className="img-item"
-                        src={childrenProfileService.getImageUrl(item.id)}
-                        fallback={FallBackImage}
-                        alt={"img" + item.id}
-                      />
-                      <div className="info">
-                        <h3>{item.fullName}</h3>
-                        <p className="descroption">
-                          {displayDate(item.dob)} | Gender:
-                          {item.gender ? " Boy" : " Girl"}
-                        </p>
-                        <p className="descroption">
-                          {convertAddressToString(item.publicAddress)}
-                        </p>
+            </Col>
+            <Col span={18} className="items">
+              <List
+                grid={{ gutter: 18, column: 4 }}
+                dataSource={childrenProfiles}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Link
+                      to={`${childrenDetailUrl}/${item.id}`}
+                      target="_blank"
+                    >
+                      <div className="item">
+                        <Image
+                          preview={false}
+                          className="img-item"
+                          src={childrenProfileService.getImageUrl(item.id)}
+                          fallback={FallBackImage}
+                          alt={"img" + item.id}
+                        />
+                        <div className="info">
+                          <h3>{item.fullName}</h3>
+                          <p className="descroption">
+                            {displayDate(item.dob)} | Gender:
+                            {item.gender ? " Boy" : " Girl"}
+                          </p>
+                          <p className="descroption">
+                            {convertAddressToString(item.publicAddress)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </List.Item>
-              )}
-            />
-          </Col>
-        </Row>
-        <div className="items"></div>
-      </div>
+                    </Link>
+                  </List.Item>
+                )}
+              />
+            </Col>
+          </Row>
+          <div className="items"></div>
+        </div>
+      </Form>
     </>
   );
 };

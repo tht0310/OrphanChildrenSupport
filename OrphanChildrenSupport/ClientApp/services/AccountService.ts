@@ -1,4 +1,5 @@
-﻿import Result from "@Core/Result";
+﻿import { IRegisterModel } from './../models/ILoginModel';
+import Result from "@Core/Result";
 import { ILoginModel } from "@Models/ILoginModel";
 import { ServiceBase } from "@Core/ServiceBase";
 import SessionManager, { IServiceUser } from "@Core/session";
@@ -29,6 +30,14 @@ export default class AccountService extends ServiceBase {
             SessionManager.setServiceUser(null);
         }
 
+        return result;
+    }
+    public async register(model: IRegisterModel) : Promise<Result<{}>> {   
+        var result = await this.requestJson<{}>({
+            url: "api/Accounts/register",
+            method: "POST",
+            data: model
+        });
         return result;
     }
 }

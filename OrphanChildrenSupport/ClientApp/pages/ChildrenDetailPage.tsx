@@ -7,17 +7,27 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { Item } from "rc-menu";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
 import FallBackImage from "@Images/children-default.png";
+import SupportCategoryService from "@Services/SupportCategoryService";
+import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 type Props = RouteComponentProps<{ id: string }>;
+
 const childrenService = new ChildrenProfileService();
+const supportCategoriesService = new SupportCategoryService();
 
 const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [children, setChildren] = React.useState<IChildrenProfileModel>();
-
+  const [supportCategories, setSupportCategories] = React.useState<
+    ISupportCategoryModel[]
+  >([]);
   React.useEffect(() => {
     document.title = "Children Detail";
-    fetchData();
+    fetchSupportCategories();
   }, []);
+
+  React.useEffect(() => {
+    fetchData();
+  }, [supportCategories]);
 
   async function fetchData() {
     try {
@@ -37,6 +47,30 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     if (!res.hasErrors) {
       setChildren(res.value);
     }
+  }
+
+  async function fetchSupportCategories() {
+    const dataRes = await supportCategoriesService.getAll();
+    if (!dataRes.hasErrors) {
+      setSupportCategories(dataRes.value.items);
+    }
+  }
+
+  function searchSupprtNameById(id) {
+    let result = "";
+    supportCategories.map((v) => {
+      v.id === id ? (result = v.title) : "";
+    });
+    return result;
+  }
+
+  function getSupport(support) {
+    let result = "";
+    support.map((v) => {
+      result += searchSupprtNameById(v.supportCategoryId) + " ";
+    });
+    result = result.replace(" ", ", ");
+    return result;
   }
 
   function convertAddressToString(address: string) {
@@ -286,24 +320,29 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               </span>
             </div>
             <p className="product-description">
-              <span className="sub-title">Circumstance:</span> All children need
-              a nurturing and supportive family and community to enable them to
-              achieve their full potential. For vulnerable children who are
-              exposed to child abuse and neglect, we need to ensure they are
-              protected and supported so they can have the best chance in life.
+              <span className="sub-title">Circumstance:</span>{" "}
+              {children?.circumstance}
             </p>
 
             <div className="rating">
-              <span className="sub-title">Need support: </span>
+              <span className="sub-title">
+                Need support:{" "}
+                {children?.childrenProfileSupportCategories
+                  ? getSupport(children.childrenProfileSupportCategories)
+                  : ""}
+              </span>
               <p>
                 <span className="sub-title">Status: </span>{" "}
+                {children?.status ? "Supported" : "Waiting for support"}{" "}
               </p>
             </div>
 
             <div className="action">
-              <button className="add-to-cart btn btn-default" type="button">
-                Donate
-              </button>
+              {children?.status && (
+                <button className="add-to-cart btn btn-default" type="button">
+                  Donate
+                </button>
+              )}
               <button className="add-to-cart btn btn-primary" type="button">
                 Report
               </button>

@@ -162,7 +162,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         });
         values.childrenProfileSupportCategories = tempList;
       }
-      console.log(imageFile?.originFileObj);
+      console.log(values);
       const res = await childrenProfileService.updateWithFile(
         values,
         imageFile?.originFileObj
@@ -207,8 +207,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       city: data.detailAddress.split("-")[0],
       province: data.detailAddress.split("-")[1],
       houseNumber: data.detailAddress.split("-")[2],
-      description: data.description,
       circumstance: data.circumstance,
+      status: data.status + "",
       guardianPhoneNumber: data.guardianPhoneNumber,
       guardianName: data.guardianName,
     });
@@ -369,8 +369,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
             </Row>
 
             <Form.Item
-              name="description"
-              label="Description"
+              name="circumstance"
+              label="Circumstance"
               className="label-custom"
               {...inlineFormLayout}
             >
@@ -400,19 +400,17 @@ const ChildrenProfileModal: React.FC<IProps> = ({
               </Checkbox.Group>
             </Form.Item>
             <Form.Item
-              label="Circumstance"
-              name="circumstance"
+              label="Status"
+              name="status"
               {...inlineFormLayout}
               style={{ marginTop: "30px" }}
-              rules={[
-                { required: true, message: "Please enter circumstance." },
-              ]}
+              rules={[{ required: true, message: "Please enter status." }]}
             >
               <Select>
-                <Select.Option value="Waiting for support" key="1">
+                <Select.Option value="0" key="1">
                   Waiting for support
                 </Select.Option>
-                <Select.Option value="Supported" key="0">
+                <Select.Option value="1" key="0">
                   Supported
                 </Select.Option>
               </Select>

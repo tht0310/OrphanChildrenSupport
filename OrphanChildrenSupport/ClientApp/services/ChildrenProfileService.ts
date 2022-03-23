@@ -7,11 +7,23 @@ import { RcFile } from "antd/lib/upload";
 import { IQueryResult } from "@Models/IQueryResult";
 import { string } from "prop-types";
 
+type Params = {
+  fullNameOrEmail?: string;
+  childrenProfileStatus?: number;
+  isNeedToBeAdopted?: string;
+  gender?: boolean;
+  fromAge?: number;
+  toAge?: number;
+};
+
+export type ChildrenParams = Params & IFilterType;
+
 export default class ChildrenProfileService extends ServiceBase {
-  public async getAll(): Promise<Result<IQueryResult<IChildrenProfileModel>>> {
+  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IChildrenProfileModel>>> {
     const result = await this.requestJson<IQueryResult<IChildrenProfileModel>>({
       url: `/api/childrenProfiles`,
       method: "GET",
+      data: param
     });
     return result;
   }

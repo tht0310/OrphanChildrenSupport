@@ -3,7 +3,6 @@ import { IEngineEntity } from "./IEngineEntity";
 
 export interface IChildrenProfileModel extends IEngineEntity {
         fullName: string,
-        description:string,
         gender: boolean,
         dob: Date | null,
         address: string,

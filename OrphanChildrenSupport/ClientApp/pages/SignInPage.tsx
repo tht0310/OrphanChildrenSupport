@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Facebook, Google, Twitter } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 
 export default function SignIn() {
   return (
@@ -57,9 +58,9 @@ export default function SignIn() {
                 </button>
                 <p className="small fw-bold mt-2 pt-1 mb-0 text-register">
                   Don't have an account?{" "}
-                  <a href="#!" className="link-danger">
+                  <Link to="/register" className="link-danger">
                     Register
-                  </a>
+                  </Link>
                 </p>
               </div>
             </form>

@@ -9,6 +9,7 @@ import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
 import LoginPage from "@Pages/LoginPage";
 import PersonalProfilePage from "@Pages/PersonalProfilePage";
+import RegisterPage from "@Pages/RegisterPage";
 import SignInPage from "@Pages/SignInPage";
 import SupportCategoryPage from "@Pages/SupportCategoryPage";
 import * as React from "react";
@@ -87,6 +88,11 @@ export const routes = (
       layout={AuthorizedLayout}
       path="/admin/supportCategory"
       component={SupportCategoryPage}
+    />
+    <AppRoute
+      layout={DefaultLayout}
+      path="/register"
+      component={RegisterPage}
     />
   </Switch>
 );

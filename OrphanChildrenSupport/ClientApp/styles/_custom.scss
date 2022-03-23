@@ -833,3 +833,13 @@ section {
     letter-spacing: 1px;
   }
 }
+.title {
+  text-align: center !important;
+  padding-bottom: 15px !important;
+}
+.h-custom .ant-form {
+  padding: 0 !important;
+  .col-xl-4 {
+    width: 60.33333% !important;
+  }
+}
