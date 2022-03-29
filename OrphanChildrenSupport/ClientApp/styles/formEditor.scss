@@ -390,3 +390,14 @@
 .sub-title {
   font-weight: 600;
 }
+.message-layout {
+  background-color: white;
+  text-align: center !important;
+  min-height: 180px;
+  margin-bottom: 5%;
+  padding-top: 30px;
+  padding-bottom: 50px;
+  h4 {
+    font-size: 20px !important;
+  }
+}

@@ -78,14 +78,14 @@ const PersonalProfileModal: React.FC<IProps> = ({
     if (data) {
       const res = await personalProfileService.update(values);
       if (!res.hasErrors) {
-        message.success("Cập nhật thành công");
+        message.success(`${values.fullName} has been successfully updated`);
         onCancel();
         fetchData();
       }
     } else {
       const res = await personalProfileService.add(values);
       if (!res.hasErrors) {
-        message.success("Thêm mới thành công");
+        message.success(`${values.fullName} has been successfully added`);
         onCancel();
         fetchData();
       }

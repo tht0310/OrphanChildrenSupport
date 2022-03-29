@@ -369,7 +369,7 @@ namespace OrphanChildrenSupport.Services
             string message;
             if (!string.IsNullOrEmpty(origin))
             {
-                var resetUrl = $"{origin}/account/reset-password?token={account.ResetToken}";
+                var resetUrl = $"{origin}/accounts/reset-password?token={account.ResetToken}";
                 message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                              <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
             }

@@ -338,7 +338,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             </div>
 
             <div className="action">
-              {children?.status && (
+              {!children?.status && (
                 <button className="add-to-cart btn btn-default" type="button">
                   Donate
                 </button>

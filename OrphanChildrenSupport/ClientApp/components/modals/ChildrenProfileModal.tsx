@@ -169,7 +169,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       );
 
       if (!res.hasErrors) {
-        message.success("Cập nhật thành công");
+        message.success(`${values.fullName} has been successfully updated`);
         onCancel();
         fetchData();
       }
@@ -191,7 +191,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
           values.childrenProfileSupportCategories = tempList;
         }
 
-        message.success("Thêm mới thành công");
+        message.success(`${values.fullName} has been successfully added`);
         onCancel();
         fetchData();
       }

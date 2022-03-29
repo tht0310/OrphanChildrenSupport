@@ -14,7 +14,7 @@ const GuestHomePage: React.FC<Props> = () => {
       <Slider />
       <Section />
       <Page2 />
-      <Page1 />
+      {/* <Page1 /> */}
       <Block children={null} />
     </div>
   );

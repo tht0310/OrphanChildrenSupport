@@ -38,7 +38,7 @@ const Section: FC<Props> = ({ children }: Props) => {
   }
   return (
     <div className="container">
-      <h3 className="topic-name">Children</h3>
+      <h3 className="topic-name">Our children</h3>
       <List
         grid={{ gutter: 18, column: 4 }}
         dataSource={childrenProfiles}

@@ -13,7 +13,7 @@ const Slider: FC<Props> = () => {
         <div>
           <h3
             style={{
-              height: "70%",
+              height: "80%",
               fontSize: "60px",
               color: "#fff",
               lineHeight: "400px",

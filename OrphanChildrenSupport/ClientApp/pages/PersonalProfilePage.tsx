@@ -156,7 +156,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
   async function onDelete(id: number) {
     const res = await childrenProfileService.delete(id);
     if (!res.hasErrors) {
-      message.success("Xóa tài khoản thành công");
+      message.success(`Children deleted sucessfully`);
       fetchData();
     }
   }
@@ -193,13 +193,13 @@ const ChildrenProfilePage: React.FC<Props> = () => {
             <div className="option-pannel">
               <Input.Group compact>
                 <Select
-                  defaultValue="Name"
+                  defaultValue="fullName"
                   style={{ width: "27%" }}
                   onChange={(e) => {
                     setFilterBy(e);
                   }}
                 >
-                  <Select.Option value="fullName">Name</Select.Option>
+                  <Select.Option value="fullName">FullName</Select.Option>
                   <Select.Option value="address">Address</Select.Option>
                   <Select.Option value="status">Status</Select.Option>
                   <Select.Option value="gender">Gender</Select.Option>

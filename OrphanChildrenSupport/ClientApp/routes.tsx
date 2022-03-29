@@ -7,16 +7,18 @@ import ChildrenWaitingForSupportPage from "@Pages/Guest/ChildrenWaitingForSuppor
 import ContactUsPage from "@Pages/Guest/ContactUs";
 import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
-import LoginPage from "@Pages/LoginPage";
 import PersonalProfilePage from "@Pages/PersonalProfilePage";
 import RegisterPage from "@Pages/RegisterPage";
-import SignInPage from "@Pages/SignInPage";
+import GuestLoginPage from "@Pages/GuestLoginPage";
 import SupportCategoryPage from "@Pages/SupportCategoryPage";
 import * as React from "react";
 import { Switch } from "react-router-dom";
 import AppRoute from "./components/shared/AppRoute";
 import AuthorizedLayout from "./layouts/AuthorizedLayout";
 import Dashboard from "./pages/Dashboard";
+import VerifyPage from "@Pages/VerifyPage";
+import ResetPasswordPage from "@Pages/ResetPasswordPage";
+import ForgotPasswordPage from "@Pages/ForgotPasswordPage";
 
 export const routes = (
   <Switch>
@@ -33,7 +35,6 @@ export const routes = (
       component={Dashboard}
     />
     <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage} />
-
     <AppRoute
       layout={AuthorizedLayout}
       exact
@@ -59,10 +60,10 @@ export const routes = (
       component={ContactUsPage}
     />
     <AppRoute
-      layout={DefaultLayout}
+      layout={GuestLayout}
       exact
-      path="/signin"
-      component={SignInPage}
+      path="/login"
+      component={GuestLoginPage}
     />
     <AppRoute
       layout={GuestLayout}
@@ -70,29 +71,43 @@ export const routes = (
       path="/childrenSupported"
       component={ChildrenSupportedPage}
     />
-
     <AppRoute
       layout={GuestLayout}
       exact
       path="/childrenWaitingForSupport"
       component={ChildrenWaitingForSupportPage}
     />
-
     <AppRoute
       layout={GuestLayout}
       path="/children/detail/:id"
       component={ChildrenDetailPage}
     />
-
     <AppRoute
       layout={AuthorizedLayout}
       path="/admin/supportCategory"
       component={SupportCategoryPage}
     />
+    <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
     <AppRoute
-      layout={DefaultLayout}
-      path="/register"
-      component={RegisterPage}
+      layout={AuthorizedLayout}
+      path="/admin/supportCategory"
+      component={SupportCategoryPage}
+    />
+    <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
+    <AppRoute
+      layout={GuestLayout}
+      path="/accounts/verify-email"
+      component={VerifyPage}
+    />
+    <AppRoute
+      layout={GuestLayout}
+      path="/forgotPassword"
+      component={ForgotPasswordPage}
+    />
+    <AppRoute
+      layout={GuestLayout}
+      path="/accounts/reset-password"
+      component={ResetPasswordPage}
     />
   </Switch>
 );

@@ -57,7 +57,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       dataIndex: "title",
       key: "fullName",
       ellipsis: true,
-      width: "45%",
+      width: "40%",
       columnSearchDataIndex: "fullName",
       render: (text: string) => (
         <a className="item-title" onClick={toggleSupportCategoryModal}>
@@ -114,7 +114,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
   async function onDelete(id: number) {
     const res = await supportCategoriesService.delete(id);
     if (!res.hasErrors) {
-      message.success("Xóa tài khoản thành công");
+      message.success("Category deleted sucessfully");
       fetchData();
     }
   }
@@ -126,6 +126,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
 
   async function onSearch() {
     const value: IFilterType = { [filterBy]: filterValue };
+
     const res = await supportCategoriesService.search(value);
     if (!res.hasErrors) {
       setSupportCategories(res.value.items);
@@ -150,13 +151,13 @@ const SupportCategoryPage: React.FC<Props> = () => {
             <div className="option-pannel">
               <Input.Group compact>
                 <Select
-                  defaultValue="Name"
+                  defaultValue="title"
                   style={{ width: "27%" }}
                   onChange={(e) => {
                     setFilterBy(e);
                   }}
                 >
-                  <Select.Option value="fullName">Name</Select.Option>
+                  <Select.Option value="title">Title</Select.Option>
                 </Select>
                 <Input
                   style={{ width: "50%" }}

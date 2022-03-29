@@ -70,7 +70,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   }, [filterParams]);
 
   async function fetchData() {
-    fetchChildrenProfile({ childrenProfileStatus: 0 });
+    fetchChildrenProfile({ childrenProfileStatus: 1 });
   }
 
   async function fetchSupportCategories() {
@@ -88,7 +88,11 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   }
 
   async function onSearchGender(value) {
-    fetchChildrenProfile({ gender: value, childrenProfileStatus: 0 });
+    fetchChildrenProfile({ gender: value, childrenProfileStatus: 1 });
+  }
+
+  async function onSearchFullName(value) {
+    fetchChildrenProfile({ fullName: value, childrenProfileStatus: 1 });
   }
 
   async function onSearchAge(value) {
@@ -148,7 +152,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                 style={{ width: "40%", float: "right", paddingRight: "10px" }}
                 prefix={<SearchOutlined className="site-form-item-icon" />}
                 onChange={(e) => {
-                  //onSearch(e.target.value, "fullNameOrEmail");
+                  onSearchFullName(e.target.value);
                 }}
               />
             </Col>

@@ -4,6 +4,7 @@ import {
   cilBaby,
   cilBell,
   cilCalculator,
+  cilGrid,
   cilPeople,
   cilPhone,
   cilSettings,
@@ -44,6 +45,12 @@ const navigations = [
     name: "Children",
     to: "/admin/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Support Category",
+    to: "/admin/supportCategory",
+    icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
 
   {

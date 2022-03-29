@@ -79,14 +79,14 @@ const SupportCategoryModal: React.FC<IProps> = ({
     if (data) {
       const res = await supportCategoriesService.update(values);
       if (!res.hasErrors) {
-        message.success("Cập nhật thành công");
+        message.success(`${values.title} has been successfully updated`);
         onCancel();
         fetchData();
       }
     } else {
       const res = await supportCategoriesService.add(values);
       if (!res.hasErrors) {
-        message.success("Thêm mới thành công");
+        message.success(`${values.title} has been successfully added`);
         onCancel();
         fetchData();
       }
