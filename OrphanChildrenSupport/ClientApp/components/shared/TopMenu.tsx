@@ -13,6 +13,13 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from "@coreui/icons";
+import { Avatar, Badge } from "antd";
+import {
+  BellOutlined,
+  MailOutlined,
+  MessageOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 interface Props extends RouteComponentProps {
   isCollapsed: boolean;
@@ -20,20 +27,15 @@ interface Props extends RouteComponentProps {
 }
 
 const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
-  
-
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
-        <CHeaderToggler
-          className="ps-1"
-          onClick={() => toggle()}
-        >
+        <CHeaderToggler className="ps-1" onClick={() => toggle()}>
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
-            <CNavLink to="/dashboard" component={NavLink}>
+            <CNavLink to="/admin/dashboard" component={NavLink}>
               Dashboard
             </CNavLink>
           </CNavItem>
@@ -46,18 +48,34 @@ const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
+            <CNavLink href="#" className="nav-item-2">
+              <Badge count={1}>
+                <BellOutlined
+                  style={{
+                    fontSize: "130%",
+                    color: "rgba(44, 56, 74, 0.681)",
+                    marginRight: "2px",
+                  }}
+                />
+              </Badge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
+            <CNavLink href="#" className="nav-item-2">
+              <Badge count={4}>
+                <MailOutlined
+                  style={{
+                    fontSize: "130%",
+                    color: "rgba(44, 56, 74, 0.681)",
+                    marginRight: "2px",
+                  }}
+                />
+              </Badge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
+            <CNavLink href="#" className="avartar">
+              <Avatar style={{ backgroundColor: "#f56a00" }}>N</Avatar>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

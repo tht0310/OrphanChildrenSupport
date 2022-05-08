@@ -19,6 +19,8 @@ import Dashboard from "./pages/Dashboard";
 import VerifyPage from "@Pages/VerifyPage";
 import ResetPasswordPage from "@Pages/ResetPasswordPage";
 import ForgotPasswordPage from "@Pages/ForgotPasswordPage";
+import ExamplePage from "@Pages/ExamplesPage";
+import AccountDetailPage from "@Pages/AccountDetailPage";
 
 export const routes = (
   <Switch>
@@ -38,7 +40,7 @@ export const routes = (
     <AppRoute
       layout={AuthorizedLayout}
       exact
-      path="/admin/children"
+      path="/admin/usermanagement/children"
       component={PersonalProfilePage}
     />
     <AppRoute
@@ -84,15 +86,11 @@ export const routes = (
     />
     <AppRoute
       layout={AuthorizedLayout}
-      path="/admin/supportCategory"
+      path="/admin/usermanagement/supportcategory"
       component={SupportCategoryPage}
     />
     <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/supportCategory"
-      component={SupportCategoryPage}
-    />
+
     <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
     <AppRoute
       layout={GuestLayout}
@@ -109,5 +107,11 @@ export const routes = (
       path="/accounts/reset-password"
       component={ResetPasswordPage}
     />
+    <AppRoute
+      layout={GuestLayout}
+      path="/myaccount"
+      component={AccountDetailPage}
+    />
+    <AppRoute layout={DefaultLayout} path="/example" component={ExamplePage} />
   </Switch>
 );

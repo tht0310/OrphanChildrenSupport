@@ -56,6 +56,12 @@ export const displayDate = (date: Date | string) => {
   return moment(date).format("DD/MM/YYYY");
 };
 
+export const displayYear = (date: Date | string) => {
+  return moment(date).format("YYYY");
+};
+
+
+
 export const getStartOfDate = (date: Date) => {
   const dateDate = moment(date).startOf("day");
   const stringDate = moment(dateDate).format("YYYY-MM-DD HH:mm:ss");

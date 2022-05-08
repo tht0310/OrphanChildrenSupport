@@ -1,14 +1,23 @@
-import { Col, Row, Image } from "antd";
+import { Col, Row, Image, Button } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import Children from "@Images/child1.jpg";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import { Item } from "rc-menu";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
+import { displayDate } from "@Services/FormatDateTimeService";
 import FallBackImage from "@Images/children-default.png";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
+
+import {
+  EnvironmentOutlined,
+  GiftOutlined,
+  HeartOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
+import ChildrenConfirmationModel from "@Components/modals/ChildrenConfirmationModel";
+import { IRegisterModel } from "@Models/ILoginModel";
+import ReporChildrenDrawer from "@Components/drawers/ReportChildrenDrawer";
+
 type Props = RouteComponentProps<{ id: string }>;
 
 const childrenService = new ChildrenProfileService();
@@ -20,14 +29,27 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
+  const [selected, setSelected] = React.useState<ISupportCategoryModel[]>([]);
+  const [isChildrenModel, setIsChildrenModel] = React.useState<boolean>(false);
+  const [isChildrenDrawer, setIsChildrenDrawer] =
+    React.useState<boolean>(false);
+  const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   React.useEffect(() => {
     document.title = "Children Detail";
     fetchSupportCategories();
+    getCurrentUser();
   }, []);
 
   React.useEffect(() => {
     fetchData();
   }, [supportCategories]);
+
+  function getCurrentUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setCurrentUser(JSON.parse(retrievedObject));
+    }
+  }
 
   async function fetchData() {
     try {
@@ -42,11 +64,25 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
+  function toggleChildrenModal() {
+    setIsChildrenModel(!isChildrenModel);
+  }
+
+  function toggleChildrenDrawer() {
+    setIsChildrenDrawer(!isChildrenDrawer);
+  }
+
   async function fetchChildren(childrenId: number) {
     const res = await childrenService.getChildren(Number(childrenId));
     if (!res.hasErrors) {
       setChildren(res.value);
     }
+  }
+
+  function findSupportCategoriesById(id) {
+    const index = supportCategories.findIndex((x) => x.id === id);
+
+    return supportCategories[index];
   }
 
   async function fetchSupportCategories() {
@@ -56,28 +92,11 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
-  function searchSupprtNameById(id) {
-    let result = "";
-    supportCategories.map((v) => {
-      v.id === id ? (result = v.title) : "";
-    });
-    return result;
-  }
-
-  function getSupport(support) {
-    let result = "";
-    support.map((v) => {
-      result += searchSupprtNameById(v.supportCategoryId) + " ";
-    });
-    result = result.replace(" ", ", ");
-    return result;
-  }
-
-  function convertAddressToString(address: string) {
+  function convertPublicAddressToString(address: string) {
+    let tempAddress = [];
     let result = "";
     if (address) {
-      const tempAddress = address.split("-");
-
+      tempAddress = address.split("-");
       tempAddress.reverse();
       tempAddress.map((v) => {
         result += v + " ";
@@ -87,85 +106,37 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     return result;
   }
 
+  function handleOnClickButton(e) {
+    const classname = e.currentTarget.className;
+    if (classname.includes("active")) {
+      e.currentTarget.className = "ant-btn ant-btn-default";
+
+      const newSelected = selected.filter(function (item) {
+        return item.id !== Number(e.currentTarget.name);
+      });
+      setSelected(newSelected);
+    } else {
+      e.currentTarget.className = "ant-btn ant-btn-default active";
+      const newSelected = selected.concat(
+        findSupportCategoriesById(Number(e.currentTarget.name))
+      );
+      setSelected(newSelected);
+    }
+  }
+
+  function convertAddressToString(address: string) {
+    let tempAddress = [];
+    if (address) {
+      tempAddress = address.split("-");
+
+      tempAddress.reverse();
+    }
+
+    return tempAddress[1];
+  }
+
   return (
     <>
-      {/* <div className="container">
-        <nav className="breadcrumb" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="#">Home</a>
-            </li>
-            <li className="breadcrumb-item">
-              <a href="#">Children</a>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Detail
-            </li>
-          </ol>
-        </nav>
-        <div className="children-detail-page">
-          <Row>
-            <Col span={10}>
-              <Image
-                preview={false}
-                className="img-item"
-                src={
-                  children?.id ? childrenService.getImageUrl(children.id) : null
-                }
-                fallback={FallBackImage}
-              />
-            </Col>
-            <Col span={14}>
-              <h4>{children?.fullName}</h4>
-
-              <span className="card-text item-company">
-                Birthday: {displayDate(children?.dob)}
-              </span>
-              <p className="card-text">
-                Status -{" "}
-                <span className="text-success">{children?.status}</span>
-              </p>
-
-              <p className="card-text">
-                GPS, Always-On Retina display, 30% larger screen, Swimproof, ECG
-                app, Electrical and optical heart sensors, Built-in compass,
-                Elevation, Emergency SOS, Fall Detection, S5 SiP with up to 2x
-                faster 64-bit dual-core processor, watchOS 6 with Activity
-                trends, cycle tracking, hearing health innovations, and the App
-                Store on your wrist
-              </p>
-              <ul className="product-features list-unstyled">
-                <li>
-                  <i data-feather="shopping-cart"></i>{" "}
-                  <span>Address: {children?.address}</span>
-                </li>
-                <li>
-                  <i data-feather="dollar-sign"></i>
-                  <span>Phone: {children?.phoneNumber}</span>
-                </li>
-              </ul>
-
-              <hr />
-              <div className="d-flex flex-column flex-sm-row pt-1">
-                <a
-                  href="#"
-                  className="btn btn-primary btn-cart me-0 me-sm-1 mb-1 mb-sm-0"
-                >
-                  <i data-feather="shopping-cart" className="me-50"></i>
-                  <span className="add-to-cart">Donate</span>
-                </a>
-                <a
-                  href="#"
-                  className="btn btn-outline-secondary btn-wishlist me-0 me-sm-1 mb-1 mb-sm-0"
-                >
-                  <i data-feather="heart" className="me-50"></i>
-                  <span>Support</span>
-                </a>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div> */}
       <div className="children-detail-container">
         <div className="wrapper row">
           <div className="preview col-md-6">
@@ -179,8 +150,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       ? childrenService.getImageUrl(children.id)
                       : null
                   }
-                  style={{ width: "500px", height: "400px" }}
-                  fallback={FallBackImage}
+                  style={{ width: "480px", height: "350px" }}
                 />
               </div>
               <div className="tab-pane" id="pic-2">
@@ -289,66 +259,135 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   />
                 </a>
               </li>
-              <li>
-                <a data-target="#pic-5" data-toggle="tab">
-                  <Image
-                    preview={false}
-                    className="img-item"
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                    fallback={FallBackImage}
-                  />
-                </a>
-              </li>
             </ul>
           </div>
           <div className="details col-md-6">
-            <h3 className="product-title">{children?.fullName}</h3>
+            <div className="product-title">{children?.fullName}</div>
             <div className="rating">
-              <span className="review-no">
-                <span className="sub-title">Birthday: </span>{" "}
-                {displayDate(children?.dob)} |{" "}
-                <span className="sub-title">Gender: </span>{" "}
-                {children?.gender ? "Boy" : "Girl"}
-                <div>
-                  <span className="sub-title">Address:</span>{" "}
-                  {convertAddressToString(children?.publicAddress)}
-                </div>
-              </span>
+              <EnvironmentOutlined
+                style={{ fontSize: "12px", color: "#ff9f1a" }}
+              />{" "}
+              {convertAddressToString(children?.publicAddress)}
             </div>
-            <p className="product-description">
-              <span className="sub-title">Circumstance:</span>{" "}
-              {children?.circumstance}
-            </p>
-
-            <div className="rating">
-              <span className="sub-title">
-                Need support:{" "}
-                {children?.childrenProfileSupportCategories
-                  ? getSupport(children.childrenProfileSupportCategories)
-                  : ""}
-              </span>
-              <p>
-                <span className="sub-title">Status: </span>{" "}
-                {children?.status ? "Supported" : "Waiting for support"}{" "}
-              </p>
+            <div className="support">
+              <div className="option-title">Support</div>
+              <Row>
+                {supportCategories.map((s) => {
+                  return (
+                    <Col span={7}>
+                      <Button
+                        onClick={(e) => {
+                          handleOnClickButton(e);
+                        }}
+                        name={s.id + ""}
+                      >
+                        <GiftOutlined style={{ fontSize: "12px" }} /> {s.title}
+                      </Button>
+                    </Col>
+                  );
+                })}
+              </Row>
             </div>
-
-            <div className="action">
-              {!children?.status && (
-                <button className="add-to-cart btn btn-default" type="button">
-                  Donate
-                </button>
-              )}
-              <button className="add-to-cart btn btn-primary" type="button">
-                Report
-              </button>
+            <div className="actions">
+              <Row>
+                <Col span={21}>
+                  <Button
+                    style={{ height: "105%" }}
+                    onClick={() => toggleChildrenModal()}
+                  >
+                    {" "}
+                    <GiftOutlined style={{ fontSize: "12px" }} />
+                    Donate now
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="action2">
+                <Col span={10} style={{ marginRight: "4%" }}>
+                  <Button
+                    style={{
+                      height: "105%",
+                      background: "#FFF7E6",
+                      color: "#E57905",
+                      border: "1px solid #FFF7E6",
+                    }}
+                  >
+                    <HeartOutlined style={{ fontSize: "12px" }} />
+                    Favorite this child
+                  </Button>
+                </Col>
+                <Col span={10}>
+                  <Button
+                    onClick={toggleChildrenDrawer}
+                    style={{
+                      height: "105%",
+                      background: "#FFF7E6",
+                      color: "#E57905",
+                      border: "1px solid #FFF7E6",
+                    }}
+                  >
+                    {" "}
+                    <WarningOutlined style={{ fontSize: "12px" }} />
+                    Report information
+                  </Button>
+                </Col>
+              </Row>
             </div>
           </div>
         </div>
+        <Row className="detail">
+          <Col span={12}>
+            <Row>
+              <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
+                Information{" "}
+              </h5>
+            </Row>
+            <div
+              style={{
+                color: "#E57905",
+              }}
+            >
+              {children?.fullName}
+            </div>
+            <div>
+              Gender: {children?.gender ? "boy" : "girl"}
+              <div>Date of Birth: {displayDate(children?.dob)}</div>
+            </div>
+            <div>
+              Address: {convertPublicAddressToString(children?.publicAddress)}
+            </div>
+            <div>Guardian name: {children?.guardianName}</div>
+          </Col>
+          <Col span={12}>
+            <Row>
+              <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
+                Circumstance{" "}
+              </h5>
+            </Row>
+            <div>{children?.circumstance}</div>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Row>
+              <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
+                Other Children{" "}
+              </h5>
+            </Row>
+          </Col>
+        </Row>
+        <ChildrenConfirmationModel
+          currentUser={currentUser}
+          visible={isChildrenModel}
+          onCancel={toggleChildrenModal}
+          selected={selected}
+          children={children}
+        />
+        <ReporChildrenDrawer
+          currentUser={currentUser}
+          visible={isChildrenDrawer}
+          onCancel={toggleChildrenDrawer}
+          children={children}
+        />
       </div>
     </>
   );

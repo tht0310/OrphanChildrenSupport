@@ -1,91 +1,54 @@
-import * as React from "react";
-import PropTypes from 'prop-types';
-import TweenOne from 'rc-tween-one';
-import QueueAnim from 'rc-queue-anim';
-import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
+import React, { FC } from "react";
+import PropTypes from "prop-types";
+import GitHubButton from "react-github-button";
+import QueueAnim from "rc-queue-anim";
+import TweenOne from "rc-tween-one";
+import { Button } from "antd";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { FC } from "react";
-
+import Children from "@Images/test.jpg";
 const loop = {
   duration: 3000,
   yoyo: true,
   repeat: -1,
 };
 
-
-
 interface Props extends RouteComponentProps {}
 
 const Banner: FC<Props> = () => {
-  
   {
     return (
-      <div className="home-page-wrapper banner-wrapper" id="banner">
-        <div className="banner-bg-wrapper">
-          <svg width="400px" height="576px" viewBox="0 0 400 576" fill="none">
-            <TweenOne
-              component="g"
-              animation={[
-                { opacity: 0, type: "from" },
-                { ...loop, y: 15 },
-              ]}
+      <div className="banner-wrapper">
+        <TweenOne animation={{ opacity: 1 }} className="banner-image-wrapper">
+          <div className="home-banner-image">
+            <img alt="banner" width="100%" />
+          </div>
+        </TweenOne>
+        <QueueAnim className="banner-title-wrapper" type={"right"}>
+          <div key="line" className="title-line-wrapper">
+            <div
+              className="title-line"
+              style={{ transform: "translateX(-64px)" }}
+            />
+          </div>
+          <h1 key="h1">FOR THE CHILDREN</h1>
+          <p key="content"></p>
+          <div key="button" className="button-wrapper">
+            <a
+              href="http://preview.pro.ant.design"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <ellipse
-                id="Oval-9-Copy-4"
-                cx="100"
-                cy="100"
-                rx="6"
-                ry="6"
-                stroke="#2F54EB"
-                strokeWidth="1.6"
-              />
-            </TweenOne>
-            <TweenOne
-              component="g"
-              animation={[
-                { opacity: 0, type: "from" },
-                { ...loop, y: -15 },
-              ]}
-            >
-              <g transform="translate(200 400)">
-                <g
-                  style={{
-                    transformOrigin: "50% 50%",
-                    transform: "rotate(-340deg)",
-                  }}
-                >
-                  <rect
-                    stroke="#FADB14"
-                    strokeWidth="1.6"
-                    width="9"
-                    height="9"
-                  />
-                </g>
-              </g>
-            </TweenOne>
-          </svg>
-          <ScrollParallax
-            location="banner"
-            className="banner-bg"
-            animation={{ playScale: [1, 1.5], rotate: 0 }}
-          />
-        </div>
+              <Button type="primary"></Button>
+            </a>
 
-        <QueueAnim className={`banner page`} type="alpha" delay={150}>
-          <QueueAnim
-            className="text-wrapper"
-            key="text"
-            type="bottom"
-          >
-            <h1 key="h1">
-              Ant Design
-            </h1>
-            <p key="p">
-              asasasas
-            </p>
-          </QueueAnim>
+            <GitHubButton
+              key="github-button"
+              type="stargazers"
+              namespace="ant-design"
+              repo="ant-design-pro"
+            />
+          </div>
         </QueueAnim>
-        
       </div>
     );
   }

@@ -5,6 +5,8 @@ import Page2 from "./Page2";
 import Slider from "@Components/shared/Slider";
 import Section from "@Components/shared/Guest/Section";
 import Block from "@Components/shared/Block";
+import InformationSection from "./InformationSection";
+import InformationSection2 from "./InformationSeaction2";
 
 type Props = RouteComponentProps<{}>;
 
@@ -13,8 +15,10 @@ const GuestHomePage: React.FC<Props> = () => {
     <div>
       <Slider />
       <Section />
+      <InformationSection />
+      <InformationSection2 />
       <Page2 />
-      {/* <Page1 /> */}
+      <Page1 />
       <Block children={null} />
     </div>
   );

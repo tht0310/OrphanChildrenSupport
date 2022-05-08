@@ -14,22 +14,21 @@ export default class AccountService extends ServiceBase {
 
     if (!result.hasErrors) {
       SessionManager.setServiceUser(result.value);
+      var testObject = result.value;
+      localStorage.setItem("currentUser", JSON.stringify(testObject));  
     }
     
     return result;
   }
 
   public async logout(): Promise<Result<{}>> {
-    var result = await this.requestJson<IServiceUser>({
-      url: "api/Account/Logout",
-      method: "POST",
-    });
-
-    if (!result.hasErrors) {
+    
+  
       SessionManager.setServiceUser(null);
-    }
+      localStorage.setItem('currentUser', null)
+    
 
-    return result;
+    return null
   }
   public async register(model: IRegisterModel): Promise<Result<{}>> {
     var result = await this.requestJson<{}>({

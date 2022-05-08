@@ -1,0 +1,84 @@
+
+#header {
+    background-color: #fff;
+    position: relative;
+    z-index: 10;
+    height: 64px;
+  }
+  
+  #logo {
+    overflow: hidden;
+    padding-left: 30px;
+    float: left;
+    line-height: 64px;
+    text-decoration: none;
+    height: 64px;
+    
+    img {
+      display: inline;
+      vertical-align: middle;
+      margin-right: 16px;
+      width: 32px;
+    }
+    span {
+      color: darkviolet;
+      outline: none;
+      font-size: 14px;
+      line-height: 28px;
+    }
+  }
+  
+  
+  
+  #menu {
+    float: right;
+    overflow: hidden;
+    height: 64px;
+    a {
+        color: #2A2B36;
+        
+    }
+    .ant-menu {
+      line-height: 60px;
+    }
+    .ant-menu-horizontal {
+      border-bottom: none !important;
+      & > .ant-menu-item-custom {
+        border-top: 2px solid transparent;
+        padding: 0 20px;
+        border-bottom: none;
+        
+        &:hover {
+          border-top: 2px solid #B62A2A;
+          border-bottom: 2px solid  transparent !important;
+        }
+      }
+      & > .ant-menu-item-selected {
+        border-top: 2px solid #B62A2A;
+        border-bottom: 2px solid  transparent !important;
+        a {
+          color: black;
+          
+        }
+      }
+      
+    }
+  }
+  
+  #preview {
+    padding-top: 17px;
+    float: right;
+    margin-left: 32px;
+    button {
+      border-radius: 32px;
+    }
+  }
+  
+  #preview-button {
+    .ant-btn {
+      color: #B62A2A;
+      border: 1px solid #B62A2A;
+    }
+   
+  }
+  

@@ -122,7 +122,12 @@ const SupportCategoryModal: React.FC<IProps> = ({
         <Form.Item name="id" label="Id" hidden={true}>
           <Input />
         </Form.Item>
-        <Form.Item {...inlineFormLayout} name="title" label="Title" required>
+        <Form.Item
+          {...inlineFormLayout}
+          name="title"
+          label="Title"
+          rules={[{ required: true }]}
+        >
           <Input />
         </Form.Item>
         {data && (

@@ -135,7 +135,15 @@ const RegisterPage: React.FC<Props> = () => {
           {...inlineFormLayout}
           name="phoneNumber"
           label="Phone"
-          rules={[{ required: true, message: "Please enter phone number" }]}
+          rules={[
+            { required: true, message: "Please enter phone number" },
+            { min: 10, message: "Phone must be at least 10 digits" },
+            {
+              pattern: new RegExp(/^[0-9()-.]+$/),
+              message: "Phone must be digit only",
+            },
+          ]}
+          // rules={[{ required: true, message: "Please enter phone number" }]}
         >
           <Input />
         </Form.Item>

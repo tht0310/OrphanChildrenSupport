@@ -247,8 +247,7 @@
   .price,
   .sizes,
   .colors {
-    text-transform: UPPERCASE;
-    font-weight: bold;
+    font-weight: 700;
   }
 
   .checked,
@@ -261,12 +260,83 @@
   .product-description,
   .price,
   .vote,
-  .sizes {
-    margin-bottom: 15px;
-  }
-
   .product-title {
     margin-top: 0;
+    font-size: 18px !important;
+  }
+
+  svg {
+    margin-bottom: 6px;
+  }
+  .detail {
+    margin: 25px 45px 25px 5px;
+    padding: 25px 0px;
+    border-top: 1px solid #eee !important;
+    border-bottom: 1px solid #eee !important;
+  }
+  .rating {
+    color: #767676;
+    font-size: 13px !important;
+    svg {
+      margin-bottom: 8px;
+    }
+  }
+  .support {
+    margin-top: 25px;
+    min-height: 180px;
+    svg {
+      margin-bottom: 7px;
+    }
+    .ant-col {
+      margin-right: 5px;
+      margin-bottom: 15px;
+    }
+    .ant-button {
+      height: 36px !important;
+    }
+    .option-title {
+      padding-top: 0;
+      flex: 0 0 100%;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 92%;
+      transition: all 0.3s;
+      cursor: pointer;
+      border-radius: 2px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.6);
+      height: 105%;
+    }
+    // button:focus {
+
+    // }
+    .active {
+      background-color: #e57905;
+      color: white;
+      border: none;
+    }
+  }
+  .actions {
+    .action2 {
+      margin-top: 15px;
+    }
+    svg {
+      margin-bottom: 7px;
+    }
+    button {
+      width: 100%;
+      transition: all 0.3s;
+      cursor: pointer;
+      border-radius: 2px;
+      border: 1px solid #e57905;
+      font-weight: 600;
+      background: #e57905;
+      color: #fff;
+    }
   }
 
   .size {
@@ -377,4 +447,236 @@
   color: #5e181a;
   font-weight: 500;
   text-align: center;
+}
+.info-section {
+  margin-top: 4%;
+  padding: 5% 5% 3% 12%;
+  img {
+    width: 243px;
+    height: 320px;
+  }
+  .first-img {
+    margin-top: 40px;
+  }
+  button {
+    background-color: #88181b;
+    color: white;
+    border-radius: 25px;
+    border: 1px solid #88181b;
+    min-width: 100px;
+  }
+  button:hover {
+    background-color: white !important;
+    color: red !important;
+  }
+  .content {
+    margin: auto;
+    padding-top: 23%;
+    padding-left: 10px;
+    padding-right: 15px;
+    .mini-title {
+      color: #88181b;
+      font-weight: 700;
+      font-family: "Open Sauce One", sans-serif;
+      font-size: 35px;
+      line-height: 35px;
+      margin-bottom: 10px;
+    }
+    .sub-content {
+      margin-bottom: 15px;
+      font-size: 18px;
+      line-height: 35px;
+      letter-spacing: -0.03em;
+      max-width: 470px;
+    }
+    button svg {
+      margin-bottom: 5px;
+    }
+  }
+}
+.info-section-2 {
+  margin-top: 5em;
+  padding: 0% 5% 3% 8%;
+  button {
+    background-color: #88181b;
+    color: white;
+    border-radius: 25px;
+    border: 1px solid #88181b;
+    min-width: 100px;
+  }
+  button:hover {
+    background-color: white !important;
+    color: red !important;
+  }
+  img {
+    display: block;
+    width: 480px;
+    height: 340px;
+    background-color: red;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+  .content {
+    float: right;
+    margin: auto;
+    padding-top: 13%;
+    padding-left: 10px;
+    padding-right: 25px;
+    text-align: right;
+
+    .sub-title {
+      color: #88181b;
+      font-weight: 700;
+      font-family: "Open Sauce One", sans-serif;
+      font-size: 35px;
+      line-height: 35px;
+      margin-bottom: 10px;
+    }
+    .sub-content {
+      font-size: 18px;
+      line-height: 35px;
+      letter-spacing: -0.03em;
+      max-width: 500px;
+    }
+  }
+}
+.response-container {
+  margin-bottom: 30px;
+  min-height: 470px;
+}
+.response-page {
+  padding: 0% 8%;
+  margin-bottom: 15%;
+  .block {
+    margin-bottom: 45px;
+  }
+  .ant-row {
+    height: 180px !important;
+  }
+
+  .sec-pic {
+    width: 100%;
+    height: 180px !important;
+    min-width: 266px !important;
+  }
+  .block-content {
+    background: #3d3d3d;
+    font-weight: 700;
+    height: 180px;
+    text-align: center;
+    .title {
+      color: #ffd154;
+      font-size: 28px;
+      padding-top: 25%;
+    }
+  }
+
+  .col-container:hover {
+    background-color: #464646;
+
+    .title {
+      padding-top: 8%;
+    }
+    .content {
+      color: white;
+      padding: 0% 20px;
+      font-size: 13px;
+    }
+  }
+}
+.childrenConfirmation--model {
+  .ant-modal-body {
+    padding: 2% 4% !important;
+  }
+  .ant-card-small > .ant-card-body {
+    padding: 8px 15px;
+  }
+  th {
+    display: none !important;
+  }
+  .ant-card-small > .ant-card-head {
+    min-height: 26px !important;
+  }
+  
+
+  .img-cart {
+    display: block;
+    max-width: 50px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  table tr td {
+    border: 1px solid #ffffff;
+  }
+
+  table tr th {
+    background: #eee;
+  }
+
+  .panel-shadow {
+    box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+  }
+
+  td {
+    padding: 12px !important;
+  }
+
+  .ant-table-cell {
+    vertical-align: top;
+  }
+  
+  .ant-card {
+    padding: 8px 14px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.078)
+    
+  }
+  .ant-card-head {
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-left: 4px solid #e57905;
+  }
+  .ant-card-head-title {
+    padding: 3px 0px !important;
+  }
+  .title {
+    font-weight: 500;
+  }
+  .support--container {
+    font-size: 13px;
+    .ant-card-body {
+      padding: 0px;
+    }
+    .ant-table-cell {
+      padding: 12px !important;
+    }
+  }
+  .ant-modal-header {
+    padding: 15px 0px 15px 30px !important;
+  }
+}
+.account {
+  .ant-card-head-title {
+    padding: 15px 0;
+  }
+  .ant-divider-horizontal {
+    margin: 15px 0 !important ;
+  }
+  .ant-card-body {
+    padding: 26px 24px 15px 24px;
+    font-size: 13px;
+  }
+  .ant-form {
+    padding: 0px !important;
+    border: none;
+  }
+  .ant-card {
+    padding: 0px 0px 0px 0px;
+  }
+  .ant-card-head-wrapper {
+    width: 100%;
+  }
+  .ant-card-head {
+    background-color: #f3f3f3;
+  }
 }

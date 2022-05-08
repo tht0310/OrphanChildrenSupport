@@ -1,26 +1,30 @@
-#header,
+#customheader,
 header {
   transition: all 0.3s;
   background: #fff;
   box-shadow: 0 2px 8px rgba(240, 241, 242, 65);
   position: relative;
   z-index: 10;
-  overflow: hidden;
+  padding: 0px 0px;
+  
   & #logo {
-    overflow: hidden;
+   
+     
+    padding: 10px;
     padding-left: 40px;
-    float: left;
+    
     height: 64px;
-    line-height: 64px;
+    
     text-decoration: none;
     white-space: nowrap;
     transition: padding 0.3s;
     img {
-      height: 32px;
-      margin-right: 16px;
+      height: 110%;
+      
+      width: 108%;
     }
     img + img {
-      height: 16px;
+      
       position: relative;
       top: 1px;
     }
@@ -28,7 +32,7 @@ header {
 }
 
 .home {
-  #header,
+  #customheader,
   header {
     box-shadow: none;
     max-width: 1200px;
@@ -50,12 +54,12 @@ header {
 }
 
 .dropdown-menu li {
-  background: #1888ff;
+  //background: #1888ff;
   cursor: pointer;
 }
 
 .dropdown-menu li:hover {
-  background: #5cabff;
+  //background: #5cabff;
 }
 
 .dropdown-menu.clicked {
@@ -128,8 +132,7 @@ header {
 .nav-item {
   display: flex;
   align-items: center;
-  height: 80px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .simplebar-content {
@@ -195,7 +198,7 @@ header {
   }
 
   .nav-links:hover {
-    background-color: #1888ff;
+    //background-color: #1888ff;
     border-radius: 0;
   }
 
@@ -228,7 +231,7 @@ header {
     margin: 2rem auto;
     border-radius: 4px;
     width: 80%;
-    background: #1888ff;
+   // background: #1888ff;
     text-decoration: none;
     color: #fff;
     font-size: 1.5rem;
@@ -236,7 +239,7 @@ header {
 
   .nav-links-mobile:hover {
     background: #fff;
-    color: #1888ff;
+    //color: #1888ff;
     transition: 250ms;
   }
 
@@ -256,7 +259,7 @@ header {
   font-size: 18px;
   color: #fff;
   cursor: pointer;
-  background-color: var(--primary);
+  
 }
 
 .buttons {

@@ -10,7 +10,9 @@ import SessionManager from "@Core/session";
 import { withStore } from "@Store/index";
 import { IRegisterModel } from "@Models/ILoginModel";
 import Dropdown from "./Dropdown";
+import AccountService from "@Services/AccountService";
 
+const accService = new AccountService();
 type Props = RouteComponentProps<{}> &
   typeof loginStore.actionCreators &
   loginStore.ILoginStoreState;
@@ -23,6 +25,10 @@ const GuestTopMenu: React.FC<Props> = (props: Props) => {
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
+  React.useEffect(() => {
+    getCurrentUser();
+  }, []);
+
   const menu = (
     <Menu>
       <Menu.Item>
@@ -32,13 +38,22 @@ const GuestTopMenu: React.FC<Props> = (props: Props) => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.antgroup.com"
+          onClick={() => {
+            accService.logout(), setCurrentUser(null);
+          }}
         >
           Logout
         </a>
       </Menu.Item>
     </Menu>
   );
+
+  function getCurrentUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setCurrentUser(JSON.parse(retrievedObject));
+    }
+  }
 
   const menu2 = (
     <Menu>
@@ -54,11 +69,6 @@ const GuestTopMenu: React.FC<Props> = (props: Props) => {
       </Menu.Item>
     </Menu>
   );
-
-  useEffect(() => {
-    document.title = "Dashboard - Quy trình";
-    setCurrentUser(props.currentUser);
-  }, [props.currentUser]);
 
   return (
     <>

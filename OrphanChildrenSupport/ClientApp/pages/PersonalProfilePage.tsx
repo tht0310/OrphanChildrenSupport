@@ -31,7 +31,7 @@ import Search from "antd/lib/input/Search";
 
 import * as React from "react";
 import { useEffect } from "react";
-import { PencilFill } from "react-bootstrap-icons";
+import { Pencil, PencilFill } from "react-bootstrap-icons";
 import { Edit2, Plus, Trash2, UserPlus } from "react-feather";
 type Props = {};
 
@@ -120,7 +120,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
           <Button
             onClick={toggleChildrenModal}
             className="btn-custom-2 blue-action-btn"
-            icon={<PencilFill size={14} style={{ color: "#40A9FF" }} />}
+            icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
           />
           <Popconfirm
             title="Are you sure？"

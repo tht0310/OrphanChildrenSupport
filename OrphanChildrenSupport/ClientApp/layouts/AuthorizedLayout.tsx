@@ -5,6 +5,7 @@ import { Layout, Menu, Breadcrumb } from "antd";
 import TopMenu from "../components/shared/TopMenu";
 import SideBar from "../components/shared/SideBar";
 import Content from "../components/shared/Content";
+import BreadcrumbCustom from "@Components/shared/BreadcrumbCustom";
 
 interface IProps {
   children?: React.ReactNode;
@@ -21,9 +22,10 @@ const AuthorizedLayout: any = ({ children }: Props) => {
 
   return (
     <div>
-      <SideBar  isCollapsed={isCollapsed} toggle={toggle}/>
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <TopMenu isCollapsed={isCollapsed} toggle={toggle}/>
+      <SideBar isCollapsed={isCollapsed} toggle={toggle} />
+      <div className="wrapper d-flex flex-column bg-light">
+        <TopMenu isCollapsed={isCollapsed} toggle={toggle} />
+        <BreadcrumbCustom />
         <div className="body flex-grow-1 px-3">
           <Content children={children} />
         </div>

@@ -17,7 +17,7 @@ const WidgetsDropdown = () => {
       <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
-          color="primary"
+          color="danger"
           value={
             <>
               26K{" "}
@@ -55,7 +55,7 @@ const WidgetsDropdown = () => {
       <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
-          color="info"
+          color="secondary"
           value={
             <>
               $6.200{" "}
@@ -131,7 +131,7 @@ const WidgetsDropdown = () => {
       <CCol sm={6} lg={3}>
         <CWidgetStatsA
           className="mb-4"
-          color="danger"
+          color="dark"
           value={
             <>
               44K{" "}

@@ -74,7 +74,6 @@ const PersonalProfileModal: React.FC<IProps> = ({
   };
 
   async function onFinish(values: IPersonalProfileModel) {
-    console.log(values);
     if (data) {
       const res = await personalProfileService.update(values);
       if (!res.hasErrors) {

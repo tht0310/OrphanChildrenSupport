@@ -43,13 +43,13 @@ const navigations = [
   {
     component: CNavItem,
     name: "Children",
-    to: "/admin/children",
+    to: "/admin/usermanagement/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Support Category",
-    to: "/admin/supportCategory",
+    to: "/admin/usermanagement/supportcategory",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
 
@@ -79,18 +79,7 @@ const navigations = [
       },
     ],
   },
-  {
-    component: CNavGroup,
-    name: "Setting",
-    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: "Configure support category",
-        to: "/admin/supportCategory",
-      },
-    ],
-  },
+
   {
     component: CNavItem,
     name: "Notification",

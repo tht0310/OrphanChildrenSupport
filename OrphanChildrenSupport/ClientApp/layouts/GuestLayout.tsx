@@ -1,5 +1,6 @@
 ﻿import Footer from "@Components/shared/Guest/Footer";
 import GuestTopMenu from "@Components/shared/Guest/GuestTopMenu";
+import ExamplePage from "@Pages/ExamplesPage";
 import "@Styles/guestLayout.scss";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
@@ -15,7 +16,7 @@ export default class GuestLayout extends React.Component<Props, {}> {
   public render() {
     return (
       <div id="guestLayout" className="layout">
-        <GuestTopMenu />
+        <ExamplePage />
         <div className="">{this.props.children}</div>
         <ToastContainer />
         <Footer />

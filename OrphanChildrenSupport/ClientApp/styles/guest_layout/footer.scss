@@ -98,10 +98,64 @@ footer {
 }
 .footer-custom {
   background-color: #110b0b;
-  text-align: center;
-  padding: 7px 0px;
+  padding:  35px ;
   width: 100%;
   color: white;
-  font-weight: 700;
+  font-weight: 400;
   align-items: center;
+  
+  .container-fluid {
+    margin: auto;
+    width: 95%;
+    
+  }
+  .title {
+    margin: 0;
+    display: block;
+    line-height: normal;
+    font-size: .875rem;
+    font-family: futura-pt,sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-align: left !important;
+  }
+  .content {
+    line-height: 30px;
+    padding-left: 0;
+  }
+  .ant-row {
+    margin-bottom: 20px;
+  }
+  .ant-input {
+    width: 96%;
+  }
+  .middle-col {
+    padding-left: 4%;
+  }
+  button {
+    background-color: #88181b !important;
+    z-index: 9999;
+    color: white;
+    border: 1px solid #88181b ;
+  }
+  .icons {
+    margin-top: 15px;
+  }
+  hr {
+    margin: 10px 0px 10px 0px;
+  }
+  .detail {
+    text-align: center;
+    font-family: futura-pt,sans-serif;
+    svg {
+      margin-bottom: 8px;
+    }
+  }
+  .policy {
+    width: 30%;
+    text-align: center;
+    margin: auto;
+    color: #aaa;
+  }
 }

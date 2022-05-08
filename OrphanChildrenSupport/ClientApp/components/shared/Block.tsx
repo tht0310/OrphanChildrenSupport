@@ -8,6 +8,7 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate } from "@Services/FormatDateTimeService";
 import Children from "@Images/child1.jpg";
+import Slider from "react-slick";
 
 import FallBackImage from "@Images/children-default.png";
 interface Props {
@@ -29,6 +30,13 @@ const Section: FC<Props> = ({ children }: Props) => {
     fetchChildrenProfile();
   }
 
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
   async function fetchChildrenProfile() {
     const dataRes = await childrenProfileService.search({ pageSize: 4 });
     if (!dataRes.hasErrors) {
@@ -36,37 +44,7 @@ const Section: FC<Props> = ({ children }: Props) => {
       console.log(dataRes.value.items);
     }
   }
-  return (
-    <div className="container">
-      <h3 className="topic-name">Our children</h3>
-      <List
-        grid={{ gutter: 18, column: 4 }}
-        dataSource={childrenProfiles}
-        renderItem={(item) => (
-          <List.Item>
-            <div className="box7">
-              <Link to={`${childrenDetailUrl}/${item.id}`} target="_blank">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={childrenProfileService.getImageUrl(item.id)}
-                  fallback={FallBackImage}
-                  alt={"img" + item.id}
-                />
-                <div className="box-content">
-                  <div className="title">{item.fullName}</div>
-                  <span className="post">
-                    Birthday: {displayDate(item.dob)}
-                  </span>
-                  <Button ghost>View more</Button>
-                </div>
-              </Link>
-            </div>
-          </List.Item>
-        )}
-      />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Section;
