@@ -1,9 +1,8 @@
 ﻿import React, { useState } from "react";
 import "@Styles/authorizedLayout.scss";
 
-import { Layout, Menu, Breadcrumb } from "antd";
-import TopMenu from "../components/shared/TopMenu";
-import SideBar from "../components/shared/SideBar";
+import TopMenu from "../components/shared/Admin/TopMenu";
+import SideBar from "../components/shared/Admin/SideBar";
 import Content from "../components/shared/Content";
 import BreadcrumbCustom from "@Components/shared/BreadcrumbCustom";
 

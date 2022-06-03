@@ -48,7 +48,6 @@ export default function ChartSample() {
       },
     ],
   });
-  
 
   return (
     <div
@@ -57,14 +56,12 @@ export default function ChartSample() {
         textAlign: "center",
       }}
     >
-     
       <Chart
         options={dataSample.options}
         series={dataSample.series}
         type="area"
         height={350}
       />
-
     </div>
   );
 }

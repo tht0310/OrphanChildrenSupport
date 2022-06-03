@@ -47,7 +47,10 @@ const AboutUsPage: React.FC<Props> = () => {
           <div className="container">
             <div className="row">
               <div className="col-lg-3 col-md-6">
-                <div className="text-center border p-4 rounded mb-4">
+                <div
+                  className="text-center border p-4 rounded mb-4"
+                  style={{ height: "160px" }}
+                >
                   <span className="counter  text-dark font-weight-normal">
                     <Counter start={100} end={1000} delay={5} />
                   </span>
@@ -55,7 +58,10 @@ const AboutUsPage: React.FC<Props> = () => {
                 </div>
               </div>
               <div className="col-lg-3 col-md-6">
-                <div className="text-center border p-4 rounded mb-4">
+                <div
+                  className="text-center border p-4 rounded mb-4"
+                  style={{ height: "160px" }}
+                >
                   <span className="counter text-dark font-weight-normal">
                     <Counter start={100} end={400} delay={5} />
                   </span>
@@ -65,7 +71,10 @@ const AboutUsPage: React.FC<Props> = () => {
                 </div>
               </div>
               <div className="col-lg-3 col-md-6">
-                <div className="text-center border p-4 rounded mb-4">
+                <div
+                  className="text-center border p-4 rounded mb-4"
+                  style={{ height: "160px" }}
+                >
                   <span className="counter text-dark font-weight-normal">
                     <Counter start={0} end={40} delay={15} />
                   </span>
@@ -76,7 +85,10 @@ const AboutUsPage: React.FC<Props> = () => {
                 </div>
               </div>
               <div className="col-lg-3 col-md-6">
-                <div className="text-center border p-4 rounded ">
+                <div
+                  className="text-center border p-4 rounded "
+                  style={{ height: "160px" }}
+                >
                   <span className="counter text-dark font-weight-normal">
                     <Counter start={100} end={400} delay={8} />
                   </span>

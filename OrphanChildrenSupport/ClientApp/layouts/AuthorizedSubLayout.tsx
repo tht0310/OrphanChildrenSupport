@@ -2,7 +2,7 @@ import * as React from "react";
 import "@Styles/custom.scss";
 import { FC } from "react";
 import { Layout } from "antd";
-import SideBar from "@Components/shared/SideBar";
+import SideBar from "@Components/shared/Admin/SideBar";
 
 
 const { Content } = Layout;

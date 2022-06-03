@@ -351,6 +351,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                           <Button
                             ghost
                             type="primary"
+                            onClick={() => console.log(form)}
                             icon={<SaveOutlined />}
                           />
                         </span>

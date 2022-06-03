@@ -23,7 +23,6 @@ div li a {
       margin: 2% 0px !important;
     }
     h2 {
-      font-size: 38px;
       line-height: 46px;
       //color: @home-text-color;
       text-align: center;
@@ -109,61 +108,6 @@ svg {
 
 /** page1 **/
 
-.page1 {
-  min-height: 350px;
-  //background: @home-bg-color;
-
-  h2 {
-    color: #fff !important;
-  }
-  &-block {
-    max-width: 160px;
-    text-align: center;
-    margin: auto;
-    display: block;
-    position: relative;
-    z-index: 1;
-    h3 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 400;
-    }
-    p {
-      color: #fff;
-    }
-    &:hover .page1-image {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 10px rgba(5, 26, 180, 0.35);
-    }
-  }
-  &-image {
-    width: 120px;
-    height: 120px;
-    background: #fff;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 46px auto 32px;
-    transition: transform 0.45s, box-shadow 0.45s;
-    img {
-      display: block;
-    }
-  }
-  img {
-    width:120px;
-    height: 120px;
-    border-radius: 50%;
-  }
-  &-point-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    overflow: inherit !important;
-  }
-}
 
 /** page2 **/
 
@@ -285,7 +229,9 @@ svg {
     }
   }
 }
-
+.simplebar-placeholder {
+  height: 0px !important;
+}
 /** page3 **/
 
 .page3 {

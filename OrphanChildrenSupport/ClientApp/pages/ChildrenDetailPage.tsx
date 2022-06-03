@@ -1,4 +1,4 @@
-import { Col, Row, Image, Button } from "antd";
+import { Col, Row, Image, Button, Tabs } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
@@ -9,14 +9,18 @@ import SupportCategoryService from "@Services/SupportCategoryService";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 
 import {
+  CalendarOutlined,
   EnvironmentOutlined,
   GiftOutlined,
   HeartOutlined,
+  HomeOutlined,
+  UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import ChildrenConfirmationModel from "@Components/modals/ChildrenConfirmationModel";
 import { IRegisterModel } from "@Models/ILoginModel";
 import ReporChildrenDrawer from "@Components/drawers/ReportChildrenDrawer";
+import TextEditor from "@Components/shared/TextEditor";
 
 type Props = RouteComponentProps<{ id: string }>;
 
@@ -141,127 +145,107 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <div className="wrapper row">
           <div className="preview col-md-6">
             <div className="preview-pic tab-content">
-              <div className="tab-pane active" id="pic-1">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={
-                    children?.id
-                      ? childrenService.getImageUrl(children.id)
-                      : null
+              <Tabs tabPosition={"bottom"}>
+                <Tabs.TabPane
+                  tab={
+                    <Image
+                      preview={false}
+                      width={100}
+                      src={
+                        children?.id
+                          ? childrenService.getImageUrl(children.id)
+                          : null
+                      }
+                    />
                   }
-                  style={{ width: "480px", height: "350px" }}
-                />
-              </div>
-              <div className="tab-pane" id="pic-2">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={
-                    children?.id
-                      ? childrenService.getImageUrl(children.id)
-                      : null
+                  key="1"
+                >
+                  <Image
+                    preview={false}
+                    width={"98%"}
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                  />
+                </Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <Image
+                      preview={false}
+                      width={100}
+                      src={
+                        children?.id
+                          ? childrenService.getImageUrl(children.id)
+                          : null
+                      }
+                    />
                   }
-                  fallback={FallBackImage}
-                />
-              </div>
-              <div className="tab-pane" id="pic-3">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={
-                    children?.id
-                      ? childrenService.getImageUrl(children.id)
-                      : null
+                  key="2"
+                >
+                  <Image
+                    preview={false}
+                    width={"98%"}
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                  />
+                </Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <Image
+                      preview={false}
+                      width={100}
+                      src={
+                        children?.id
+                          ? childrenService.getImageUrl(children.id)
+                          : null
+                      }
+                    />
                   }
-                  fallback={FallBackImage}
-                />
-              </div>
-              <div className="tab-pane" id="pic-4">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={
-                    children?.id
-                      ? childrenService.getImageUrl(children.id)
-                      : null
+                  key="3"
+                >
+                  <Image
+                    preview={false}
+                    width={"98%"}
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                  />
+                </Tabs.TabPane>
+                <Tabs.TabPane
+                  tab={
+                    <Image
+                      preview={false}
+                      width={100}
+                      src={
+                        children?.id
+                          ? childrenService.getImageUrl(children.id)
+                          : null
+                      }
+                    />
                   }
-                  fallback={FallBackImage}
-                />
-              </div>
-              <div className="tab-pane" id="pic-5">
-                <Image
-                  preview={false}
-                  className="img-item"
-                  src={
-                    children?.id
-                      ? childrenService.getImageUrl(children.id)
-                      : null
-                  }
-                  fallback={FallBackImage}
-                />
-              </div>
+                  key="4"
+                >
+                  <Image
+                    preview={false}
+                    width={"98%"}
+                    src={
+                      children?.id
+                        ? childrenService.getImageUrl(children.id)
+                        : null
+                    }
+                  />
+                </Tabs.TabPane>
+              </Tabs>
             </div>
-            <ul className="preview-thumbnail nav nav-tabs">
-              <li className="active">
-                <a data-target="#pic-1" data-toggle="tab">
-                  <Image
-                    preview={false}
-                    className="img-item"
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                    fallback={FallBackImage}
-                  />
-                </a>
-              </li>
-              <li>
-                <a data-target="#pic-2" data-toggle="tab">
-                  <Image
-                    preview={false}
-                    className="img-item"
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                    fallback={FallBackImage}
-                  />
-                </a>
-              </li>
-              <li>
-                <a data-target="#pic-3" data-toggle="tab">
-                  <Image
-                    preview={false}
-                    className="img-item"
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                    fallback={FallBackImage}
-                  />
-                </a>
-              </li>
-              <li>
-                <a data-target="#pic-4" data-toggle="tab">
-                  <Image
-                    preview={false}
-                    className="img-item"
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                    fallback={FallBackImage}
-                  />
-                </a>
-              </li>
-            </ul>
           </div>
-          <div className="details col-md-6">
+          <div className="details col-md-6" style={{ paddingLeft: "20px" }}>
             <div className="product-title">{children?.fullName}</div>
             <div className="rating">
               <EnvironmentOutlined
@@ -341,21 +325,32 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 Information{" "}
               </h5>
             </Row>
-            <div
-              style={{
-                color: "#E57905",
-              }}
-            >
-              {children?.fullName}
+            <div>
+              <span
+                style={{
+                  color: "#E57905",
+                }}
+              >
+                {children?.fullName}
+              </span>
+              <span style={{ margin: "0px 6px" }}>-</span>
+              <span>{children?.gender ? "boy" : "girl"}</span>
+            </div>
+
+            <div>
+              <div>
+                <CalendarOutlined style={{ color: "#b2b2b2" }} />{" "}
+                {displayDate(children?.dob)}
+              </div>
             </div>
             <div>
-              Gender: {children?.gender ? "boy" : "girl"}
-              <div>Date of Birth: {displayDate(children?.dob)}</div>
+              <HomeOutlined style={{ color: "#b2b2b2", marginRight: "5px" }} />
+              {convertPublicAddressToString(children?.publicAddress)}
             </div>
             <div>
-              Address: {convertPublicAddressToString(children?.publicAddress)}
+              <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
+              {children?.guardianName}
             </div>
-            <div>Guardian name: {children?.guardianName}</div>
           </Col>
           <Col span={12}>
             <Row>
@@ -363,7 +358,15 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 Circumstance{" "}
               </h5>
             </Row>
-            <div>{children?.circumstance}</div>
+            <div className="text-editor-read-only">
+              {children?.circumstance && (
+                <TextEditor
+                  readingMode={true}
+                  editable={false}
+                  value={children?.circumstance.toString()}
+                />
+              )}
+            </div>
           </Col>
         </Row>
         <Row>
