@@ -18,5 +18,9 @@ namespace OrphanChildrenSupport.Services.Models
         public string ImagePath { get; set; }
         public ChildrenProfileStatus Status { get; set; }
         public ICollection<ChildrenProfileSupportCategory> ChildrenProfileSupportCategories { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
+        public ICollection<ChildrenProfileImage> ChildrenProfileImages { get; set; }
+        public ICollection<Donation> Donations { get; set; }
+
     }
 }

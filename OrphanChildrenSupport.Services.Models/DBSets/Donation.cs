@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrphanChildrenSupport.Services.Models.DBSets
 {
-    public class Support : EngineEntity
+    public class Donation : EngineEntity
     {
         [ForeignKey("Account")]
         [Required]
@@ -13,15 +12,13 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("ChildrenProfile")]
         [Required]
         public long ChildrenProfileId { get; set; }
-        public string AssignedTo { get; set; }
-        public string Approver { get; set; }
-        public DateTime? Deadline { get; set; }
-        public SupportStatus Status { get; set; }
+        public long? ApproverId { get; set; }
+        public DonationStatus DonationStatus { get; set; }
+        public ICollection<DonationDetail> DonationDetails { get; set; }
+        public string Note { get; set; }
         #region  Foreign
         public Account Account { get; set; }
         public ChildrenProfile ChildrenProfile { get; set; }
-        [ForeignKey("SupportId")]
-        public ICollection<SupportDetail> SupportDetails { get; set; }
         #endregion
     }
 }

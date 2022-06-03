@@ -14,11 +14,17 @@ namespace OrphanChildrenSupport.Infrastructure.Data
 
         public OrphanChildrenSupportDbContext(DbContextOptions options) : base(options)
         { }
-        public DbSet<PersonalProfile> PersonalProfiles { get; set; }
         public DbSet<ChildrenProfile> ChildrenProfiles { get; set; }
         public DbSet<SupportCategory> SupportCategories { get; set; }
-        public DbSet<Support> Supports { get; set; }
-        public DbSet<SupportDetail> SupportDetails { get; set; }
+        public DbSet<ChildrenProfileSupportCategory> ChildrenProfileSupportCategories { get; set; }
+        public DbSet<Donation> Donations { get; set; }
+        public DbSet<DonationDetail> DonationDetails { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportDetail> ReportDetails { get; set; }
+        public DbSet<ReportFieldCategory> ReportFieldCategories { get; set; }
+        public DbSet<Notification> ChildrenProfileImages { get; set; }
+        public DbSet<Changelog> Changelogs { get; set; }
         public DbSet<Account> Accounts { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                     => optionsBuilder.LogTo(Console.WriteLine);
@@ -28,11 +34,18 @@ namespace OrphanChildrenSupport.Infrastructure.Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
-            builder.Entity<PersonalProfile>().ToTable("PersonalProfile");
             builder.Entity<ChildrenProfile>().ToTable("ChildrenProfile");
             builder.Entity<SupportCategory>().ToTable("SupportCategory");
-            builder.Entity<Support>().ToTable("Support");
-            builder.Entity<SupportDetail>().ToTable("SupportDetail");
+            builder.Entity<ChildrenProfileSupportCategory>().ToTable("ChildrenProfileSupportCategory");
+            builder.Entity<Donation>().ToTable("Donation");
+            builder.Entity<DonationDetail>().ToTable("DonationDetail");
+            builder.Entity<ChildrenProfileImage>().ToTable("ChildrenProfileImage");
+            builder.Entity<Favorite>().ToTable("Favorite");
+            builder.Entity<Report>().ToTable("Report");
+            builder.Entity<ReportDetail>().ToTable("ReportDetail");
+            builder.Entity<ReportFieldCategory>().ToTable("ReportFieldCategory");
+            builder.Entity<Notification>().ToTable("Notification");
+            builder.Entity<Changelog>().ToTable("Changelog");
             builder.Entity<Account>().ToTable("Account");
         }
     }

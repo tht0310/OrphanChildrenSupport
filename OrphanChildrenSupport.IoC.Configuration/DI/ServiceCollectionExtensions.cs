@@ -17,10 +17,18 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
         {
             if (services != null)
             {
-                services.AddTransient<IPersonalProfileService, PersonalProfileService>();
                 services.AddTransient<IChildrenProfileService, ChildrenProfileService>();
                 services.AddTransient<ISupportCategoryService, SupportCategoryService>();
                 services.AddTransient<IChildrenProfileSupportCategoryService, ChildrenProfileSupportCategoryService>();
+                services.AddTransient<IDonationService, DonationService>();
+                services.AddTransient<IDonationDetailService, DonationDetailService>();
+                services.AddTransient<IFavoriteService, FavoriteService>();
+                services.AddTransient<IReportService, ReportService>();
+                services.AddTransient<IReportDetailService, ReportDetailService>();
+                services.AddTransient<IReportFieldCategoryService, ReportFieldCategoryService>();
+                services.AddTransient<INotificationService, NotificationService>();
+                services.AddTransient<IChangelogService, ChangelogService>();
+                services.AddTransient<IChildrenProfileImageService, ChildrenProfileImageService>();
             }
         }
 

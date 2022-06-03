@@ -7,65 +7,65 @@ using System.Threading.Tasks;
 namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
-    [Route("api/personalProfiles")]//required for default versioning
-    [Route("api/v{version:apiVersion}/personalProfiles")]
+    [Route("api/reportFieldCategories")]//required for default versioning
+    [Route("api/v{version:apiVersion}/reportFieldCategories")]
     [ApiController]
-    public class PersonalProfileController : Controller
+    public class ReportFieldCategoryController : Controller
     {
-        private IPersonalProfileService _personalProfileService;
+        private IReportFieldCategoryService _reportFieldCategoryService;
 
-        public PersonalProfileController(IPersonalProfileService personalProfileService)
+        public ReportFieldCategoryController(IReportFieldCategoryService reportFieldCategoryService)
         {
-            this._personalProfileService = personalProfileService;
+            this._reportFieldCategoryService = reportFieldCategoryService;
         }
 
-        // GET: api/personalProfiles
+        // GET: api/reportFieldCategories
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
-            var apiResponse = await _personalProfileService.GetPersonalProfiles(queryResource);
+            var apiResponse = await _reportFieldCategoryService.GetReportFieldCategories(queryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // GET api/personalProfiles/5
+        // GET api/reportFieldCategories/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
-            var apiResponse = await _personalProfileService.GetPersonalProfile(id);
+            var apiResponse = await _reportFieldCategoryService.GetReportFieldCategory(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // POST api/personalProfiles
+        // POST api/reportFieldCategories
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PersonalProfileResource PersonalProfileResource)
+        public async Task<IActionResult> Post([FromBody] ReportFieldCategoryResource ReportFieldCategoryResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _personalProfileService.CreatePersonalProfile(PersonalProfileResource);
+            var apiResponse = await _reportFieldCategoryService.CreateReportFieldCategory(ReportFieldCategoryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // PUT api/personalProfiles/5
+        // PUT api/reportFieldCategories/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, [FromBody] PersonalProfileResource PersonalProfileResource)
+        public async Task<IActionResult> Put(long id, [FromBody] ReportFieldCategoryResource ReportFieldCategoryResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _personalProfileService.UpdatePersonalProfile(id, PersonalProfileResource);
+            var apiResponse = await _reportFieldCategoryService.UpdateReportFieldCategory(id, ReportFieldCategoryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // DELETE api/personalProfiles/5
+        // DELETE api/reportFieldCategories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            var apiResponse = await _personalProfileService.DeletePersonalProfile(id);
+            var apiResponse = await _reportFieldCategoryService.DeleteReportFieldCategory(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

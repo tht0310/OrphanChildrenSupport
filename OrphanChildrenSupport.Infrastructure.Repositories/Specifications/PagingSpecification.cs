@@ -40,13 +40,11 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories.Specifications
                 }
             }
         }
-
         public PagingSpecification(int skip, int take)
         {
             this.Skip = skip < 0 ? 0 : skip;
             this.Take = take < 0 ? 10 : take;
         }
-
         public int Skip { get; }
         public int Take { get; }
         public bool IsTakeAll { get; set; }

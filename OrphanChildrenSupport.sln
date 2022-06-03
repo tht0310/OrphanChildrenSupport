@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.API", "1.API", "{FD8B5594-3DDA-4944-8888-B0005B0810DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Services", "2.Services", "{FA4FA740-FA6B-44F9-801B-E54F58A27389}"
+	ProjectSection(SolutionItems) = preProject
+		OrphanChildrenSupport.Services\ChildrenProfileSupportCategoryService.cs = OrphanChildrenSupport.Services\ChildrenProfileSupportCategoryService.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Infrastructures", "3.Infrastructures", "{88967CF2-F28A-48A3-BE82-FA86EAF7B03B}"
 EndProject
