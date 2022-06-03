@@ -47,51 +47,36 @@ import {
 import WidgetsDropdown from "@Components/shared/WidgetsDropdown";
 import ChartSample from "@Components/shared/Chart";
 
-
-
 const Dashboard = () => {
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
   const progressExample = [
-    { title: "Visits", value: "29.703 Users", percent: 40, color: "success" },
-    { title: "Unique", value: "24.093 Users", percent: 20, color: "info" },
     {
-      title: "Pageviews",
-      value: "78.706 Views",
-      percent: 60,
+      title: "Total children",
+      value: "8",
+      percent: 100,
+      color: "success",
+    },
+    {
+      title: "Childrene supported",
+      value: "2",
+      percent: (2 * 100) / 8,
+      color: "info",
+    },
+    {
+      title: "Children waiting for support",
+      value: "6",
+      percent: (6 * 100) / 8,
+      color: "danger",
+    },
+    {
+      title: "Children reported",
+      value: "1",
+      percent: (1 * 100) / 8,
       color: "warning",
     },
-    { title: "New Users", value: "22.123 Users", percent: 80, color: "danger" },
-    {
-      title: "Bounce Rate",
-      value: "Average Rate",
-      percent: 40.15,
-      color: "primary",
-    },
-  ];
-
-  const progressGroupExample1 = [
-    { title: "Monday", value1: 34, value2: 78 },
-    { title: "Tuesday", value1: 56, value2: 94 },
-    { title: "Wednesday", value1: 12, value2: 67 },
-    { title: "Thursday", value1: 43, value2: 91 },
-    { title: "Friday", value1: 22, value2: 73 },
-    { title: "Saturday", value1: 53, value2: 82 },
-    { title: "Sunday", value1: 9, value2: 69 },
-  ];
-
-  const progressGroupExample2 = [
-    { title: "Male", icon: cilUser, value: 53 },
-    { title: "Female", icon: cilUserFemale, value: 43 },
-  ];
-
-  const progressGroupExample3 = [
-    { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },
-    { title: "Facebook", icon: cibFacebook, percent: 15, value: "51,223" },
-    { title: "Twitter", icon: cibTwitter, percent: 11, value: "37,564" },
-    { title: "LinkedIn", icon: cibLinkedin, percent: 8, value: "27,319" },
   ];
 
   const tableExample = [
@@ -158,7 +143,7 @@ const Dashboard = () => {
         new: true,
         registered: "Jan 1, 2021",
       },
-      country: { name: "Spain", flag: cifEs },
+      country: { name: "Vietnam", flag: cifPl },
       usage: {
         value: 22,
         period: "Jun 11, 2021 - Jul 10, 2021",
@@ -199,13 +184,11 @@ const Dashboard = () => {
                 January - September 2022
               </div>
             </CCol>
-            <ChartSample/>
-          
+            <ChartSample />
           </CRow>
-        
         </CCardBody>
         <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
+          <CRow xs={{ cols: 1 }} md={{ cols: 4 }} className="text-center">
             {progressExample.map((item, index) => (
               <CCol className="mb-sm-2 mb-0" key={index}>
                 <div className="text-medium-emphasis">{item.title}</div>
@@ -223,19 +206,18 @@ const Dashboard = () => {
           </CRow>
         </CCardFooter>
       </CCard>
-      
 
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {" & "} Sales</CCardHeader>
+            <CCardHeader style={{ fontWeight: "bold" }}>
+              New support request
+            </CCardHeader>
             <CCardBody>
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light">
                   <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
+                    <CTableHeaderCell className="text-center"></CTableHeaderCell>
                     <CTableHeaderCell>User</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">
                       Country

@@ -5,13 +5,14 @@ import {
   cilBell,
   cilCalculator,
   cilGrid,
+  cilHeart,
   cilPeople,
   cilPhone,
-  cilSettings,
   cilSpeedometer,
   cilUser,
+  cilWarning,
 } from "@coreui/icons";
-import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
+import { CNavItem, CNavTitle } from "@coreui/react";
 
 const navigations = [
   {
@@ -37,7 +38,7 @@ const navigations = [
   {
     component: CNavItem,
     name: "Registered User",
-    to: "/user",
+    to: "/admin/user",
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
@@ -46,11 +47,28 @@ const navigations = [
     to: "/admin/usermanagement/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
   },
+
+  {
+    component: CNavTitle,
+    name: "Activity Management",
+  },
+  {
+    component: CNavItem,
+    name: "Donation",
+    to: "/admin/activitymanagement/donation",
+    icon: <CIcon icon={cilHeart} customClassName="nav-icon" />,
+  },
   {
     component: CNavItem,
     name: "Support Category",
     to: "/admin/usermanagement/supportcategory",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Report",
+    to: "/admin/activitymanagement/report",
+    icon: <CIcon icon={cilWarning} customClassName="nav-icon" />,
   },
 
   {
@@ -58,33 +76,10 @@ const navigations = [
     name: "Other",
   },
   {
-    component: CNavGroup,
-    name: "Statistic",
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: "User",
-        to: "/admin/statistic/user",
-      },
-      {
-        component: CNavItem,
-        name: "Donation",
-        to: "/admin/statistic/donation",
-      },
-      {
-        component: CNavItem,
-        name: "Adopt Registration",
-        to: "/admin/adopt",
-      },
-    ],
-  },
-
-  {
     component: CNavItem,
-    name: "Notification",
-    to: "/notification",
-    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+    name: "Statistic",
+    to: "/admin/statistic",
+    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

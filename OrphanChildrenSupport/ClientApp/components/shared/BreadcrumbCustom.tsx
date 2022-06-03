@@ -1,27 +1,7 @@
 import * as React from "react";
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Row,
-  Select,
-  Upload,
-} from "antd";
-import { Plus, Save } from "react-feather";
+import { Breadcrumb, Input } from "antd";
 
-import SupportCategoryService from "@Services/SupportCategoryService";
-import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
-import { displayDateTime } from "@Services/FormatDateTimeService";
-import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
 import { useLocation } from "react-router-dom";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const routesName = [
   {
@@ -34,6 +14,14 @@ const routesName = [
   },
   { path: "/admin/dashboard", breadcrumb: ["Home", "Dashboard"] },
   { path: "/admin", breadcrumb: ["Home", "Dashboard"] },
+  {
+    path: "/admin/donation/detail",
+    breadcrumb: ["Home", "Donation", "Detail"],
+  },
+  {
+    path: "/admin/report/detail",
+    breadcrumb: ["Home", "Report", "Detail"],
+  },
 ];
 const { TextArea } = Input;
 

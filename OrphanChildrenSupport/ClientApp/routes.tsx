@@ -7,20 +7,30 @@ import ChildrenWaitingForSupportPage from "@Pages/Guest/ChildrenWaitingForSuppor
 import ContactUsPage from "@Pages/Guest/ContactUs";
 import GuestHomePage from "@Pages/Guest/GuestHomePage";
 
-import PersonalProfilePage from "@Pages/PersonalProfilePage";
 import RegisterPage from "@Pages/RegisterPage";
 import GuestLoginPage from "@Pages/GuestLoginPage";
 import SupportCategoryPage from "@Pages/SupportCategoryPage";
 import * as React from "react";
-import { Switch } from "react-router-dom";
 import AppRoute from "./components/shared/AppRoute";
 import AuthorizedLayout from "./layouts/AuthorizedLayout";
 import Dashboard from "./pages/Dashboard";
 import VerifyPage from "@Pages/VerifyPage";
 import ResetPasswordPage from "@Pages/ResetPasswordPage";
 import ForgotPasswordPage from "@Pages/ForgotPasswordPage";
-import ExamplePage from "@Pages/ExamplesPage";
+
 import AccountDetailPage from "@Pages/AccountDetailPage";
+import ChildrenCartPage from "@Pages/Guest/ChildrenCartPage";
+import { Switch } from "react-router-dom";
+import VolunteerPage from "@Pages/VolunteerPage";
+import RegisteredProfilePage from "@Pages/RegisteredUserProfilePage";
+import ActivityHistoryPage from "@Pages/Guest/ActivityHistoryPage";
+import ChildrenPage from "@Pages/Guest/ChildrenPage";
+import ExamplePage from "@Pages/Guest/ExamplePage";
+import DonationManagementPage from "@Pages/DonationManagementPage";
+import DonationDetailPage from "@Pages/DonationDetailPage";
+import ReportDetailPage from "@Pages/ReportDetailPage";
+import StatisticPage from "@Pages/Guest/StatisticPage";
+import ChildrenProfilePage from "@Pages/ChildrenProfilePage";
 
 export const routes = (
   <Switch>
@@ -41,7 +51,7 @@ export const routes = (
       layout={AuthorizedLayout}
       exact
       path="/admin/usermanagement/children"
-      component={PersonalProfilePage}
+      component={ChildrenProfilePage}
     />
     <AppRoute
       layout={GuestLayout}
@@ -91,7 +101,6 @@ export const routes = (
     />
     <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
 
-    <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
     <AppRoute
       layout={GuestLayout}
       path="/accounts/verify-email"
@@ -112,6 +121,51 @@ export const routes = (
       path="/myaccount"
       component={AccountDetailPage}
     />
+
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/volunteer"
+      component={VolunteerPage}
+    />
+    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/user"
+      component={RegisteredProfilePage}
+    />
+    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
+    <AppRoute
+      layout={GuestLayout}
+      path="/activityHistory/:key"
+      component={ActivityHistoryPage}
+    />
+    <AppRoute
+      layout={GuestLayout}
+      path="/activityHistory/"
+      component={ActivityHistoryPage}
+    />
+    <AppRoute layout={GuestLayout} path="/children" component={ChildrenPage} />
     <AppRoute layout={DefaultLayout} path="/example" component={ExamplePage} />
+
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/donation/"
+      component={DonationManagementPage}
+    />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/donation/detail/"
+      component={DonationDetailPage}
+    />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/report/detail/"
+      component={ReportDetailPage}
+    />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/statistic/"
+      component={StatisticPage}
+    />
   </Switch>
 );

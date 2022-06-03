@@ -2,24 +2,61 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import Page1 from "./Page1";
 import Page2 from "./Page2";
-import Slider from "@Components/shared/Slider";
+
+import InformationSection2 from "./Section1";
+import Slider from "@Components/shared/Guest/Slider";
 import Section from "@Components/shared/Guest/Section";
-import Block from "@Components/shared/Block";
-import InformationSection from "./InformationSection";
-import InformationSection2 from "./InformationSeaction2";
+import Page3 from "./Page3";
+import Section1 from "./Section1";
+import Section2 from "@Components/shared/Guest/Section2";
+import ChildrenBlock from "./ChildrenBlock";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
+import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
+import TextEditor from "@Components/shared/TextEditor";
 
 type Props = RouteComponentProps<{}>;
 
+const childrenProfileService = new ChildrenProfileService();
+
 const GuestHomePage: React.FC<Props> = () => {
+  React.useEffect(() => {
+    fetchChildrenProfile();
+  }, []);
+
+  const [childrenProfiles, setChildrenProfiles] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+
+  async function fetchChildrenProfile() {
+    const dataRes = await childrenProfileService.getAll({ pageSize: 4 });
+    if (!dataRes.hasErrors) {
+      setChildrenProfiles(dataRes.value.items);
+    }
+  }
   return (
     <div>
       <Slider />
       <Section />
-      <InformationSection />
-      <InformationSection2 />
+      <Page3 />
       <Page2 />
+      <Section1 />
+      {/* <Section1 /> */}
+      <Section2 />
+      <ChildrenBlock
+        title={"Special Circumstances"}
+        children={childrenProfiles}
+      />
+      <ChildrenBlock
+        title={"Children"}
+        children={childrenProfiles}
+        subTitle={"Need support school things"}
+      />
+      <ChildrenBlock
+        title={"Children"}
+        children={childrenProfiles}
+        subTitle={"Need support food"}
+      />
       <Page1 />
-      <Block children={null} />
     </div>
   );
 };

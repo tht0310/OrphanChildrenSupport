@@ -26,6 +26,7 @@ import SupportCategoryService from "@Services/SupportCategoryService";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
 import { IChildrenSupportCategoryModel } from "@Models/IChildrenSupportCategoryModel";
+import TextEditor from "@Components/shared/TextEditor";
 
 const { TextArea } = Input;
 
@@ -67,28 +68,21 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<UploadFile<any>>();
-  const [imageUrlTmp, setImageUrlTmp] = useState<string>();
   const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
 
   React.useEffect(() => {
-    if (visible) {
+    if (visible === true) {
       form.resetFields();
+      setImageUrl(null);
       if (data) {
         innitialValue();
+        getImage(data.id);
       }
     }
   }, [data, visible]);
-
-  React.useEffect(() => {
-    if (data) {
-      getImage(data.id);
-    } else {
-      setImageUrl(null);
-    }
-  }, [data]);
 
   React.useEffect(() => {
     fetchSupportCategories();
@@ -97,6 +91,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   const handleCancel = () => {
     onCancel();
     form.resetFields();
+    setImageUrl(null);
   };
 
   async function fetchSupportCategories() {
@@ -147,7 +142,6 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   );
 
   async function onFinish(values: IChildrenProfileModel | any) {
-    //Prepare value
     values.detailAddress =
       values.city + "-" + values.province + "-" + values.houseNumber;
     values.publicAddress = values.city + "-" + values.province;
@@ -162,12 +156,10 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         });
         values.childrenProfileSupportCategories = tempList;
       }
-      console.log(values);
       const res = await childrenProfileService.updateWithFile(
         values,
         imageFile?.originFileObj
       );
-
       if (!res.hasErrors) {
         message.success(`${values.fullName} has been successfully updated`);
         onCancel();
@@ -230,8 +222,12 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       footer={null}
       width={1000}
       className="antd-modal-custom"
-      style={{ top: 10, height: "300px" }}
-      bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 90px)" }}
+      style={{ top: 20, height: "300px" }}
+      bodyStyle={{
+        overflowY: "scroll",
+        height: "calc(100vh - 105px)",
+        marginLeft: "19px",
+      }}
     >
       <Form
         form={form}
@@ -374,7 +370,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
               className="label-custom"
               {...inlineFormLayout}
             >
-              <TextArea rows={3} style={{ width: "100%" }} />
+              {/* <TextArea rows={3} style={{ width: "100%" }} /> */}
+              <TextEditor />
             </Form.Item>
 
             <Form.Item

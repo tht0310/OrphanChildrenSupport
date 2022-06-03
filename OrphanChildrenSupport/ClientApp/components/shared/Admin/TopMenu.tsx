@@ -12,14 +12,9 @@ import {
   CNavItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from "@coreui/icons";
+import { cilMenu } from "@coreui/icons";
 import { Avatar, Badge } from "antd";
-import {
-  BellOutlined,
-  MailOutlined,
-  MessageOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { BellOutlined, MailOutlined } from "@ant-design/icons";
 
 interface Props extends RouteComponentProps {
   isCollapsed: boolean;
