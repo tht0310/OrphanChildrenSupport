@@ -14,6 +14,7 @@ using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -95,7 +96,7 @@ namespace OrphanChildrenSupport.Services
 
                     childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
 
-                    await unitOfWork.DeleteChildrenProfileSupportCategiry(childrenProfile.Id);
+                    await unitOfWork.DeleteChildrenProfileSupportCategories(childrenProfile.Id);
 
                     _logger.LogDebug($"{loggerHeader} - Start to update ChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
                     childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
@@ -148,7 +149,7 @@ namespace OrphanChildrenSupport.Services
                         childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
                         childrenProfile.IsDeleted = true;
                         childrenProfile.LastModified = DateTime.UtcNow;
-                        await unitOfWork.DeleteChildrenProfileSupportCategiry(childrenProfile.Id);
+                        await unitOfWork.DeleteChildrenProfileSupportCategories(childrenProfile.Id);
                         unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     }
 
@@ -247,11 +248,11 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<ChildrenProfile>> UploadChildrenProfileImage(long id, IFormFile file)
+        public async Task<ApiResponse<ChildrenProfileResponse>> UploadChildrenProfileImage(long id, IFormFile file)
         {
             const string loggerHeader = "UploadChildrenProfileImage";
 
-            var apiResponse = new ApiResponse<ChildrenProfile>();
+            var apiResponse = new ApiResponse<ChildrenProfileResponse>();
 
             if (file == null || file.Length == 0)
             {
@@ -308,7 +309,7 @@ namespace OrphanChildrenSupport.Services
                         await unitOfWork.SaveChanges();
                         _logger.LogDebug($"{loggerHeader} - Upload ChildrenProfileImage successfully with Id: {childrenProfile.Id}");
 
-                        apiResponse.Data = childrenProfile;
+                        apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResponse>(childrenProfile);
                     }
                     catch (Exception ex)
                     {
@@ -321,68 +322,6 @@ namespace OrphanChildrenSupport.Services
                     {
                         unitOfWork.Dispose();
                     }
-                }
-            }
-            return apiResponse;
-        }
-
-        public async Task<ApiResponse<ChildrenProfile>> UploadChildrenProfileImageBase64(long id, string base64String)
-        {
-            const string loggerHeader = "UploadChildrenProfileAvatarBase64";
-            var apiResponse = new ApiResponse<ChildrenProfile>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to upload ChildrenProfileAvatarBase64 with");
-            using (var unitOfWork = new UnitOfWork(_connectionString))
-            {
-                try
-                {
-                    string dir = Path.Combine("wwwroot", "ChildrenProfileImages");
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-                    string fileName = id + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".png";
-                    var newPath = Path.Combine(dir, fileName);
-                    _logger.LogDebug($"{loggerHeader} - Save file in new path: {newPath}");
-
-                    //Convert base 64 string to byte[]
-                    byte[] imageBytes = Convert.FromBase64String(base64String);
-
-                    //Convert byte[] to Image
-                    using (var stream = new FileStream(newPath, FileMode.Create))
-                    {
-                        stream.Write(imageBytes, 0, imageBytes.Length);
-                    }
-
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(d => d.Id == id,
-                                                                        include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory));
-
-                    var oldPath = childrenProfile.ImagePath;
-                    _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
-                    if (File.Exists(oldPath))
-                    {
-                        File.Delete(oldPath);
-                    }
-
-                    _logger.LogDebug($"{loggerHeader} - Upload ImagePath for Id: {childrenProfile.Id}");
-                    childrenProfile.ImagePath = newPath;
-                    childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                    childrenProfile.LastModified = DateTime.UtcNow;
-                    unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
-                    await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Upload ChildrenProfileAvatarBase64 successfully with Id: {childrenProfile.Id}");
-                    apiResponse.Data = childrenProfile;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
-                    apiResponse.IsError = true;
-                    apiResponse.Message = ex.Message;
-                    await unitOfWork.SaveErrorLog(ex);
-                }
-                finally
-                {
-                    unitOfWork.Dispose();
                 }
             }
             return apiResponse;
@@ -415,6 +354,79 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<ChildrenProfileResponse>> UploadChildrenProfileImages(long id, List<IFormFile> files)
+        {
+            const string loggerHeader = "UploadChildrenProfileImage";
+
+            var apiResponse = new ApiResponse<ChildrenProfileResponse>();
+
+            foreach (var file in files)
+            {
+                if (file == null || file.Length == 0)
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File not selected";
+                    return apiResponse;
+                }
+                else if (file.Length > 5242880)
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File must be smaller than 5MB";
+                    return apiResponse;
+                }
+                else if (!file.IsImage())
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File must be an image";
+                    return apiResponse;
+                }
+                else
+                {
+                    _logger.LogDebug($"{loggerHeader} - Start to Upload ChildrenProfileImage with");
+                    using (var unitOfWork = new UnitOfWork(_connectionString))
+                    {
+                        try
+                        {
+                            string dir = Path.Combine("wwwroot", "ChildrenProfileImages");
+                            if (!Directory.Exists(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            }
+
+                            string fileName = id + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + files.IndexOf(file) + ".png";
+
+                            var newPath = Path.Combine(dir, fileName);
+                            ChildrenProfileImage childrenProfileImage = new ChildrenProfileImage();
+
+                            childrenProfileImage.ChildrenProfileId = id;
+                            childrenProfileImage.ImagePath = newPath;
+                            await unitOfWork.ChildrenProfileImageRepository.Add(childrenProfileImage);
+                            await unitOfWork.SaveChanges();
+
+                            _logger.LogDebug($"{loggerHeader} - Save file in new path: {newPath}");
+                            using (var stream = new FileStream(newPath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                            apiResponse.IsError = true;
+                            apiResponse.Message = ex.Message;
+                            await unitOfWork.SaveErrorLog(ex);
+                        }
+                        finally
+                        {
+                            unitOfWork.Dispose();
+                        }
+                    }
+                }
+            }
+
             return apiResponse;
         }
 

@@ -292,7 +292,7 @@ namespace OrphanChildrenSupport
                             options.DisplayRequestDuration();
                         });
                     }
-                } 
+                }
                 // global error handler
                 app.UseMiddleware<ErrorHandlerMiddleware>();
 

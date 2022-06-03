@@ -7,65 +7,65 @@ using System.Threading.Tasks;
 namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
-    [Route("api/supports")]//required for default versioning
-    [Route("api/v{version:apiVersion}/supports")]
+    [Route("api/childrenProfileImages")]//required for default versioning
+    [Route("api/v{version:apiVersion}/childrenProfileImages")]
     [ApiController]
-    public class SupportController : Controller
+    public class ChildrenProfileImageController : Controller
     {
-        private ISupportService _supportService;
+        private IChildrenProfileImageService _childrenProfileImageService;
 
-        public SupportController(ISupportService supportService)
+        public ChildrenProfileImageController(IChildrenProfileImageService childrenProfileImageService)
         {
-            this._supportService = supportService;
+            this._childrenProfileImageService = childrenProfileImageService;
         }
 
-        // GET: api/supports
+        // GET: api/childrenProfileImages
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
-            var apiResponse = await _supportService.GetSupports(queryResource);
+            var apiResponse = await _childrenProfileImageService.GetChildrenProfileImages(queryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // GET api/supports/5
+        // GET api/childrenProfileImages/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
-            var apiResponse = await _supportService.GetSupport(id);
+            var apiResponse = await _childrenProfileImageService.GetChildrenProfileImage(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // POST api/supports
+        // POST api/childrenProfileImages
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SupportResource SupportResource)
+        public async Task<IActionResult> Post([FromBody] ChildrenProfileImageResource ChildrenProfileImageResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _supportService.CreateSupport(SupportResource);
+            var apiResponse = await _childrenProfileImageService.CreateChildrenProfileImage(ChildrenProfileImageResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // PUT api/supports/5
+        // PUT api/childrenProfileImages/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, [FromBody] SupportResource SupportResource)
+        public async Task<IActionResult> Put(long id, [FromBody] ChildrenProfileImageResource ChildrenProfileImageResource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _supportService.UpdateSupport(id, SupportResource);
+            var apiResponse = await _childrenProfileImageService.UpdateChildrenProfileImage(id, ChildrenProfileImageResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // DELETE api/supports/5
+        // DELETE api/childrenProfileImages/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            var apiResponse = await _supportService.DeleteSupport(id);
+            var apiResponse = await _childrenProfileImageService.DeleteChildrenProfileImage(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

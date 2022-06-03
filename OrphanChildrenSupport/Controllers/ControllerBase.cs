@@ -21,7 +21,8 @@ namespace OrphanChildrenSupport.Controllers
             ServiceUser = serviceUser as ServiceUser;
             base.OnActionExecuting(context);
         }
-        // returns the current authenticated account (null if not logged in)
+
+        // Returns the current authenticated account (null if not logged in)
         public Account Account => (Account)HttpContext.Items["Account"];
     }
 }

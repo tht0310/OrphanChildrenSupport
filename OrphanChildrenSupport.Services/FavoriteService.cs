@@ -21,7 +21,7 @@ using OrphanChildrenSupport.Services.Models.DBSets;
 
 namespace OrphanChildrenSupport.Services
 {
-    public class SupportService : ISupportService
+    public class FavoriteService : IFavoriteService
     {
 
         private string _connectionString;
@@ -30,39 +30,39 @@ namespace OrphanChildrenSupport.Services
         private ICryptoEncryptionHelper _cryptoEncryptionHelper;
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
-        private readonly ILogger<SupportService> _logger;
+        private readonly ILogger<FavoriteService> _logger;
 
-        public SupportService(IMapper mapper, ILogger<SupportService> logger, IConfiguration config,
+        public FavoriteService(IMapper mapper, ILogger<FavoriteService> logger, IConfiguration config,
             ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:SupportAvatarFolderId") ?? "";
+            _folderid = config.GetValue<string>("LibraryApi:FavoriteAvatarFolderId") ?? "";
             _type = config.GetValue<string>("LibraryApi:Type") ?? "";
             _cryptoEncryptionHelper = cryptoEncryptionHelper;
             _httpContextHelper = httpContextHelper;
         }
 
-        public async Task<ApiResponse<SupportResource>> CreateSupport(SupportResource supportResource)
+        public async Task<ApiResponse<FavoriteResource>> CreateFavorite(FavoriteResource childrenFavoriteResource)
         {
-            const string loggerHeader = "CreateSupport";
+            const string loggerHeader = "CreateFavorite";
 
-            var apiResponse = new ApiResponse<SupportResource>();
-            Support support = _mapper.Map<SupportResource, Support>(supportResource);
+            var apiResponse = new ApiResponse<FavoriteResource>();
+            Favorite childrenFavorite = _mapper.Map<FavoriteResource, Favorite>(childrenFavoriteResource);
 
-            _logger.LogDebug($"{loggerHeader} - Start to add Support: {JsonConvert.SerializeObject(support)}");
+            _logger.LogDebug($"{loggerHeader} - Start to add Favorite: {JsonConvert.SerializeObject(childrenFavorite)}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    support.CreatedBy = _httpContextHelper.GetCurrentUser();
-                    support.CreatedTime = DateTime.UtcNow;
-                    await unitOfWork.SupportRepository.Add(support);
+                    childrenFavorite.CreatedBy = _httpContextHelper.GetCurrentUser();
+                    childrenFavorite.CreatedTime = DateTime.UtcNow;
+                    await unitOfWork.FavoriteRepository.Add(childrenFavorite);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Add new Support successfully with Id: {support.Id}");
-                    support = await unitOfWork.SupportRepository.FindFirst(predicate: d => d.Id == support.Id);
-                    apiResponse.Data = _mapper.Map<Support, SupportResource>(support);
+                    _logger.LogDebug($"{loggerHeader} - Add new Favorite successfully with Id: {childrenFavorite.Id}");
+                    childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == childrenFavorite.Id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
                 }
                 catch (Exception ex)
                 {
@@ -80,26 +80,26 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportResource>> UpdateSupport(long id, SupportResource supportResource)
+        public async Task<ApiResponse<FavoriteResource>> UpdateFavorite(long id, FavoriteResource childrenFavoriteResource)
         {
-            const string loggerHeader = "UpdateSupport";
-            var apiResponse = new ApiResponse<SupportResource>();
+            const string loggerHeader = "UpdateFavorite";
+            var apiResponse = new ApiResponse<FavoriteResource>();
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var support = await unitOfWork.SupportRepository.FindFirst(predicate: d => d.Id == id);
-                    support = _mapper.Map<SupportResource, Support>(supportResource, support);
-                    _logger.LogDebug($"{loggerHeader} - Start to update Support: {JsonConvert.SerializeObject(support)}");
-                    support.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                    support.LastModified = DateTime.UtcNow;
-                    unitOfWork.SupportRepository.Update(support);
+                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
+                    childrenFavorite = _mapper.Map<FavoriteResource, Favorite>(childrenFavoriteResource, childrenFavorite);
+                    _logger.LogDebug($"{loggerHeader} - Start to update Favorite: {JsonConvert.SerializeObject(childrenFavorite)}");
+                    childrenFavorite.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                    childrenFavorite.LastModified = DateTime.UtcNow;
+                    unitOfWork.FavoriteRepository.Update(childrenFavorite);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Update Support successfully with Id: {support.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Update Favorite successfully with Id: {childrenFavorite.Id}");
 
-                    support = await unitOfWork.SupportRepository.FindFirst(predicate: d => d.Id == support.Id);
-                    apiResponse.Data = _mapper.Map<Support, SupportResource>(support);
+                    childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == childrenFavorite.Id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
                 }
                 catch (Exception ex)
                 {
@@ -117,33 +117,33 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportResource>> DeleteSupport(long id, bool removeFromDB = false)
+        public async Task<ApiResponse<FavoriteResource>> DeleteFavorite(long id, bool removeFromDB = false)
         {
-            const string loggerHeader = "DeleteSupport";
+            const string loggerHeader = "DeleteFavorite";
 
-            var apiResponse = new ApiResponse<SupportResource>();
+            var apiResponse = new ApiResponse<FavoriteResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to delete Support with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to delete Favorite with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var support = await unitOfWork.SupportRepository.FindFirst(d => d.Id == id);
+                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.Id == id);
                     if (removeFromDB)
                     {
-                        unitOfWork.SupportRepository.Remove(support);
+                        unitOfWork.FavoriteRepository.Remove(childrenFavorite);
                     }
                     else
                     {
-                        support.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                        support.IsDeleted = true;
-                        support.LastModified = DateTime.UtcNow;
-                        unitOfWork.SupportRepository.Update(support);
+                        childrenFavorite.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                        childrenFavorite.IsDeleted = true;
+                        childrenFavorite.LastModified = DateTime.UtcNow;
+                        unitOfWork.FavoriteRepository.Update(childrenFavorite);
                     }
 
                     await unitOfWork.SaveChanges();
 
-                    _logger.LogDebug($"{loggerHeader} - Delete Support successfully with Id: {support.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Delete Favorite successfully with Id: {childrenFavorite.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -161,21 +161,21 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportResource>> GetSupport(long id)
+        public async Task<ApiResponse<FavoriteResource>> GetFavorite(long id)
         {
-            const string loggerHeader = "GetSupport";
+            const string loggerHeader = "GetFavorite";
 
-            var apiResponse = new ApiResponse<SupportResource>();
+            var apiResponse = new ApiResponse<FavoriteResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to get Support with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to get Favorite with Id: {id}");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var support = await unitOfWork.SupportRepository.FindFirst(predicate: d => d.Id == id);
-                    apiResponse.Data = _mapper.Map<Support, SupportResource>(support);
-                    _logger.LogDebug($"{loggerHeader} - Get Support successfully with Id: {apiResponse.Data.Id}");
+                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
+                    _logger.LogDebug($"{loggerHeader} - Get Favorite successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -193,14 +193,14 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<QueryResultResource<SupportResource>>> GetSupports(QueryResource queryObj)
+        public async Task<ApiResponse<QueryResultResource<FavoriteResource>>> GetFavorites(QueryResource queryObj)
         {
-            const string loggerHeader = "GetSupports";
+            const string loggerHeader = "GetFavorites";
 
-            var apiResponse = new ApiResponse<QueryResultResource<SupportResource>>();
+            var apiResponse = new ApiResponse<QueryResultResource<FavoriteResource>>();
             var pagingSpecification = new PagingSpecification(queryObj);
 
-            _logger.LogDebug($"{loggerHeader} - Start to get Supports with");
+            _logger.LogDebug($"{loggerHeader} - Start to getFavorites with");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
@@ -208,14 +208,13 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
 
-                    var query = await unitOfWork.SupportRepository.FindAll(predicate: d => d.IsDeleted == false
-                                                                                                ,
+                    var query = await unitOfWork.FavoriteRepository.FindAll(predicate: d => d.IsDeleted == false,
                                                                         include: null,
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
-                    apiResponse.Data = _mapper.Map<QueryResult<Support>, QueryResultResource<SupportResource>>(query);
-                    _logger.LogDebug($"{loggerHeader} - Get Supports successfully");
+                    apiResponse.Data = _mapper.Map<QueryResult<Favorite>, QueryResultResource<FavoriteResource>>(query);
+                    _logger.LogDebug($"{loggerHeader} - GetFavorites successfully");
                 }
                 catch (Exception ex)
                 {
@@ -241,13 +240,13 @@ namespace OrphanChildrenSupport.Services
             var currentEmail = _httpContextHelper.GetCurrentUser();
             if (!String.IsNullOrEmpty(currentEmail))
             {
-                _logger.LogDebug($"{loggerHeader} - Start to get Support with email: {currentEmail}");
+                _logger.LogDebug($"{loggerHeader} - Start to get Favorite with email: {currentEmail}");
 
                 using (var unitOfWork = new UnitOfWork(_connectionString))
                 {
                     try
                     {
-                        _logger.LogDebug($"{loggerHeader} - Get Support successfully with Id: {apiResponse.Data}");
+                        _logger.LogDebug($"{loggerHeader} - Get Favorite successfully with Id: {apiResponse.Data}");
                     }
                     catch (Exception ex)
                     {
@@ -271,5 +270,5 @@ namespace OrphanChildrenSupport.Services
                 return "";
             }
         }
-       }
+    }
 }

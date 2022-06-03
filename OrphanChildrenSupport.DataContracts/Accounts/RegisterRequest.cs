@@ -20,9 +20,7 @@ namespace OrphanChildrenSupport.Models.Accounts
         [MinLength(6)]
         public string Password { get; set; }
         [Required]
-        public string DetailAddress { get; set; }
-        [Required]
-        public string PublicAddress { get; set; }
+        public string Address { get; set; }
         [Required]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }

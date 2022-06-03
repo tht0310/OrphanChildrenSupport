@@ -1,4 +1,5 @@
-﻿using OrphanChildrenSupport.Services.Models;
+﻿using OrphanChildrenSupport.DataContracts.Resources;
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.Collections.Generic;
 
@@ -18,5 +19,8 @@ namespace OrphanChildrenSupport.DataContracts
         public string ImagePath { get; set; }
         public ChildrenProfileStatus Status { get; set; }
         public ICollection<ChildrenProfileSupportCategoryResponse> ChildrenProfileSupportCategories { get; set; }
+        public ICollection<FavoriteResource> Favorites { get; set; }
+        public ICollection<ChildrenProfileImageResource> ChildrenProfileImages { get; set; }
+        public ICollection<DonationResource> Donations { get; set; }
     }
 }

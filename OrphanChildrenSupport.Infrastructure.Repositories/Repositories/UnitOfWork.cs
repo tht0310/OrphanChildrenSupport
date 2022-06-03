@@ -21,21 +21,32 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         private string _connectionString;
 
         #region DBSet Repotiory
-        private IAsyncRepository<PersonalProfile> _personalProfileRepository;
         private IAsyncRepository<ChildrenProfile> _childrenProfileRepository;
         private IAsyncRepository<SupportCategory> _supportCategoryRepository;
         private IAsyncRepository<ChildrenProfileSupportCategory> _childrenProfileSupportCategoryRepository;
-        private IAsyncRepository<Support> _supportRepository;
-        private IAsyncRepository<SupportDetail> _supportDetailRepository;
+        private IAsyncRepository<Donation> _donationRepository;
+        private IAsyncRepository<DonationDetail> _donationDetailRepository;
+        private IAsyncRepository<ChildrenProfileImage> _childrenProfileImageRepository;
+        private IAsyncRepository<Favorite> _favoriteRepository;
+        private IAsyncRepository<Report> _reportRepository;
+        private IAsyncRepository<ReportDetail> _reportDetailRepository;
+        private IAsyncRepository<ReportFieldCategory> _reportFieldCategoryRepository;
+        private IAsyncRepository<Notification> _notificationRepository;
+        private IAsyncRepository<Changelog> _changelogRepository;
         private IAsyncRepository<Account> _accountRepository;
 
-        public IAsyncRepository<PersonalProfile> PersonalProfileRepository => _personalProfileRepository ?? (_personalProfileRepository = new EfRepository<PersonalProfile>(_context));
         public IAsyncRepository<ChildrenProfile> ChildrenProfileRepository => _childrenProfileRepository ?? (_childrenProfileRepository = new EfRepository<ChildrenProfile>(_context));
         public IAsyncRepository<SupportCategory> SupportCategoryRepository => _supportCategoryRepository ?? (_supportCategoryRepository = new EfRepository<SupportCategory>(_context));
         public IAsyncRepository<ChildrenProfileSupportCategory> ChildrenProfileSupportCategoryRepository => _childrenProfileSupportCategoryRepository ?? (_childrenProfileSupportCategoryRepository = new EfRepository<ChildrenProfileSupportCategory>(_context));
-        public IAsyncRepository<Support> SupportRepository => _supportRepository ?? (_supportRepository = new EfRepository<Support>(_context));
-        public IAsyncRepository<SupportDetail> SupportDetailRepository => _supportDetailRepository ?? (_supportDetailRepository = new EfRepository<SupportDetail>(_context));
-
+        public IAsyncRepository<Donation> DonationRepository => _donationRepository ?? (_donationRepository = new EfRepository<Donation>(_context));
+        public IAsyncRepository<DonationDetail> DonationDetailRepository => _donationDetailRepository ?? (_donationDetailRepository = new EfRepository<DonationDetail>(_context));
+        public IAsyncRepository<ChildrenProfileImage> ChildrenProfileImageRepository => _childrenProfileImageRepository ?? (_childrenProfileImageRepository = new EfRepository<ChildrenProfileImage>(_context));
+        public IAsyncRepository<Favorite> FavoriteRepository => _favoriteRepository ?? (_favoriteRepository = new EfRepository<Favorite>(_context));
+        public IAsyncRepository<Report> ReportRepository => _reportRepository ?? (_reportRepository = new EfRepository<Report>(_context));
+        public IAsyncRepository<ReportDetail> ReportDetailRepository => _reportDetailRepository ?? (_reportDetailRepository = new EfRepository<ReportDetail>(_context));
+        public IAsyncRepository<ReportFieldCategory> ReportFieldCategoryRepository => _reportFieldCategoryRepository ?? (_reportFieldCategoryRepository = new EfRepository<ReportFieldCategory>(_context));
+        public IAsyncRepository<Notification> NotificationRepository => _notificationRepository ?? (_notificationRepository = new EfRepository<Notification>(_context));
+        public IAsyncRepository<Changelog> ChangelogRepository => _changelogRepository ?? (_changelogRepository = new EfRepository<Changelog>(_context));
         public IAsyncRepository<Account> AccountRepository => _accountRepository ?? (_accountRepository = new EfRepository<Account>(_context));
         #endregion
 
@@ -95,9 +106,9 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
             }
         }
 
-        public async Task DeleteChildrenProfileSupportCategiry(long childrenProfileId)
+        public async Task DeleteChildrenProfileSupportCategories(long childrenProfileId)
         {
-            string spName = StoreProcedureConstants.SP_DeleteChildrenProfileSuportCategory;
+            string spName = StoreProcedureConstants.SP_DeleteChildrenProfileSuportCategories;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
@@ -110,6 +121,75 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
                 cmd.CommandTimeout = 0;
 
                 cmd.Parameters.Add(new SqlParameter("@ChildrenProfileId", childrenProfileId));
+
+                // execute the command
+                await cmd.ExecuteReaderAsync();
+
+                await conn.DisposeAsync();
+            }
+        }
+
+        public async Task DeleteReportDetails(long reportId)
+        {
+            string spName = StoreProcedureConstants.SP_DeleteReportDetails;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand comm = new SqlCommand("SET ARITHABORT ON", conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+                SqlCommand cmd = new SqlCommand(spName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                cmd.Parameters.Add(new SqlParameter("@ReportId", reportId));
+
+                // execute the command
+                await cmd.ExecuteReaderAsync();
+
+                await conn.DisposeAsync();
+            }
+        }
+
+        public async Task DeleteDonationDetails(long donationId)
+        {
+            string spName = StoreProcedureConstants.SP_DeleteDonationDetails;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand comm = new SqlCommand("SET ARITHABORT ON", conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+                SqlCommand cmd = new SqlCommand(spName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                cmd.Parameters.Add(new SqlParameter("@DonationId", donationId));
+
+                // execute the command
+                await cmd.ExecuteReaderAsync();
+
+                await conn.DisposeAsync();
+            }
+        }
+
+        public async Task DeleteFavorites(long accountId)
+        {
+            string spName = StoreProcedureConstants.SP_DeleteFavorites;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand comm = new SqlCommand("SET ARITHABORT ON", conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+                SqlCommand cmd = new SqlCommand(spName, conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 0;
+
+                cmd.Parameters.Add(new SqlParameter("@AccountId", accountId));
 
                 // execute the command
                 await cmd.ExecuteReaderAsync();

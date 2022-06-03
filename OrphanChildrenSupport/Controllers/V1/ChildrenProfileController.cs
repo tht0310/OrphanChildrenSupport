@@ -4,6 +4,7 @@ using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
 using OrphanChildrenSupport.DataContracts.ViewModels;
 using OrphanChildrenSupport.Services.Contracts;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Controllers.V1
@@ -79,20 +80,20 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        [HttpPost]
-        [Route("{id}/uploadImageBase64")]
-        public async Task<IActionResult> UploadPersonalProfileAvatarBase64(long id, [FromBody] Base64File base64File)
-        {
-            var apiResponse = await _childrenProfileService.UploadChildrenProfileImageBase64(id, base64File.Base64);
-            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
-        }
-
         [HttpGet]
         [Route("{id}/getImage")]
         public async Task<IActionResult> GetPersonalProfileImage(long id)
         {
             var apiResponse = await _childrenProfileService.GetChildrenProfileImage(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : File(apiResponse.Data, "image/png");
+        }
+
+        [HttpPost]
+        [Route("{id}/uploadImages")]
+        public async Task<IActionResult> UploadPersonalProfileImages(long id, List<IFormFile> files)
+        {
+            var apiResponse = await _childrenProfileService.UploadChildrenProfileImages(id, files);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }
 }

@@ -21,7 +21,7 @@ using OrphanChildrenSupport.Services.Models.DBSets;
 
 namespace OrphanChildrenSupport.Services
 {
-    public class SupportDetailService : ISupportDetailService
+    public class ReportFieldCategoryService : IReportFieldCategoryService
     {
 
         private string _connectionString;
@@ -30,39 +30,39 @@ namespace OrphanChildrenSupport.Services
         private ICryptoEncryptionHelper _cryptoEncryptionHelper;
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
-        private readonly ILogger<SupportDetailService> _logger;
+        private readonly ILogger<ReportFieldCategoryService> _logger;
 
-        public SupportDetailService(IMapper mapper, ILogger<SupportDetailService> logger, IConfiguration config,
+        public ReportFieldCategoryService(IMapper mapper, ILogger<ReportFieldCategoryService> logger, IConfiguration config,
             ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:SupportDetailAvatarFolderId") ?? "";
+            _folderid = config.GetValue<string>("LibraryApi:ReportFieldCategoryAvatarFolderId") ?? "";
             _type = config.GetValue<string>("LibraryApi:Type") ?? "";
             _cryptoEncryptionHelper = cryptoEncryptionHelper;
             _httpContextHelper = httpContextHelper;
         }
 
-        public async Task<ApiResponse<SupportDetailResource>> CreateSupportDetail(SupportDetailResource supportCategoryResource)
+        public async Task<ApiResponse<ReportFieldCategoryResource>> CreateReportFieldCategory(ReportFieldCategoryResource seportFieldCategoryResource)
         {
-            const string loggerHeader = "CreateSupportDetail";
+            const string loggerHeader = "CreateReportFieldCategory";
 
-            var apiResponse = new ApiResponse<SupportDetailResource>();
-            SupportDetail supportCategory = _mapper.Map<SupportDetailResource, SupportDetail>(supportCategoryResource);
+            var apiResponse = new ApiResponse<ReportFieldCategoryResource>();
+            ReportFieldCategory seportFieldCategory = _mapper.Map<ReportFieldCategoryResource, ReportFieldCategory>(seportFieldCategoryResource);
 
-            _logger.LogDebug($"{loggerHeader} - Start to add SupportDetail: {JsonConvert.SerializeObject(supportCategory)}");
+            _logger.LogDebug($"{loggerHeader} - Start to add ReportFieldCategory: {JsonConvert.SerializeObject(seportFieldCategory)}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    supportCategory.CreatedBy = _httpContextHelper.GetCurrentUser();
-                    supportCategory.CreatedTime = DateTime.UtcNow;
-                    await unitOfWork.SupportDetailRepository.Add(supportCategory);
+                    seportFieldCategory.CreatedBy = _httpContextHelper.GetCurrentUser();
+                    seportFieldCategory.CreatedTime = DateTime.UtcNow;
+                    await unitOfWork.ReportFieldCategoryRepository.Add(seportFieldCategory);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Add new SupportDetail successfully with Id: {supportCategory.Id}");
-                    supportCategory = await unitOfWork.SupportDetailRepository.FindFirst(predicate: d => d.Id == supportCategory.Id);
-                    apiResponse.Data = _mapper.Map<SupportDetail, SupportDetailResource>(supportCategory);
+                    _logger.LogDebug($"{loggerHeader} - Add new ReportFieldCategory successfully with Id: {seportFieldCategory.Id}");
+                    seportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(predicate: d => d.Id == seportFieldCategory.Id);
+                    apiResponse.Data = _mapper.Map<ReportFieldCategory, ReportFieldCategoryResource>(seportFieldCategory);
                 }
                 catch (Exception ex)
                 {
@@ -80,26 +80,26 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportDetailResource>> UpdateSupportDetail(long id, SupportDetailResource supportCategoryResource)
+        public async Task<ApiResponse<ReportFieldCategoryResource>> UpdateReportFieldCategory(long id, ReportFieldCategoryResource seportFieldCategoryResource)
         {
-            const string loggerHeader = "UpdateSupportDetail";
-            var apiResponse = new ApiResponse<SupportDetailResource>();
+            const string loggerHeader = "UpdateReportFieldCategory";
+            var apiResponse = new ApiResponse<ReportFieldCategoryResource>();
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var supportCategory = await unitOfWork.SupportDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    supportCategory = _mapper.Map<SupportDetailResource, SupportDetail>(supportCategoryResource, supportCategory);
-                    _logger.LogDebug($"{loggerHeader} - Start to update SupportDetail: {JsonConvert.SerializeObject(supportCategory)}");
-                    supportCategory.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                    supportCategory.LastModified = DateTime.UtcNow;
-                    unitOfWork.SupportDetailRepository.Update(supportCategory);
+                    var seportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(predicate: d => d.Id == id);
+                    seportFieldCategory = _mapper.Map<ReportFieldCategoryResource, ReportFieldCategory>(seportFieldCategoryResource, seportFieldCategory);
+                    _logger.LogDebug($"{loggerHeader} - Start to update ReportFieldCategory: {JsonConvert.SerializeObject(seportFieldCategory)}");
+                    seportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                    seportFieldCategory.LastModified = DateTime.UtcNow;
+                    unitOfWork.ReportFieldCategoryRepository.Update(seportFieldCategory);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Update SupportDetail successfully with Id: {supportCategory.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Update ReportFieldCategory successfully with Id: {seportFieldCategory.Id}");
 
-                    supportCategory = await unitOfWork.SupportDetailRepository.FindFirst(predicate: d => d.Id == supportCategory.Id);
-                    apiResponse.Data = _mapper.Map<SupportDetail, SupportDetailResource>(supportCategory);
+                    seportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(predicate: d => d.Id == seportFieldCategory.Id);
+                    apiResponse.Data = _mapper.Map<ReportFieldCategory, ReportFieldCategoryResource>(seportFieldCategory);
                 }
                 catch (Exception ex)
                 {
@@ -117,33 +117,33 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportDetailResource>> DeleteSupportDetail(long id, bool removeFromDB = false)
+        public async Task<ApiResponse<ReportFieldCategoryResource>> DeleteReportFieldCategory(long id, bool removeFromDB = false)
         {
-            const string loggerHeader = "DeleteSupportDetail";
+            const string loggerHeader = "DeleteReportFieldCategory";
 
-            var apiResponse = new ApiResponse<SupportDetailResource>();
+            var apiResponse = new ApiResponse<ReportFieldCategoryResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to delete SupportDetail with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to delete ReportFieldCategory with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var supportCategory = await unitOfWork.SupportDetailRepository.FindFirst(d => d.Id == id);
+                    var seportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(d => d.Id == id);
                     if (removeFromDB)
                     {
-                        unitOfWork.SupportDetailRepository.Remove(supportCategory);
+                        unitOfWork.ReportFieldCategoryRepository.Remove(seportFieldCategory);
                     }
                     else
                     {
-                        supportCategory.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                        supportCategory.IsDeleted = true;
-                        supportCategory.LastModified = DateTime.UtcNow;
-                        unitOfWork.SupportDetailRepository.Update(supportCategory);
+                        seportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                        seportFieldCategory.IsDeleted = true;
+                        seportFieldCategory.LastModified = DateTime.UtcNow;
+                        unitOfWork.ReportFieldCategoryRepository.Update(seportFieldCategory);
                     }
 
                     await unitOfWork.SaveChanges();
 
-                    _logger.LogDebug($"{loggerHeader} - Delete SupportDetail successfully with Id: {supportCategory.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Delete ReportFieldCategory successfully with Id: {seportFieldCategory.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -161,21 +161,21 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<SupportDetailResource>> GetSupportDetail(long id)
+        public async Task<ApiResponse<ReportFieldCategoryResource>> GetReportFieldCategory(long id)
         {
-            const string loggerHeader = "GetSupportDetail";
+            const string loggerHeader = "GetReportFieldCategory";
 
-            var apiResponse = new ApiResponse<SupportDetailResource>();
+            var apiResponse = new ApiResponse<ReportFieldCategoryResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to get SupportDetail with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to get ReportFieldCategory with Id: {id}");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var supportCategory = await unitOfWork.SupportDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    apiResponse.Data = _mapper.Map<SupportDetail, SupportDetailResource>(supportCategory);
-                    _logger.LogDebug($"{loggerHeader} - Get SupportDetail successfully with Id: {apiResponse.Data.Id}");
+                    var seportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(predicate: d => d.Id == id);
+                    apiResponse.Data = _mapper.Map<ReportFieldCategory, ReportFieldCategoryResource>(seportFieldCategory);
+                    _logger.LogDebug($"{loggerHeader} - Get ReportFieldCategory successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -193,14 +193,14 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<QueryResultResource<SupportDetailResource>>> GetSupportDetails(QueryResource queryObj)
+        public async Task<ApiResponse<QueryResultResource<ReportFieldCategoryResource>>> GetReportFieldCategories(QueryResource queryObj)
         {
-            const string loggerHeader = "GetSupportDetails";
+            const string loggerHeader = "GetReportFieldCategories";
 
-            var apiResponse = new ApiResponse<QueryResultResource<SupportDetailResource>>();
+            var apiResponse = new ApiResponse<QueryResultResource<ReportFieldCategoryResource>>();
             var pagingSpecification = new PagingSpecification(queryObj);
 
-            _logger.LogDebug($"{loggerHeader} - Start to get SupportDetails with");
+            _logger.LogDebug($"{loggerHeader} - Start to get ReportFieldCategories with");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
@@ -208,14 +208,14 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
 
-                    var query = await unitOfWork.SupportDetailRepository.FindAll(predicate: d => d.IsDeleted == false
+                    var query = await unitOfWork.ReportFieldCategoryRepository.FindAll(predicate: d => d.IsDeleted == false
                                                                                                 ,
                                                                         include: null,
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
-                    apiResponse.Data = _mapper.Map<QueryResult<SupportDetail>, QueryResultResource<SupportDetailResource>>(query);
-                    _logger.LogDebug($"{loggerHeader} - Get SupportDetails successfully");
+                    apiResponse.Data = _mapper.Map<QueryResult<ReportFieldCategory>, QueryResultResource<ReportFieldCategoryResource>>(query);
+                    _logger.LogDebug($"{loggerHeader} - Get ReportFieldCategories successfully");
                 }
                 catch (Exception ex)
                 {
@@ -241,13 +241,13 @@ namespace OrphanChildrenSupport.Services
             var currentEmail = _httpContextHelper.GetCurrentUser();
             if (!String.IsNullOrEmpty(currentEmail))
             {
-                _logger.LogDebug($"{loggerHeader} - Start to get SupportDetail with email: {currentEmail}");
+                _logger.LogDebug($"{loggerHeader} - Start to get ReportFieldCategory with email: {currentEmail}");
 
                 using (var unitOfWork = new UnitOfWork(_connectionString))
                 {
                     try
                     {
-                        _logger.LogDebug($"{loggerHeader} - Get SupportDetail successfully with Id: {apiResponse.Data}");
+                        _logger.LogDebug($"{loggerHeader} - Get ReportFieldCategory successfully with Id: {apiResponse.Data}");
                     }
                     catch (Exception ex)
                     {
