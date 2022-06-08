@@ -46,6 +46,10 @@ const RegisteredProfilePage: React.FC<Props> = () => {
     onSearch();
   }, [filterBy, filterValue]);
 
+  useEffect(() => {
+    console.log(userProfiles);
+  }, [userProfiles]);
+
   const requestColumns: CustomColumnType[] = [
     {
       title: "#",
@@ -175,9 +179,9 @@ const RegisteredProfilePage: React.FC<Props> = () => {
   function onDelete(id) {}
 
   async function fetchUserProfile() {
-    const res = await userService.getAll();
+    const res = await userService.getAllUser();
     if (!res.hasErrors) {
-      setUserProfiles(res.value.items);
+      setUserProfiles(res.value);
     }
   }
 

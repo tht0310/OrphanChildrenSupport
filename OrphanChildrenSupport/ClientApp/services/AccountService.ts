@@ -72,6 +72,8 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
+  
+
   public async getAccount(id: number): Promise<Result<IRegisterModel>> {
     const res = await this.requestJson<IRegisterModel>({
       url: `/api/accounts/${id}`,
@@ -79,6 +81,17 @@ export default class AccountService extends ServiceBase {
     });
     return res;
   }
+
+  public async getAllUser(): Promise<Result<IRegisterModel[]>> {
+    const result = await this.requestJson<IRegisterModel[]>({
+      url: `/api/accounts`,
+      method: "GET",
+    });
+    return result;
+  }
+
+
+ 
 
   
 }
