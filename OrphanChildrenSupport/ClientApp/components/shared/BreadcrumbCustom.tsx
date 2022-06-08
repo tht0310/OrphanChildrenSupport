@@ -22,6 +22,26 @@ const routesName = [
     path: "/admin/report/detail",
     breadcrumb: ["Home", "Report", "Detail"],
   },
+  {
+    path: "/admin/activitymanagement/donation",
+    breadcrumb: ["Home", "Activity Management", "Donation"],
+  },
+  {
+    path: "/admin/user",
+    breadcrumb: ["Home", "User Management", "User"],
+  },
+  {
+    path: `/admin/donation/detail/`,
+    breadcrumb: ["Home", "Donation", "Detail"],
+  },
+  {
+    path: `/admin/activitymanagement/reportfield`,
+    breadcrumb: ["Home", "User Management", "Report Field"],
+  },
+  {
+    path: `/admin/activitymanagement/report`,
+    breadcrumb: ["Home", "User Management", "Report"],
+  },
 ];
 const { TextArea } = Input;
 

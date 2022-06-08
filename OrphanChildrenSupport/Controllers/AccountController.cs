@@ -105,8 +105,8 @@ namespace OrphanChildrenSupport.Controllers
         }
 
         //[Authorize]
-        [HttpGet("{id:int}")]
-        public ActionResult<AccountResponse> GetById(int id)
+        [HttpGet("{id:long}")]
+        public ActionResult<AccountResponse> GetById(long id)
         {
             // users can get their own account and admins can get any account
             // if (id != Account.Id && Account.Role != Role.Admin)

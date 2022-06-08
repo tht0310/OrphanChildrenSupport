@@ -162,7 +162,6 @@ const VolunteerProfileModal: React.FC<IProps> = ({
         });
         values.childrenProfileSupportCategories = tempList;
       }
-      console.log(values);
       const res = await childrenProfileService.updateWithFile(
         values,
         imageFile?.originFileObj

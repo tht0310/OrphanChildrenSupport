@@ -6,8 +6,10 @@ import {
   cilCalculator,
   cilGrid,
   cilHeart,
+  cilObjectUngroup,
   cilPeople,
   cilPhone,
+  cilPlaylistAdd,
   cilSpeedometer,
   cilUser,
   cilWarning,
@@ -68,7 +70,13 @@ const navigations = [
     component: CNavItem,
     name: "Report",
     to: "/admin/activitymanagement/report",
-    icon: <CIcon icon={cilWarning} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilObjectUngroup} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Report Field Category",
+    to: "/admin/activitymanagement/reportfield",
+    icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
 
   {
@@ -80,12 +88,6 @@ const navigations = [
     name: "Statistic",
     to: "/admin/statistic",
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: "Contact",
-    to: "/contact",
-    icon: <CIcon icon={cilPhone} customClassName="nav-icon" />,
   },
 ];
 

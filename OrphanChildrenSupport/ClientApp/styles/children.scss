@@ -338,6 +338,13 @@
       background: #e57905;
       color: #fff;
     }
+    button:disabled,
+    button[disabled]{
+      border: 1px solid #e0dfdf;
+      background-color: #e0dfdf;
+      color: #666666;
+    }
+
   }
 
   .size {

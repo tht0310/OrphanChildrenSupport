@@ -6,36 +6,34 @@ import {
   DatePicker,
   Form,
   Input,
-  InputNumber,
-  message,
   Modal,
   Row,
   Select,
+  Space,
   Upload,
 } from "antd";
-import { Plus, Save } from "react-feather";
 
+import { IReportFieldModel } from "@Models/IReportFieldModel";
+import { IReportDetailModel } from "@Models/IReportModel";
 import moment from "moment";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import { DataServices } from "@Services/DataServices";
-import { useState } from "react";
-import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
-import SupportCategoryService from "@Services/SupportCategoryService";
-import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
-import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
-import { IChildrenSupportCategoryModel } from "@Models/IChildrenSupportCategoryModel";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import TextEditor from "@Components/shared/TextEditor";
+import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
+import { displayDateTime } from "@Services/FormatDateTimeService";
+import { DataServices } from "@Services/DataServices";
+import { UploadChangeParam } from "antd/lib/upload";
+import { UploadFile } from "antd/lib/upload/interface";
+import { Plus } from "react-feather";
+import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
+import SupportCategoryService from "@Services/SupportCategoryService";
+import AccountService from "@Services/AccountService";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
+import { IRegisterModel } from "@Models/ILoginModel";
 
-const { TextArea } = Input;
-
-export interface IProps {
-  visible?: boolean;
-  onCancel: () => void;
-  data?: IChildrenProfileModel;
-  fetchData: () => void;
-}
+const supportCategoriesService = new SupportCategoryService();
+const userService = new AccountService();
+const childrenService = new ChildrenProfileService();
 
 const inlineCol2FormLayout = {
   labelCol: {
@@ -55,61 +53,65 @@ const inlineFormLayout = {
   },
 };
 
-const childrenProfileService = new ChildrenProfileService();
-const supportCategoriesService = new SupportCategoryService();
+export interface IProps {
+  visible?: boolean;
+  onCancel: () => void;
+  data: IDonationDetailModel;
+  donation: IDonationModel;
+}
 
-const ChildrenProfileModal: React.FC<IProps> = ({
-  fetchData,
+const DonationDetailModal: React.FC<IProps> = ({
   visible,
-  onCancel,
   data,
+  onCancel,
+  donation,
 }: IProps) => {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState<string | null>();
-  const [imageFile, setImageFile] = useState<UploadFile<any>>();
-  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = React.useState<string | null>();
+  const [imageFile, setImageFile] = React.useState<UploadFile<any>>();
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
+  const [children, setChildren] = React.useState<IChildrenProfileModel[]>([]);
+  const [user, setUser] = React.useState<IRegisterModel[]>([]);
 
   React.useEffect(() => {
-    if (visible === true) {
+    fetchData();
+  }, []);
+
+  React.useEffect(() => {
+    if (visible) {
       form.resetFields();
-      setImageUrl(null);
       if (data) {
         innitialValue();
-        getImage(data.id);
       }
     }
   }, [data, visible]);
 
-  React.useEffect(() => {
-    fetchSupportCategories();
-  }, [visible === true]);
-
-  const handleCancel = () => {
-    onCancel();
-    form.resetFields();
-    setImageUrl(null);
-  };
+  async function fetchData() {
+    fetchSupportCategories;
+    fetchUsers;
+    fetchChildren;
+  }
 
   async function fetchSupportCategories() {
-    const dataRes = await supportCategoriesService.getAll();
-    if (!dataRes.hasErrors) {
-      setSupportCategories(dataRes.value.items);
+    const res = await supportCategoriesService.getAll();
+    if (!res.hasErrors) {
+      setSupportCategories(res.value.items);
     }
   }
 
-  function onSubmit() {
-    form.submit();
+  async function fetchUsers() {
+    const res = await userService.getAll();
+    if (!res.hasErrors) {
+      setUser(res.value.items);
+    }
   }
 
-  async function getImage(id) {
-    const avatarUrl = await childrenProfileService.getImage(id);
-    if (!avatarUrl.hasErrors) {
-      setImageUrl(avatarUrl.value.toString());
-    } else {
-      setImageUrl(null);
+  async function fetchChildren() {
+    const res = await childrenService.getAll();
+    if (!res.hasErrors) {
+      setChildren(res.value.items);
     }
   }
 
@@ -119,9 +121,17 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     reader.readAsDataURL(img);
   }
 
+  function innitialValue() {
+    form.setFieldsValue({
+      id: data.id,
+      supportCategoryId: data.supportCategoryId.toString(),
+      childrenProfileId: donation?.childrenProfileId,
+      accountId: donation?.accountId,
+    });
+  }
+
   const handleChangeImage = (info: UploadChangeParam<UploadFile<any>>) => {
     if (info.file.status === "uploading") {
-      setIsUploadingImage(true);
       return;
     }
     if (info.file.status === "done") {
@@ -129,87 +139,18 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       getBase64(info.file.originFileObj, (imageUrlT: string) => {
         setImageUrl(imageUrlT);
         setImageFile(info.file);
-        setIsUploadingImage(false);
       });
     }
   };
-  const uploadButton = (
-    <div>
-      <Plus />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
 
-  async function onFinish(values: IChildrenProfileModel | any) {
-    values.detailAddress =
-      values.city + "-" + values.province + "-" + values.houseNumber;
-    values.publicAddress = values.city + "-" + values.province;
-    if (data) {
-      const tempList = [];
-      if (values.childrenCategoryGroup) {
-        values.childrenCategoryGroup.map((v) => {
-          tempList.push({
-            supportCategoryId: v,
-            childrenProfileId: values.id,
-          });
-        });
-        values.childrenProfileSupportCategories = tempList;
-      }
-      const res = await childrenProfileService.updateWithFile(
-        values,
-        imageFile?.originFileObj
-      );
-      if (!res.hasErrors) {
-        message.success(`${values.fullName} has been successfully updated`);
-        onCancel();
-        fetchData();
-      }
-    } else {
-      const res = await childrenProfileService.addWithFile(
-        values,
-        imageFile?.originFileObj
-      );
+  function onFinish(value) {}
 
-      if (!res.hasErrors) {
-        if (values.childrenCategoryGroup) {
-          const tempList = [];
-          values.childrenCategoryGroup.map((v) => {
-            tempList.push({
-              supportCategoryId: v,
-              childrenProfileId: res.value.id,
-            });
-          });
-          values.childrenProfileSupportCategories = tempList;
-        }
-
-        message.success(`${values.fullName} has been successfully added`);
-        onCancel();
-        fetchData();
-      }
-    }
+  function onSubmit() {
+    form.submit();
   }
 
-  function innitialValue() {
-    form.setFieldsValue({
-      id: data.id,
-      fullName: data.fullName,
-      gender: data.gender ? "true" : "false",
-      dob: moment(data.dob),
-      city: data.detailAddress.split("-")[0],
-      province: data.detailAddress.split("-")[1],
-      houseNumber: data.detailAddress.split("-")[2],
-      circumstance: data.circumstance,
-      status: data.status + "",
-      guardianPhoneNumber: data.guardianPhoneNumber,
-      guardianName: data.guardianName,
-    });
-    if (data.childrenProfileSupportCategories) {
-      const tempList = [];
-      data.childrenProfileSupportCategories.map((v) => {
-        tempList.push(v.supportCategoryId);
-      });
-      form.setFieldsValue({ childrenCategoryGroup: tempList });
-    }
+  async function handleCancel() {
+    onCancel();
   }
 
   return (
@@ -258,47 +199,56 @@ const ChildrenProfileModal: React.FC<IProps> = ({
                   style={{ width: "100%" }}
                 />
               ) : (
-                uploadButton
+                <div>
+                  <Plus />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
               )}
             </Upload>
           </Col>
           <Col span={18}>
             <Form.Item
-              name="fullName"
-              label="Full name"
+              style={{ width: "100%" }}
+              name="supportCategoryId"
+              label="Support Category"
               className="label-custom"
               {...inlineFormLayout}
               rules={[{ required: true, message: "Please enter full name." }]}
             >
-              <Input />
+              <Select style={{ width: "100%" }}>
+                {supportCategories.map((s) => {
+                  return <Select.Option value={s.id}>{s.title}</Select.Option>;
+                })}
+              </Select>
             </Form.Item>
             <Row>
               <Col xs={24} lg={12}>
                 <Form.Item
-                  label="Birthday"
-                  name="dob"
+                  label="User"
+                  name="accountId"
                   {...inlineCol2FormLayout}
-                  rules={[
-                    { required: true, message: "Please enter birthday." },
-                  ]}
                 >
-                  <DatePicker style={{ width: "100%" }} format={"DD/MM/YYYY"} />
+                  <Select showSearch style={{ width: "100%" }}>
+                    {user.map((s) => {
+                      return (
+                        <Select.Option value={s.id}>{s.fullName}</Select.Option>
+                      );
+                    })}
+                  </Select>
                 </Form.Item>
               </Col>
               <Col xs={24} lg={12}>
                 <Form.Item
-                  label="Gender"
-                  name="gender"
+                  label="Children"
+                  name="childrenProfileId"
                   {...inlineCol2FormLayout}
-                  rules={[{ required: true, message: "Please enter gender." }]}
                 >
-                  <Select>
-                    <Select.Option value="false" key="1">
-                      Girl
-                    </Select.Option>
-                    <Select.Option value="true" key="0">
-                      Boy
-                    </Select.Option>
+                  <Select showSearch style={{ width: "100%" }}>
+                    {children.map((s) => {
+                      return (
+                        <Select.Option value={s.id}>{s.fullName}</Select.Option>
+                      );
+                    })}
                   </Select>
                 </Form.Item>
               </Col>
@@ -377,24 +327,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
               name="childrenCategoryGroup"
               {...inlineFormLayout}
               label="Need support"
-            >
-              <Checkbox.Group>
-                <Row>
-                  {supportCategories.map((s) => {
-                    return (
-                      <Col span={6}>
-                        <Checkbox
-                          value={s.id}
-                          style={{ lineHeight: "32px", paddingRight: "20px" }}
-                        >
-                          {s.title}
-                        </Checkbox>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
+            ></Form.Item>
             <Form.Item
               label="Status"
               name="status"
@@ -488,4 +421,4 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   );
 };
 
-export default ChildrenProfileModal;
+export default DonationDetailModal;

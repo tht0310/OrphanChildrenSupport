@@ -82,7 +82,7 @@ const ChildrenPage: React.FC<Props> = (props) => {
 
   async function fetchChildrenProfile(filterParam) {
     const dataRes = await childrenProfileService.getAll(filterParam);
-    console.log(dataRes);
+
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
     }

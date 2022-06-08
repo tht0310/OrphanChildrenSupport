@@ -3,6 +3,7 @@ import Result from "@Core/Result";
 import { ILoginModel } from "@Models/ILoginModel";
 import { ServiceBase } from "@Core/ServiceBase";
 import SessionManager, { IServiceUser } from "@Core/session";
+import { IQueryResult } from "@Models/IQueryResult";
 
 export default class AccountService extends ServiceBase {
   public async login(loginModel: ILoginModel): Promise<Result<IRegisterModel>> {
@@ -21,18 +22,15 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
-  public async logout(): Promise<Result<{}>> {
-    
-  
+  public async logout(): Promise<Result<{}>> {   
       SessionManager.setServiceUser(null);
       localStorage.setItem('currentUser', null)
-    
-
     return null
   }
+  
   public async register(model: IRegisterModel): Promise<Result<{}>> {
     var result = await this.requestJson<{}>({
-      url: "/api/Accounts/register",
+      url: "/api/accounts/register",
       method: "POST",
       data: model,
     });
@@ -66,6 +64,34 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
+  public async getAll(): Promise<Result<IQueryResult<IRegisterModel>>> {
+    const result = await this.requestJson<IQueryResult<IRegisterModel>>({
+      url: `/api/accounts`,
+      method: "GET",
+    });
+    return result;
+  }
+
+  
+
+  public async getAccount(id: number): Promise<Result<IRegisterModel>> {
+    const res = await this.requestJson<IRegisterModel>({
+      url: `/api/accounts/${id}`,
+      method: "GET",
+    });
+    return res;
+  }
+
+  public async getAllUser(): Promise<Result<IRegisterModel[]>> {
+    const result = await this.requestJson<IRegisterModel[]>({
+      url: `/api/accounts`,
+      method: "GET",
+    });
+    return result;
+  }
+
+
+ 
 
   
 }

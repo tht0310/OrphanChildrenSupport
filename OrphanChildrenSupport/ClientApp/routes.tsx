@@ -22,7 +22,7 @@ import AccountDetailPage from "@Pages/AccountDetailPage";
 import ChildrenCartPage from "@Pages/Guest/ChildrenCartPage";
 import { Switch } from "react-router-dom";
 import VolunteerPage from "@Pages/VolunteerPage";
-import RegisteredProfilePage from "@Pages/RegisteredUserProfilePage";
+import RegisteredProfilePage from "@Pages/UserProfilePage";
 import ActivityHistoryPage from "@Pages/Guest/ActivityHistoryPage";
 import ChildrenPage from "@Pages/Guest/ChildrenPage";
 import ExamplePage from "@Pages/Guest/ExamplePage";
@@ -31,6 +31,8 @@ import DonationDetailPage from "@Pages/DonationDetailPage";
 import ReportDetailPage from "@Pages/ReportDetailPage";
 import StatisticPage from "@Pages/Guest/StatisticPage";
 import ChildrenProfilePage from "@Pages/ChildrenProfilePage";
+import ReportFieldCategoryPage from "@Pages/ReportFieldCategoryPage";
+import ReportManagementPage from "@Pages/ReportManagementPage";
 
 export const routes = (
   <Switch>
@@ -154,18 +156,28 @@ export const routes = (
     />
     <AppRoute
       layout={AuthorizedLayout}
-      path="/admin/donation/detail/"
+      path="/admin/donation/detail/:id"
       component={DonationDetailPage}
     />
     <AppRoute
       layout={AuthorizedLayout}
-      path="/admin/report/detail/"
+      path="/admin/report/detail/:id"
       component={ReportDetailPage}
     />
     <AppRoute
       layout={AuthorizedLayout}
       path="/admin/statistic/"
       component={StatisticPage}
+    />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/reportfield"
+      component={ReportFieldCategoryPage}
+    />
+    <AppRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/report"
+      component={ReportManagementPage}
     />
   </Switch>
 );

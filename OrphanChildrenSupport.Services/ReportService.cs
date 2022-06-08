@@ -60,7 +60,7 @@ namespace OrphanChildrenSupport.Services
                     report.CreatedTime = DateTime.UtcNow;
                     report.ApproverId = null;
                     report.ModifiedBy = null;
-                    
+
                     await unitOfWork.ReportRepository.Add(report);
                     await unitOfWork.SaveChanges();
                     _logger.LogDebug($"{loggerHeader} - Add new Report successfully with Id: {report.Id}");
@@ -179,7 +179,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: null);
+                                                                       include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - Get Report successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -215,7 +215,7 @@ namespace OrphanChildrenSupport.Services
                 {
 
                     var query = await unitOfWork.ReportRepository.FindAll(predicate: d => d.IsDeleted == false,
-                                                                        include: null,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)),
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);

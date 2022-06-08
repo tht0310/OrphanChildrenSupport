@@ -5,10 +5,14 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
+import ReportFieldModal from "@Components/modals/ReportFieldModel";
 import SupportCategoryModal from "@Components/modals/SupportCategoryModal";
 import { IFilterType } from "@Models/IFilterType";
+import { IReportFieldModel } from "@Models/IReportFieldModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
+import ReportFieldService from "@Services/ReportFieldService";
+import ReportService from "@Services/ReportService";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import {
   Button,
@@ -28,19 +32,25 @@ import { Edit2, Trash2 } from "react-feather";
 
 type Props = {};
 
-const supportCategoriesService = new SupportCategoryService();
+const options = [
+  { name: "Full Name", value: "fullName" },
+  { name: "Birthday", value: "dob" },
+  { name: "Address", value: "detailAddress" },
+  { name: "Gender", value: "gender" },
+  { name: "Circumstance", value: "circumstance" },
+  { name: "Guardian Name", value: "guardianName" },
+  { name: "Other", value: "other" },
+];
 
-const SupportCategoryPage: React.FC<Props> = () => {
+const reportFieldService = new ReportFieldService();
+
+const ReportFieldCategoryPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
-  const [supportCategories, setSupportCategories] = React.useState<
-    ISupportCategoryModel[]
-  >([]);
+  const [reports, setReport] = React.useState<IReportFieldModel[]>([]);
   const [filterValue, setFilterValue] = React.useState<string>();
-  const [isSupportCategoriesModal, setSupportCategoriesModal] =
-    React.useState<boolean>(false);
-  const [modelForEdit, setmodelForEdit] =
-    React.useState<ISupportCategoryModel>();
+  const [isModal, setModal] = React.useState<boolean>(false);
+  const [modelForEdit, setmodelForEdit] = React.useState<IReportFieldModel>();
   const [filterBy, setFilterBy] = React.useState<string>("title");
 
   useEffect(() => {
@@ -50,6 +60,16 @@ const SupportCategoryPage: React.FC<Props> = () => {
   useEffect(() => {
     onSearch();
   }, [filterValue]);
+
+  function findName(v) {
+    let result = "";
+    options.map((o) => {
+      if (o.value === v) {
+        result = o.name;
+      }
+    });
+    return result;
+  }
 
   const excelColumns: IExcelColumn[] = [
     {
@@ -62,8 +82,8 @@ const SupportCategoryPage: React.FC<Props> = () => {
       title: "Title",
       dataIndex: "title",
       render: (text: string) => (
-        <a className="item-title" onClick={toggleSupportCategoryModal}>
-          {text}
+        <a className="item-title" onClick={toggleModal}>
+          {findName(text)}
         </a>
       ),
     },
@@ -97,8 +117,8 @@ const SupportCategoryPage: React.FC<Props> = () => {
       width: "40%",
       columnSearchDataIndex: "fullName",
       render: (text: string) => (
-        <a className="item-title" onClick={toggleSupportCategoryModal}>
-          {text}
+        <a className="item-title" onClick={toggleModal}>
+          {findName(text)}
         </a>
       ),
     },
@@ -125,7 +145,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       render: (text, record, index) => (
         <Space className="actions">
           <Button
-            onClick={toggleSupportCategoryModal}
+            onClick={toggleModal}
             className="btn-custom-2 blue-action-btn"
             icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
           />
@@ -145,7 +165,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
     },
   ];
   async function fetchData() {
-    fetchSupportCategories();
+    fetchReport();
   }
 
   const handleClick = () => {
@@ -153,39 +173,37 @@ const SupportCategoryPage: React.FC<Props> = () => {
     excel
       .addSheet("test")
       .addColumns(excelColumns)
-      .addDataSource(supportCategories, {
+      .addDataSource(reports, {
         str2Percent: true,
       })
-      .saveAs("SupportCategory.xlsx");
+      .saveAs("Report.xlsx");
   };
 
   async function onDelete(id: number) {
-    const res = await supportCategoriesService.delete(id);
+    const res = await reportFieldService.delete(id);
     if (!res.hasErrors) {
       message.success("Category deleted sucessfully");
       fetchData();
     }
   }
 
-  async function toggleSupportCategoryModal() {
-    setSupportCategoriesModal(!isSupportCategoriesModal);
+  async function toggleModal() {
+    setModal(!isModal);
     setmodelForEdit(null);
   }
 
   async function onSearch() {
     const value: IFilterType = { [filterBy]: filterValue };
-
-    const res = await supportCategoriesService.search(value);
-
+    const res = await reportFieldService.search(value);
     if (!res.hasErrors) {
-      setSupportCategories(res.value.items);
+      setReport(res.value.items);
     }
   }
 
-  async function fetchSupportCategories() {
-    const dataRes = await supportCategoriesService.getAll();
+  async function fetchReport() {
+    const dataRes = await reportFieldService.getAll();
     if (!dataRes.hasErrors) {
-      setSupportCategories(dataRes.value.items);
+      setReport(dataRes.value.items);
     }
   }
 
@@ -194,7 +212,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={14} className="table-title">
-            Support Category
+            Report Field Category
           </Col>
           <Col span={7}>
             <div className="option-pannel">
@@ -216,7 +234,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
             <Button
               style={{ marginRight: "3px", padding: "4px 10px" }}
               type="primary"
-              onClick={toggleSupportCategoryModal}
+              onClick={toggleModal}
               danger
             >
               <AppstoreAddOutlined />
@@ -242,20 +260,22 @@ const SupportCategoryPage: React.FC<Props> = () => {
             },
           };
         }}
-        dataSource={supportCategories}
+        dataSource={reports}
         pagination={{ pageSize: 10 }}
         onChange={(e) => {
           setPage(e.current);
         }}
       />
-      <SupportCategoryModal
-        visible={isSupportCategoriesModal}
-        onCancel={toggleSupportCategoryModal}
+
+      <ReportFieldModal
+        visible={isModal}
+        onCancel={toggleModal}
         data={modelForEdit}
         fetchData={fetchData}
+        reportField={reports}
       />
     </div>
   );
 };
 
-export default SupportCategoryPage;
+export default ReportFieldCategoryPage;

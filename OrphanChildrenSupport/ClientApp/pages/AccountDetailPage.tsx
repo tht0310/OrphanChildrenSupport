@@ -13,22 +13,13 @@ import {
   Tag,
 } from "antd";
 import React from "react";
-import { Image } from "antd";
 import { IRegisterModel } from "@Models/ILoginModel";
 import {
-  CalendarOutlined,
-  ContactsOutlined,
-  EnvironmentOutlined,
   FacebookOutlined,
   GoogleOutlined,
   InstagramOutlined,
-  MailOutlined,
-  PoweroffOutlined,
   SaveOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import { displayDate } from "@Services/FormatDateTimeService";
-import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
 interface Props {}
 
@@ -58,7 +49,6 @@ const AccountDetailPage: React.FC<Props> = () => {
   }, []);
   React.useEffect(() => {
     innitialValue();
-    console.log(currentUser);
   }, [currentUser]);
   function getCurrentUser() {
     var retrievedObject = localStorage.getItem("currentUser");
@@ -67,28 +57,12 @@ const AccountDetailPage: React.FC<Props> = () => {
     }
   }
 
-  function convertAddressToString(address: string) {
-    let tempAddress = [];
-    let result = "";
-    if (address) {
-      tempAddress = address.split("-");
-      tempAddress.reverse();
-      tempAddress.map((v) => {
-        result += v + " ";
-      });
-    }
-    return result;
-  }
-
   function innitialValue() {
     form.setFieldsValue({
       id: currentUser?.id,
       fullName: currentUser?.fullName,
       gender: currentUser?.gender ? "true" : "false",
       dob: moment(currentUser?.dob),
-      city: currentUser?.detailAddress.split("-")[0],
-      province: currentUser?.detailAddress.split("-")[1],
-      houseNumber: currentUser?.detailAddress.split("-")[2],
       phoneNumber: currentUser?.phoneNumber,
       email: currentUser?.email,
     });
@@ -351,7 +325,6 @@ const AccountDetailPage: React.FC<Props> = () => {
                           <Button
                             ghost
                             type="primary"
-                            onClick={() => console.log(form)}
                             icon={<SaveOutlined />}
                           />
                         </span>

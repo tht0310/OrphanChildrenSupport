@@ -39,7 +39,6 @@ const ChildrenBlock: FC<Props> = ({}: Props) => {
     const dataRes = await childrenProfileService.search({ pageSize: 4 });
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
-      console.log(dataRes.value.items);
     }
   }
 

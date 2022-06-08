@@ -11,10 +11,15 @@ export interface IRegisterModel {
   phoneNumber?: string;
   email?: string;
   password?: string;
-  detailAddress?: string;
-  publicAddress?: string;
+  address?: string;
   confirmPassword?: string;
+  refreshToken?:string;
   acceptTerms?: boolean;
+  createdBy?: string;
+  createdTime?: string | Date | null;
+  lastModified?: string | Date | null;
+  modifiedBy?: string;
+  isDeleted?: boolean;
 }
 
 export interface IVerifyModel { 
