@@ -15,8 +15,10 @@ import { CustomColumnType } from "@Components/forms/Table";
 import { colors } from "@Components/shared/TagColor";
 
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
+import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
 import { IRegisterModel } from "@Models/ILoginModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
+import DonationService from "@Services/DonationService";
 import { displayDate, displayYear } from "@Services/FormatDateTimeService";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import {
@@ -32,6 +34,8 @@ import {
   Input,
   InputNumber,
   Button,
+  message,
+  Popconfirm,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React from "react";
@@ -45,10 +49,8 @@ export interface IProps {
   currentUser: IRegisterModel;
 }
 
-let colorIndex;
-
-const supportCategoriesService = new SupportCategoryService();
-const ChildrenConfirmationModel: React.FC<IProps> = ({
+const donationService = new DonationService();
+const ChildrenConfirmationModal: React.FC<IProps> = ({
   visible,
   onCancel,
   children,
@@ -59,38 +61,53 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
     ISupportCategoryModel[]
   >([]);
   const [form] = Form.useForm();
+  const [donationDetail, setDonationDetail] =
+    React.useState<IDonationDetailModel[]>();
 
   React.useEffect(() => {
     document.title = "Children Detail";
-    fetchData();
   }, []);
 
   React.useEffect(() => {
-    colorIndex = -1;
-  }, [visible]);
+    initializeValue(selected);
+    setSupportCategories(selected);
+  }, [selected]);
 
-  async function fetchData() {
-    fetchSupportCategories();
-  }
-
-  async function fetchSupportCategories() {
-    const dataRes = await supportCategoriesService.getAll();
-
-    if (!dataRes.hasErrors) {
-      setSupportCategories(dataRes.value.items);
+  function initializeValue(selected) {
+    const tempList = [];
+    for (let index = 0; index < selected.length; index++) {
+      let element: IDonationDetailModel = {
+        supportCategoryId: selected[index].id,
+      };
+      tempList.push(element);
     }
+    setDonationDetail(tempList);
   }
 
-  function getAge(children) {
-    const date = new Date();
-    const dob = children.dob;
-    return Number(date.getFullYear()) - Number(displayYear(dob));
+  const onChange = (e: string, index: number, text: string) => {
+    const items = [...donationDetail];
+    let item = { ...items[index] };
+    item = { ...item, [e]: text };
+    items[index] = item;
+    setDonationDetail(items);
+  };
+
+  function onDelete(id: number) {
+    let result = donationDetail.filter(function (u) {
+      return u.supportCategoryId !== id;
+    });
+    setDonationDetail(result);
+    let tempSelected = supportCategories.filter(function (u) {
+      return u.id !== id;
+    });
+    setSupportCategories(tempSelected);
   }
+
   const requestColumns: CustomColumnType[] = [
     {
       title: "",
       ellipsis: true,
-      width: "8%",
+      width: "12%",
       align: "center",
       render: (text, row, index) => index + 1,
     },
@@ -98,26 +115,15 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
       title: "",
       dataIndex: "title",
       ellipsis: true,
-      width: "16%",
-      render: (text) => {
-        colorIndex += 1;
-        return (
-          <Tag
-            style={{
-              width: "100%",
-              textAlign: "center",
-            }}
-            color={colors[colorIndex]}
-          >
-            {text}
-          </Tag>
-        );
+      width: "20%",
+      render: (text, row, index) => {
+        return <Tag color={colors[index]}>{text}</Tag>;
       },
     },
     {
       title: "",
-      width: "50%",
-      render: (text, row) => (
+      width: "58%",
+      render: (text, row, index) => (
         <>
           {row.title === "Money" ? (
             <InputNumber
@@ -131,9 +137,12 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
           ) : (
             <Input
               required
+              onBlur={(e) => {
+                onChange("note", index, e.target.value);
+              }}
               placeholder="Input detail"
               maxLength={25}
-              style={{ fontSize: "12px" }}
+              style={{ fontSize: "12px", width: "85%" }}
             />
           )}
         </>
@@ -142,15 +151,38 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
     {
       title: "",
       ellipsis: true,
-      width: "8%",
       align: "center",
+      width: "10%",
       render: (text, row, index) => (
-        <DeleteOutlined
-          style={{ color: "#e57905", marginTop: "5px", fontSize: "15px" }}
-        />
+        <Popconfirm
+          title="Are you sure？"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={(e) => onDelete(row.id)}
+        >
+          <Button style={{ padding: "4px 12px" }}>
+            <DeleteOutlined
+              style={{ color: "#e57905", marginTop: "5px", fontSize: "15px" }}
+            />
+          </Button>
+        </Popconfirm>
       ),
     },
   ];
+
+  async function onFinish(values: IDonationModel | any) {
+    values.donationDetails = donationDetail;
+    values.childrenProfileId = children.id;
+    values.accountId = currentUser.id;
+
+    const res = await donationService.add(values);
+    if (!res.hasErrors) {
+      message.success("Donation request has sent successfully.");
+      onCancel();
+    } else {
+      message.error("Fail");
+    }
+  }
 
   function convertPublicAddressToString(address: string) {
     let tempAddress = [];
@@ -164,6 +196,10 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
     }
 
     return result;
+  }
+
+  function onSubmit() {
+    form.submit();
   }
 
   return (
@@ -181,6 +217,8 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
       <Row>
         <Col span={17}>
           <Form
+            form={form}
+            onFinish={onFinish}
             labelCol={{ span: 3 }}
             wrapperCol={{ span: 20 }}
             layout="horizontal"
@@ -192,7 +230,7 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
             >
               <Table
                 columns={requestColumns}
-                dataSource={selected}
+                dataSource={supportCategories}
                 pagination={false}
               />
             </Card>
@@ -201,7 +239,7 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
               title="Note"
               style={{
                 marginTop: "15px",
-                marginRight: "15px",
+
                 boxShadow: "none",
               }}
             >
@@ -209,7 +247,7 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
                 <TextArea
                   rows={2}
                   placeholder="Leave a message to us"
-                  style={{ fontSize: "13px" }}
+                  style={{ fontSize: "13px", width: "100%" }}
                 />
               </Form.Item>
             </Card>
@@ -269,9 +307,7 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>
                 <HomeOutlined style={{ color: "#b2b2b2" }} />
-                <div>
-                  {convertPublicAddressToString(currentUser?.detailAddress)}
-                </div>
+                <div>{convertPublicAddressToString(currentUser?.address)}</div>
               </Space>
             </div>
             <div>
@@ -282,6 +318,7 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
             </div>
           </Card>
           <Button
+            onClick={onSubmit}
             style={{
               marginTop: "15px",
               width: "100%",
@@ -300,4 +337,4 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
   );
 };
 
-export default ChildrenConfirmationModel;
+export default ChildrenConfirmationModal;

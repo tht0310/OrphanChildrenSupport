@@ -63,9 +63,8 @@ const RegisterPage: React.FC<Props> = () => {
   };
 
   async function register(values: IRegisterModel | any) {
-    values.detailAddress =
+    values.address =
       values.city + "-" + values.province + "-" + values.houseNumber;
-    values.publicAddress = values.city + "-" + values.province;
     const res = await accService.register(values);
 
     if (!res.hasErrors) {
@@ -260,11 +259,7 @@ const RegisterPage: React.FC<Props> = () => {
             },
           ]}
         >
-          <Checkbox
-            onChange={(e) => {
-              console.log(e.target);
-            }}
-          />
+          <Checkbox />
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>

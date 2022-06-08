@@ -1,4 +1,4 @@
-import { Col, Row, Image, Button, Tabs } from "antd";
+import { Col, Row, Image, Button, Tabs, message } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
@@ -17,15 +17,23 @@ import {
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import ChildrenConfirmationModel from "@Components/modals/ChildrenConfirmationModel";
+
 import { IRegisterModel } from "@Models/ILoginModel";
 import ReporChildrenDrawer from "@Components/drawers/ReportChildrenDrawer";
 import TextEditor from "@Components/shared/TextEditor";
+import ReportFieldService from "@Services/ReportFieldService";
+import { IReportFieldModel } from "@Models/IReportFieldModel";
+
+import { IFavoriteModel } from "@Models/IFavoriteModel";
+import FavoriteService from "@Services/FavoriteService";
+import ChildrenConfirmationModal from "@Components/modals/ChildrenConfirmationModal";
 
 type Props = RouteComponentProps<{ id: string }>;
 
 const childrenService = new ChildrenProfileService();
 const supportCategoriesService = new SupportCategoryService();
+const reportFieldService = new ReportFieldService();
+const favouriteService = new FavoriteService();
 
 const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -33,6 +41,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
+  const [reports, setReport] = React.useState<IReportFieldModel[]>([]);
   const [selected, setSelected] = React.useState<ISupportCategoryModel[]>([]);
   const [isChildrenModel, setIsChildrenModel] = React.useState<boolean>(false);
   const [isChildrenDrawer, setIsChildrenDrawer] =
@@ -41,6 +50,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   React.useEffect(() => {
     document.title = "Children Detail";
     fetchSupportCategories();
+    fetchReport();
     getCurrentUser();
   }, []);
 
@@ -69,11 +79,40 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   }
 
   function toggleChildrenModal() {
+    if (isChildrenModel) {
+      setSelected([]);
+      var list = document.getElementsByClassName("ant-btn");
+      for (var i = 0; i < list.length; i++) {
+        list[i].className = "ant-btn ant-btn-default";
+      }
+    }
     setIsChildrenModel(!isChildrenModel);
   }
 
   function toggleChildrenDrawer() {
     setIsChildrenDrawer(!isChildrenDrawer);
+  }
+
+  async function favoriteChildren() {
+    const temp: IFavoriteModel = {
+      childrenProfileId: children?.id,
+      accountId: currentUser?.id,
+    };
+
+    const res = await favouriteService.add(temp);
+
+    if (!res.hasErrors) {
+      message.success("Successful");
+    } else {
+      message.error("Fail");
+    }
+  }
+
+  async function fetchReport() {
+    const dataRes = await reportFieldService.getAll();
+    if (!dataRes.hasErrors) {
+      setReport(dataRes.value.items);
+    }
   }
 
   async function fetchChildren(childrenId: number) {
@@ -272,12 +311,14 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 })}
               </Row>
             </div>
+
             <div className="actions">
               <Row>
                 <Col span={21}>
                   <Button
                     style={{ height: "105%" }}
                     onClick={() => toggleChildrenModal()}
+                    disabled={selected.length > 0 ? false : true}
                   >
                     {" "}
                     <GiftOutlined style={{ fontSize: "12px" }} />
@@ -294,6 +335,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       color: "#E57905",
                       border: "1px solid #FFF7E6",
                     }}
+                    onClick={favoriteChildren}
                   >
                     <HeartOutlined style={{ fontSize: "12px" }} />
                     Favorite this child
@@ -378,7 +420,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             </Row>
           </Col>
         </Row>
-        <ChildrenConfirmationModel
+        <ChildrenConfirmationModal
           currentUser={currentUser}
           visible={isChildrenModel}
           onCancel={toggleChildrenModal}
@@ -390,6 +432,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           visible={isChildrenDrawer}
           onCancel={toggleChildrenDrawer}
           children={children}
+          reportField={reports}
         />
       </div>
     </>

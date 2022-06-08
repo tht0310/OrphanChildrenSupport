@@ -70,7 +70,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         }
 
         [HttpPut]
-        [Route("finish/{id}")]
+        [Route("approve/{id}")]
         public async Task<IActionResult> Approve(long id)
         {
             var apiResponse = await _reportDetailService.Approve(id);

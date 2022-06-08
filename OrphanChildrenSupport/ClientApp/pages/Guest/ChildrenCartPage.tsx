@@ -143,7 +143,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
             <div>
               <HeartOutlined style={{ marginTop: "50px", fontSize: "25px" }} />
             </div>
-            My wishlist
+            My favourite children
           </h3>
         </div>
       </Carousel>

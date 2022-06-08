@@ -27,7 +27,7 @@ namespace OrphanChildrenSupport.Services
         void ValidateResetToken(ValidateResetTokenRequest model);
         void ResetPassword(ResetPasswordRequest model);
         IEnumerable<AccountResponse> GetAll();
-        AccountResponse GetById(int id);
+        AccountResponse GetById(long id);
         AccountResponse Create(CreateRequest model);
         AccountResponse Update(int id, UpdateRequest model);
         void Delete(int id);
@@ -209,7 +209,7 @@ namespace OrphanChildrenSupport.Services
             return _mapper.Map<IList<AccountResponse>>(accounts);
         }
 
-        public AccountResponse GetById(int id)
+        public AccountResponse GetById(long id)
         {
             var account = getAccount(id);
             return _mapper.Map<AccountResponse>(account);
@@ -266,7 +266,7 @@ namespace OrphanChildrenSupport.Services
 
         // helper methods
 
-        private Account getAccount(int id)
+        private Account getAccount(long id)
         {
             var account = _context.Accounts.Find(id);
             if (account == null) throw new KeyNotFoundException("Account not found");

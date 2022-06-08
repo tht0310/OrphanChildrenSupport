@@ -1,64 +1,42 @@
 import {
   AppstoreAddOutlined,
   ExportOutlined,
-  EyeOutlined,
-  PlusOutlined,
   SearchOutlined,
-  UserAddOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
-import ChildrenProfileModal from "@Components/modals/ChildrenProfileModal";
-
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { IDonationModel } from "@Models/IDonationModel";
 import { IFilterType } from "@Models/IFilterType";
 import { IRegisterModel } from "@Models/ILoginModel";
-import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
+import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
-import DonationService from "@Services/DonationService";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import PersonalProfileService from "@Services/PersonalProfileService";
-import PersonService from "@Services/PersonService";
-import {
-  AutoComplete,
-  Button,
-  Checkbox,
-  Col,
-  Input,
-  message,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Table,
-  Tag,
-} from "antd";
-import { number } from "prop-types";
+import ReportService from "@Services/ReportService";
+import { Button, Col, Input, Popconfirm, Row, Space, Table, Tag } from "antd";
 
 import * as React from "react";
 import { useEffect } from "react";
-import { Edit2, Plus, Trash2, UserPlus } from "react-feather";
+import { Edit2, Trash2 } from "react-feather";
 import { Link } from "react-router-dom";
 type Props = {};
 
-const donationService = new DonationService();
+const reportService = new ReportService();
 const userService = new AccountService();
 const childrenService = new ChildrenProfileService();
 
-const DonationManagementPage: React.FC<Props> = () => {
+const ReportManagementPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [filterBy, setFilterBy] = React.useState<string>("fullName");
   const [filterValue, setFilterValue] = React.useState<string>();
   const [isModal, setModal] = React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] = React.useState<IDonationModel>();
-  const [donation, setDonation] = React.useState<IDonationModel[]>([]);
+  const [reports, setReport] = React.useState<IReportModel[]>([]);
   const [childrenProfiles, setchildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
   const [userProfiles, setUserProfiles] = React.useState<IRegisterModel[]>([]);
+  const [detailStatus, setDetailStatus] = React.useState<number>();
 
   useEffect(() => {
     document.title = "Dashboard - Quy trình";
@@ -77,12 +55,12 @@ const DonationManagementPage: React.FC<Props> = () => {
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
     {
-      title: "Donation Code",
+      title: "Report Code",
       ellipsis: true,
       width: "16%",
       align: "center",
       render: (text, row, index) => (
-        <Link to={`/admin/donation/detail/${row.id}`}>DC{10000 + row.id}</Link>
+        <Link to={`/admin/report/detail/${row.id}`}>RC{10000 + row.id}</Link>
       ),
     },
     {
@@ -112,8 +90,8 @@ const DonationManagementPage: React.FC<Props> = () => {
     },
     {
       title: "Status",
-      dataIndex: "donationStatus",
-      key: "donationStatus",
+      dataIndex: "reportStatus",
+      key: "reportStatus",
       align: "center",
       width: "18%",
       render: (text, row, index) => (
@@ -129,11 +107,13 @@ const DonationManagementPage: React.FC<Props> = () => {
       key: "address",
       render: (text, record, index) => (
         <Space className="actions">
-          <Button
-            onClick={toggleModal}
-            className="btn-custom-2 blue-action-btn"
-            icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
-          />
+          <Link to={`/admin/report/detail/${record.id}`}>
+            <Button
+              onClick={toggleModal}
+              className="btn-custom-2 blue-action-btn"
+              icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
+            />
+          </Link>
           <Popconfirm
             title="Are you sure？"
             okText="Yes"
@@ -190,9 +170,9 @@ const DonationManagementPage: React.FC<Props> = () => {
   }
 
   async function fetchDonation() {
-    const dataRes = await donationService.getAll();
+    const dataRes = await reportService.getAll();
     if (!dataRes.hasErrors) {
-      setDonation(dataRes.value.items);
+      setReport(dataRes.value.items);
     }
   }
 
@@ -216,9 +196,9 @@ const DonationManagementPage: React.FC<Props> = () => {
 
   async function onSearch() {
     const value: IFilterType = { [filterBy]: filterValue };
-    const res = await donationService.search(value);
+    const res = await reportService.search(value);
     if (!res.hasErrors) {
-      setDonation(res.value.items);
+      setReport(res.value.items);
     }
   }
 
@@ -227,7 +207,7 @@ const DonationManagementPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row>
           <Col span={14} className="table-title">
-            Donation Information
+            Report Information
           </Col>
           <Col span={7}>
             <div className="option-pannel">
@@ -280,7 +260,7 @@ const DonationManagementPage: React.FC<Props> = () => {
             },
           };
         }}
-        dataSource={donation}
+        dataSource={reports}
         pagination={{ pageSize: 10 }}
         onChange={(e) => {
           setPage(e.current);
@@ -290,4 +270,4 @@ const DonationManagementPage: React.FC<Props> = () => {
   );
 };
 
-export default DonationManagementPage;
+export default ReportManagementPage;
