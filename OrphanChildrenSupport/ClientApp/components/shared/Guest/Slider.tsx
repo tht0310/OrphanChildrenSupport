@@ -3,9 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Carousel } from "antd";
 import React from "react";
 import Children2 from "@Images/test.jpg";
-import Children3 from "@Images/child-vid-2.mp4";
-import Banner from "./Banner";
-import ExamplePage from "@Pages/ExamplesPage";
+
 interface Props {}
 
 const Slider: FC<Props> = () => {

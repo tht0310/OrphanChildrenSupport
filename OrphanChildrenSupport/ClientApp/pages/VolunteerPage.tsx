@@ -6,9 +6,11 @@ import {
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
 import ChildrenProfileModal from "@Components/modals/ChildrenProfileModal";
+import VolunteerProfileModal from "@Components/modals/VolunteerProfileModel";
 
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { IFilterType } from "@Models/IFilterType";
+import { IRegisterModel } from "@Models/ILoginModel";
 import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
@@ -35,17 +37,15 @@ import { Pencil, PencilFill } from "react-bootstrap-icons";
 import { Edit2, Plus, Trash2, UserPlus } from "react-feather";
 type Props = {};
 
-const childrenProfileService = new ChildrenProfileService();
-
-const ChildrenProfilePage: React.FC<Props> = () => {
+const VolunteerProfilePage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
-  const [childrenProfiles, setchildrenProfiles] = React.useState<
-    IChildrenProfileModel[]
+  const [volunteerProfiles, setVolunteerProfiles] = React.useState<
+    IRegisterModel[]
   >([]);
   const [filterBy, setFilterBy] = React.useState<string>("fullName");
   const [filterValue, setFilterValue] = React.useState<string>();
-  const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
+  const [isVoluteerModal, setVolunteerModal] = React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] =
     React.useState<IChildrenProfileModel>();
 
@@ -73,7 +73,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       width: "20%",
       columnSearchDataIndex: "fullName",
       render: (text: string) => (
-        <a className="item-title" onClick={toggleChildrenModal}>
+        <a className="item-title" onClick={toggleVolunteerModal}>
           {text}
         </a>
       ),
@@ -104,7 +104,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       render: (text: string) => convertAddressToString(text),
     },
     {
-      title: "Guardian Phone",
+      title: "Mobile Phone",
       dataIndex: "guardianPhoneNumber",
       width: "14%",
       key: "guardianPhoneNumber",
@@ -118,7 +118,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       render: (text, record, index) => (
         <Space className="actions">
           <Button
-            onClick={toggleChildrenModal}
+            onClick={toggleVolunteerModal}
             className="btn-custom-2 blue-action-btn"
             icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
           />
@@ -153,41 +153,23 @@ const ChildrenProfilePage: React.FC<Props> = () => {
     return result;
   }
 
-  async function onDelete(id: number) {
-    const res = await childrenProfileService.delete(id);
-    if (!res.hasErrors) {
-      message.success(`Children deleted sucessfully`);
-      fetchData();
-    }
-  }
+  async function onDelete(id: number) {}
 
-  async function toggleChildrenModal() {
-    setChildrenModal(!isChildrenModal);
+  async function toggleVolunteerModal() {
+    setVolunteerModal(!isVoluteerModal);
     setmodelForEdit(null);
   }
 
-  async function onSearch() {
-    const value: IFilterType = { [filterBy]: filterValue };
-    const res = await childrenProfileService.search(value);
-    console.log(value);
-    if (!res.hasErrors) {
-      setchildrenProfiles(res.value.items);
-    }
-  }
+  async function onSearch() {}
 
-  async function fetchchildrenProfile() {
-    const dataRes = await childrenProfileService.getAll();
-    if (!dataRes.hasErrors) {
-      setchildrenProfiles(dataRes.value.items);
-    }
-  }
+  async function fetchchildrenProfile() {}
 
   return (
-    <div className="table-container">
+    <div className="table-container" style={{ minHeight: "480px" }}>
       <div className="option-panel">
         <Row justify="start">
           <Col span={12} className="table-title">
-            Children Information
+            Volunteer Information
           </Col>
           <Col span={12}>
             <div className="option-pannel">
@@ -211,8 +193,8 @@ const ChildrenProfilePage: React.FC<Props> = () => {
                     setFilterValue(e.target.value);
                   }}
                 />
-                <Button className="new-button" onClick={toggleChildrenModal}>
-                  Add New
+                <Button className="new-button" onClick={toggleVolunteerModal}>
+                  Test view
                 </Button>
               </Input.Group>
             </div>
@@ -230,15 +212,15 @@ const ChildrenProfilePage: React.FC<Props> = () => {
             },
           };
         }}
-        dataSource={childrenProfiles}
+        dataSource={volunteerProfiles}
         pagination={{ pageSize: 10 }}
         onChange={(e) => {
           setPage(e.current);
         }}
       />
-      <ChildrenProfileModal
-        visible={isChildrenModal}
-        onCancel={toggleChildrenModal}
+      <VolunteerProfileModal
+        visible={isVoluteerModal}
+        onCancel={toggleVolunteerModal}
         data={modelForEdit}
         fetchData={fetchData}
       />
@@ -246,4 +228,4 @@ const ChildrenProfilePage: React.FC<Props> = () => {
   );
 };
 
-export default ChildrenProfilePage;
+export default VolunteerProfilePage;

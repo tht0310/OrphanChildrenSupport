@@ -5,17 +5,14 @@ import { Helmet } from "react-helmet";
 type Props = RouteComponentProps<{}>;
 
 const NotFoundPage: React.FC<Props> = () => {
-    return <div>
-        <Helmet>
-            <title>Page not found - OrphanChildrenSupport</title>
-        </Helmet>
-
-        <br />
-
-        <p className="text-center" style={{ "fontSize": "3rem" }}>
-            404 - Page not found
-        </p>
-    </div>;
-}
+  return (
+    <div>
+      <br />
+      <p className="text-center" style={{ fontSize: "3rem" }}>
+        404 - Page not found
+      </p>
+    </div>
+  );
+};
 
 export default NotFoundPage;

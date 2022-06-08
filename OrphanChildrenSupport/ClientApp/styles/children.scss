@@ -34,6 +34,7 @@
     font-size: 18px;
     margin-bottom: 50px;
   }
+ 
   h3 {
     font-family: "Playfair Display", serif !important;
     text-align: center;
@@ -596,6 +597,7 @@
   .ant-card-small > .ant-card-head {
     min-height: 26px !important;
   }
+
   
 
   .img-cart {
@@ -662,12 +664,17 @@
   .ant-divider-horizontal {
     margin: 15px 0 !important ;
   }
+  .ant-card-bordered {
+    border-left: none;
+    border-right: none;
+  }
   .ant-card-body {
     padding: 26px 24px 15px 24px;
     font-size: 13px;
   }
   .ant-form {
     padding: 0px !important;
+    
     border: none;
   }
   .ant-card {
@@ -680,3 +687,99 @@
     background-color: #f3f3f3;
   }
 }
+.cart {
+  padding: 2% 2%;
+  .ant-tabs-left > .ant-tabs-nav, .ant-tabs-right > .ant-tabs-nav, .ant-tabs-left > div > .ant-tabs-nav, .ant-tabs-right > div > .ant-tabs-nav {
+    flex-direction: column;
+    min-width: 300px;
+    
+    
+}
+svg {
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+}
+.page3 {
+  min-height: 150px;
+  margin: 40px 0px;
+}
+.homepage {
+  .item {
+    width: 180px !important;
+    height: 210px;
+    margin-top: 0px !important;
+    margin-bottom: 30px;
+    
+  }
+  
+}
+.activity-history-page {
+  .ant-tabs-nav {
+    width: 20%;
+    margin-top: 2px;
+  }
+ 
+  .btn-change-tab {
+    border: none ;
+    background: white ;
+    color: #e57905 ;
+    width: 100%;
+    padding: 3px 0px;
+  }
+  .active {
+    background: #e57905;
+    color: white;
+   
+  }
+  .ant-tabs-tab {
+    font-size: 16px;
+  }
+  .ant-tabs-tab:hover {
+    color: #e57905 !important;
+  }
+  .ant-tabs-ink-bar {
+    color: #e57905
+  }
+  .ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      color: #e57905 !important;
+    }
+  }
+
+  svg {
+    margin-right: 5px;
+    margin-bottom: 6px;
+  }
+
+  
+  .ant-card {   
+    button {
+      padding : 2px !important;
+      font-size: 12px  !important;
+      margin-right: 2%;
+    }
+    .ant-card-actions {  
+      padding: 0 !important;
+      li {
+        margin: 0;
+      }
+    }
+    .ant-card-head-title {
+      font-size: 12px;
+    }
+    a {
+      font-weight: 600;
+    }
+    
+  }
+  .ant-tabs-nav-list {
+    padding-right: 30px;
+  }
+  .notification-page {
+    th {
+      display: none;
+    }
+  }
+}
+

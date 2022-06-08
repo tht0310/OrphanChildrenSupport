@@ -352,6 +352,10 @@
     font-size: 13px;
     color: darkgrey;
   }
+  input {
+    font-size: 12px;
+
+  }
 }
 
 .green-action-btn:hover {
@@ -400,4 +404,34 @@
   h4 {
     font-size: 20px !important;
   }
+}
+.text-editor {
+  .ant-btn-icon-only > * {
+    font-size: 9px;
+    padding: 1px 0 !important;
+  }
+  .ant-btn {
+    padding: 2px 8px;
+    font-size: 11px;
+    height: 27px !important;
+    vertical-align: -2px !important;
+  }
+
+  .text-editor-content .ProseMirror {
+    border: 1px solid #d9d9d9;
+    border-radius: 0 0 2px 2px;
+    min-height: 100px;
+    margin-Top: 10px !important;
+  }
+  p {
+    font-size: 12px !important;
+    margin-bottom: 5px !important;
+  }
+  
+}
+.text-editor-read-only .text-editor .text-editor-content .ProseMirror {
+  border: none;
+  padding: 1em 0px;
+  min-height: 50px;
+ 
 }

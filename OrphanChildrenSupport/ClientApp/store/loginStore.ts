@@ -51,7 +51,7 @@ export const actionCreators = {
         if (!result.hasErrors) {
             dispatch(slice.actions.setSuccess(true));
             dispatch(slice.actions.setCurrentUser(result.value));
-           // window.location.replace("/home");
+           window.location.replace("");
             
         } else {
             message.error("Username or password is incorrect")

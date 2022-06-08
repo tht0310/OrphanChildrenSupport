@@ -5,20 +5,17 @@ $enable-rtl: true;
 
 // Import CoreUI for React components library
 @import "@coreui/coreui/scss/coreui";
-
 @import "layout";
-@import "example";
+
 
 // If you want to add custom CSS you can put it here.
 @import "custom";
-@import "simplebar";
 @import "formEditor.scss";
 @import "table.scss";
 @import "guest_layout/home.scss";
 @import "guest_layout/footer.scss";
-@import "guest_layout/responsive.scss";
 @import "guest_layout/header.scss";
 @import "guestLayout.scss";
-@import "card.scss";
 @import "children.scss";
 @import "guest_layout/antd-header.scss";
+@import "guest_layout/antd-custom.scss";

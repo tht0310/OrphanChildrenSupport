@@ -13,11 +13,10 @@ import {
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
 import { colors } from "@Components/shared/TagColor";
+
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { IRegisterModel } from "@Models/ILoginModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
-import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
 import { displayDate, displayYear } from "@Services/FormatDateTimeService";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import {
@@ -34,6 +33,7 @@ import {
   InputNumber,
   Button,
 } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -48,7 +48,6 @@ export interface IProps {
 let colorIndex;
 
 const supportCategoriesService = new SupportCategoryService();
-const childrenService = new ChildrenProfileService();
 const ChildrenConfirmationModel: React.FC<IProps> = ({
   visible,
   onCancel,
@@ -56,7 +55,6 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
   selected,
   currentUser,
 }: IProps) => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
@@ -208,7 +206,8 @@ const ChildrenConfirmationModel: React.FC<IProps> = ({
               }}
             >
               <Form.Item name="note" label="Note">
-                <Input
+                <TextArea
+                  rows={2}
                   placeholder="Leave a message to us"
                   style={{ fontSize: "13px" }}
                 />

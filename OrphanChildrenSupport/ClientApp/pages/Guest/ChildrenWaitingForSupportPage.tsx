@@ -19,6 +19,7 @@ import {
   Form,
   Input,
   Slider,
+  Pagination,
 } from "antd";
 import Meta from "antd/lib/card/Meta";
 import * as React from "react";
@@ -165,12 +166,13 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                   <div className="mini-menu">
                     <ul>
                       <li className="sub">
-                        <a
-                          href="javascript:void(0)"
+                        <div
+                          className="header-item"
+                          style={{ background: "#f0f0f0", fontSize: "14p" }}
                           onClick={() => onSearchGender(null)}
                         >
                           All
-                        </a>
+                        </div>
                       </li>
                       <li className="sub">
                         <a
@@ -190,7 +192,10 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                       </li>
                     </ul>
                   </div>
-                  <div className="menu-colors menu-item">
+                  <div
+                    className="menu-colors menu-item"
+                    style={{ marginTop: "25px" }}
+                  >
                     <div className="header-item">Age</div>
                     <Slider
                       range
@@ -219,6 +224,10 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
               <List
                 grid={{ gutter: 18, column: 4 }}
                 dataSource={childrenProfiles}
+                pagination={{
+                  showSizeChanger: true,
+                  pageSizeOptions: ["5", "10", "20", "50"],
+                }}
                 renderItem={(item) => (
                   <List.Item>
                     <Link

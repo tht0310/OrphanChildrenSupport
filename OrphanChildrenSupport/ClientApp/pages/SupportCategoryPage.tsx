@@ -1,4 +1,9 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  ExportOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
 import SupportCategoryModal from "@Components/modals/SupportCategoryModal";
 import { IFilterType } from "@Models/IFilterType";
@@ -16,8 +21,10 @@ import {
   Space,
   Table,
 } from "antd";
+import { Excel } from "antd-table-saveas-excel";
+import { IExcelColumn } from "antd-table-saveas-excel/app";
 import React, { useEffect } from "react";
-import { PencilFill, Trash2 } from "react-bootstrap-icons";
+import { Edit2, Trash2 } from "react-feather";
 
 type Props = {};
 
@@ -43,6 +50,36 @@ const SupportCategoryPage: React.FC<Props> = () => {
   useEffect(() => {
     onSearch();
   }, [filterValue]);
+
+  const excelColumns: IExcelColumn[] = [
+    {
+      title: "#",
+      dataIndex: "",
+      width: 50,
+      render: (text, row, index) => index + 1 + (page - 1) * pageSize,
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      render: (text: string) => (
+        <a className="item-title" onClick={toggleSupportCategoryModal}>
+          {text}
+        </a>
+      ),
+    },
+    {
+      title: "Created By",
+      dataIndex: "createdBy",
+      render: (text: Date, row, index) => <>{text ? text : row.modifiedBy}</>,
+    },
+    {
+      title: "Created time",
+      dataIndex: "createdTime",
+      render: (text: Date, row, index) => (
+        <>{text ? displayDateTime(text) : displayDateTime(row.lastModified)}</>
+      ),
+    },
+  ];
 
   const requestColumns: CustomColumnType[] = [
     {
@@ -90,7 +127,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
           <Button
             onClick={toggleSupportCategoryModal}
             className="btn-custom-2 blue-action-btn"
-            icon={<PencilFill size={14} style={{ color: "#40A9FF" }} />}
+            icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
           />
           <Popconfirm
             title="Are you sure？"
@@ -111,6 +148,17 @@ const SupportCategoryPage: React.FC<Props> = () => {
     fetchSupportCategories();
   }
 
+  const handleClick = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("test")
+      .addColumns(excelColumns)
+      .addDataSource(supportCategories, {
+        str2Percent: true,
+      })
+      .saveAs("SupportCategory.xlsx");
+  };
+
   async function onDelete(id: number) {
     const res = await supportCategoriesService.delete(id);
     if (!res.hasErrors) {
@@ -128,6 +176,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
     const value: IFilterType = { [filterBy]: filterValue };
 
     const res = await supportCategoriesService.search(value);
+    console.log(res, value);
     if (!res.hasErrors) {
       setSupportCategories(res.value.items);
     }
@@ -144,36 +193,41 @@ const SupportCategoryPage: React.FC<Props> = () => {
     <div className="table-container">
       <div className="option-panel">
         <Row justify="start">
-          <Col span={12} className="table-title">
+          <Col span={14} className="table-title">
             Support Category
           </Col>
-          <Col span={12}>
+          <Col span={7}>
             <div className="option-pannel">
-              <Input.Group compact>
-                <Select
-                  defaultValue="title"
-                  style={{ width: "27%" }}
-                  onChange={(e) => {
-                    setFilterBy(e);
-                  }}
-                >
-                  <Select.Option value="title">Title</Select.Option>
-                </Select>
-                <Input
-                  style={{ width: "50%" }}
-                  prefix={<SearchOutlined className="site-form-item-icon" />}
-                  onChange={(e) => {
-                    setFilterValue(e.target.value);
-                  }}
-                />
-                <Button
-                  className="new-button"
-                  onClick={toggleSupportCategoryModal}
-                >
-                  Add New
-                </Button>
-              </Input.Group>
+              <Input
+                style={{
+                  width: "100%",
+                  fontSize: "14px",
+                  borderRadius: "25px",
+                }}
+                placeholder="Input support title"
+                prefix={<SearchOutlined className="site-form-item-icon" />}
+                onChange={(e) => {
+                  setFilterValue(e.target.value);
+                }}
+              />
             </div>
+          </Col>
+          <Col span={3} style={{ textAlign: "right" }}>
+            <Button
+              style={{ marginRight: "3px", padding: "4px 10px" }}
+              type="primary"
+              onClick={toggleSupportCategoryModal}
+              danger
+            >
+              <AppstoreAddOutlined />
+            </Button>
+            <Button
+              onClick={handleClick}
+              style={{ padding: "4px 10px" }}
+              danger
+            >
+              <ExportOutlined />
+            </Button>
           </Col>
         </Row>
       </div>
