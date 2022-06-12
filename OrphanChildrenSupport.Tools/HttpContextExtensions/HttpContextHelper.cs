@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Security.Claims;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
+using System;
 
 namespace OrphanChildrenSupport.Tools
 {

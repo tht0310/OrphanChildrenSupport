@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -9,11 +8,8 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
-using OrphanChildrenSupport.Tools.Encryptions;
-using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -22,22 +18,21 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        private string _folderid;
-        private string _type;
-        private ICryptoEncryptionHelper _cryptoEncryptionHelper;
+        
+       
+        
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<ReportDetailService> _logger;
 
         public ReportDetailService(IMapper mapper, ILogger<ReportDetailService> logger, IConfiguration config,
-            ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
+             IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:ReportDetailAvatarFolderId") ?? "";
-            _type = config.GetValue<string>("LibraryApi:Type") ?? "";
-            _cryptoEncryptionHelper = cryptoEncryptionHelper;
+            
+            
             _httpContextHelper = httpContextHelper;
         }
 

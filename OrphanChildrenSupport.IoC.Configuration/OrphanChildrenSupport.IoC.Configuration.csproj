@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrphanChildrenSupport.DataContracts\OrphanChildrenSupport.DataContracts.csproj" />
-    <ProjectReference Include="..\OrphanChildrenSupport.HttpClientFactory\OrphanChildrenSupport.HttpClientFactory.csproj" />
     <ProjectReference Include="..\OrphanChildrenSupport.Infrastructure.Data\OrphanChildrenSupport.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\OrphanChildrenSupport.Services.Contracts\OrphanChildrenSupport.Services.Contracts.csproj" />
     <ProjectReference Include="..\OrphanChildrenSupport.Services.Models\OrphanChildrenSupport.Services.Models.csproj" />

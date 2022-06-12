@@ -19,6 +19,7 @@ namespace OrphanChildrenSupport.Extensions
         /// <param name="configuration">Application configuration.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete]
         public static NodeServicesOptions AddHttps(
             this NodeServicesOptions options,
             IConfiguration configuration
@@ -53,6 +54,7 @@ namespace OrphanChildrenSupport.Extensions
         /// <param name="services">Service collection.</param>
         /// <param name="configuration">Application configuration.</param>
         /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete]
         public static void AddNodeServicesWithHttps(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null)
@@ -78,6 +80,7 @@ namespace OrphanChildrenSupport.Extensions
         /// <param name="configuration">Application configuration.</param>
         /// <param name="setupAction"></param>
         /// <exception cref="ArgumentNullException"></exception>
+        [Obsolete]
         public static void AddNodeServicesWithHttps(this IServiceCollection services, IConfiguration configuration, Action<NodeServicesOptions> setupAction)
         {
             if (services == null)

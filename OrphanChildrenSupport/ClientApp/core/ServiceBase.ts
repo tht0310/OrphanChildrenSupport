@@ -51,17 +51,18 @@ export abstract class ServiceBase {
 
       let axiosRequestConfig: AxiosRequestConfig;
 
-      if (isNode()) {
-        const ssrSessionData = SessionManager.getSessionContext().ssr;
-        const { cookie } = ssrSessionData;
-
-        // Make SSR requests 'authorized' from the NodeServices to the web server.
-        axiosRequestConfig = {
-          headers: {
-            Cookie: cookie,
-          },
-        };
+      var retrievedObject = localStorage.getItem("currentUser");
+      var jwtToken = "";
+      if (retrievedObject) {
+        const currentUser = JSON.parse(retrievedObject);
+        jwtToken = currentUser.jwtToken;
       }
+      console.log(jwtToken, isNode());
+      axiosRequestConfig = {
+        headers: {
+          Authorization: "Bearer " + jwtToken,
+        },
+      };
 
       if (!axiosRequestConfig) {
         axiosRequestConfig = {};
@@ -118,7 +119,7 @@ export abstract class ServiceBase {
         showErrors(...result.errors);
       }
     } catch (error) {
-      result = new Result<T>(null, "loi truy xuat");
+      result = new Result<T>(null, "Lỗi truy xuất");
     }
     return result;
   }

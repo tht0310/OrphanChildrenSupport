@@ -1,5 +1,4 @@
 ﻿using OrphanChildrenSupport.Services.Models;
-using System.Collections.Generic;
 
 namespace OrphanChildrenSupport.DataContracts
 {

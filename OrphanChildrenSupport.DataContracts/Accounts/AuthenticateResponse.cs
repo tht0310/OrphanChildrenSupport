@@ -11,8 +11,7 @@ namespace OrphanChildrenSupport.Models.Accounts
         public DateTime DOB { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string DetailAddress { get; set; }
-        public string PublicAddress { get; set; }
+        public string Address { get; set; }
         public string Role { get; set; }
         public bool IsVerified { get; set; }
         public string JwtToken { get; set; }

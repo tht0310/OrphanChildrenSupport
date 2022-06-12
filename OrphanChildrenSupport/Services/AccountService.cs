@@ -240,10 +240,6 @@ namespace OrphanChildrenSupport.Services
         {
             var account = getAccount(id);
 
-            // validate
-            if (account.Email != model.Email && _context.Accounts.Any(x => x.Email == model.Email))
-                throw new AppException($"Email '{model.Email}' is already taken");
-
             // hash password if it was entered
             if (!string.IsNullOrEmpty(model.Password))
                 account.PasswordHash = BC.HashPassword(model.Password);

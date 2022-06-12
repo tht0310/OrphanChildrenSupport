@@ -8,17 +8,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.API", "1.API", "{FD8B5594-3DDA-4944-8888-B0005B0810DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Services", "2.Services", "{FA4FA740-FA6B-44F9-801B-E54F58A27389}"
-	ProjectSection(SolutionItems) = preProject
-		OrphanChildrenSupport.Services\ChildrenProfileSupportCategoryService.cs = OrphanChildrenSupport.Services\ChildrenProfileSupportCategoryService.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Infrastructures", "3.Infrastructures", "{88967CF2-F28A-48A3-BE82-FA86EAF7B03B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.Common", "0.Common", "{9F178780-2A8A-489C-A9C2-34A8E9A7262E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrphanChildrenSupport.Common", "OrphanChildrenSupport.Common\OrphanChildrenSupport.Common.csproj", "{8EE8CF94-5208-4B42-8D63-1154A8E32125}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrphanChildrenSupport.HttpClientFactory", "OrphanChildrenSupport.HttpClientFactory\OrphanChildrenSupport.HttpClientFactory.csproj", "{17DAF105-2522-4DA3-A5B9-9AA905D75878}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrphanChildrenSupport.IoC.Configuration", "OrphanChildrenSupport.IoC.Configuration\OrphanChildrenSupport.IoC.Configuration.csproj", "{63093691-7035-4F8D-A59A-A5297688D088}"
 EndProject
@@ -50,10 +45,6 @@ Global
 		{8EE8CF94-5208-4B42-8D63-1154A8E32125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EE8CF94-5208-4B42-8D63-1154A8E32125}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EE8CF94-5208-4B42-8D63-1154A8E32125}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17DAF105-2522-4DA3-A5B9-9AA905D75878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17DAF105-2522-4DA3-A5B9-9AA905D75878}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17DAF105-2522-4DA3-A5B9-9AA905D75878}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17DAF105-2522-4DA3-A5B9-9AA905D75878}.Release|Any CPU.Build.0 = Release|Any CPU
 		{63093691-7035-4F8D-A59A-A5297688D088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{63093691-7035-4F8D-A59A-A5297688D088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63093691-7035-4F8D-A59A-A5297688D088}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,7 +84,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0036209A-18F8-4046-AD21-B00B79A4516D} = {FD8B5594-3DDA-4944-8888-B0005B0810DD}
 		{8EE8CF94-5208-4B42-8D63-1154A8E32125} = {FD8B5594-3DDA-4944-8888-B0005B0810DD}
-		{17DAF105-2522-4DA3-A5B9-9AA905D75878} = {9F178780-2A8A-489C-A9C2-34A8E9A7262E}
 		{63093691-7035-4F8D-A59A-A5297688D088} = {9F178780-2A8A-489C-A9C2-34A8E9A7262E}
 		{945BA7E6-EEE9-4B3F-B435-A0AEB47F1C94} = {9F178780-2A8A-489C-A9C2-34A8E9A7262E}
 		{048FC2E2-D6C0-4408-B5D7-6D86D3D4D5EF} = {88967CF2-F28A-48A3-BE82-FA86EAF7B03B}

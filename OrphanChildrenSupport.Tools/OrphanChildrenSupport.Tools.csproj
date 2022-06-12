@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="StringExtensions\" />
+    <Compile Remove="Configurations\**" />
+    <Compile Remove="StringExtensions\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <EmbeddedResource Remove="StringExtensions\**" />
+    <None Remove="Configurations\**" />
+    <None Remove="StringExtensions\**" />
   </ItemGroup>
 
   <ItemGroup>

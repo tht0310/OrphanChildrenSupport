@@ -5,7 +5,6 @@ using OrphanChildrenSupport.Infrastructure.Data;
 using OrphanChildrenSupport.Services;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Tools;
-using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System.Reflection;
 
@@ -36,7 +35,6 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
         {
             if (services != null)
             {
-                services.AddSingleton<ICryptoEncryptionHelper, CryptoEncryptionHelper>();
                 services.AddScoped<IHttpContextHelper, HttpContextHelper>();
             }
         }

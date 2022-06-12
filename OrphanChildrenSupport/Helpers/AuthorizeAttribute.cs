@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OrphanChildrenSupport;
-using OrphanChildrenSupport.Services.Models;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter

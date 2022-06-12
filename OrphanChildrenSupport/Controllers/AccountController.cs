@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using OrphanChildrenSupport.Models.Accounts;
 using OrphanChildrenSupport.Services;
 using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Models.Accounts;
+using System;
+using System.Collections.Generic;
 
 namespace OrphanChildrenSupport.Controllers
 {
@@ -96,7 +96,7 @@ namespace OrphanChildrenSupport.Controllers
             return Ok(new { message = "Password reset successful, you can now login" });
         }
 
-        //[Authorize(Role.Admin)]
+        [Authorize(Role.Admin)]
         [HttpGet]
         public ActionResult<IEnumerable<AccountResponse>> GetAll()
         {

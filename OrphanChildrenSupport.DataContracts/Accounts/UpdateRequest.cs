@@ -1,6 +1,6 @@
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
-using OrphanChildrenSupport.Services.Models;
 
 namespace OrphanChildrenSupport.Models.Accounts
 {
@@ -9,27 +9,18 @@ namespace OrphanChildrenSupport.Models.Accounts
         private string _password;
         private string _confirmPassword;
         private string _role;
-        private string _email;
 
         public string FullName { get; set; }
         public bool Gender { get; set; }
         public DateTime DOB { get; set; }
-        public string GuardianPhoneNumber { get; set; }
-        public string DetailAddress { get; set; }
-        public string PublicAddress { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
 
         [EnumDataType(typeof(Role))]
         public string Role
         {
             get => _role;
             set => _role = replaceEmptyWithNull(value);
-        }
-
-        [EmailAddress]
-        public string Email
-        {
-            get => _email;
-            set => _email = replaceEmptyWithNull(value);
         }
 
         [MinLength(6)]

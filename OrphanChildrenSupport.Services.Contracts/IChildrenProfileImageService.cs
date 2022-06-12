@@ -1,9 +1,8 @@
-﻿using OrphanChildrenSupport.DataContracts;
+﻿using Microsoft.AspNetCore.Http;
+using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
@@ -15,5 +14,8 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ChildrenProfileImageResource>> DeleteChildrenProfileImage(long id, bool removeFromDB = false);
         Task<ApiResponse<ChildrenProfileImageResource>> GetChildrenProfileImage(long id);
         Task<ApiResponse<QueryResultResource<ChildrenProfileImageResource>>> GetChildrenProfileImages(QueryResource queryObj);
+        Task<ApiResponse<FileStream>> ViewChildrenProfileImage(long id);
+        Task<ApiResponse<QueryResultResource<ChildrenProfileImageResource>>> GetImagesByChildrenProfileId(long id);
+        Task<ApiResponse<ChildrenProfileResponse>> UploadImagesByChildrenProfileId(long id, List<IFormFile> files);
     }
 }
