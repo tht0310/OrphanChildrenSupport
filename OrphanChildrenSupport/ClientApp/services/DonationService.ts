@@ -49,4 +49,13 @@ export default class DonationService extends ServiceBase {
     return res;
   }
 
+  public async update(model: IDonationModel): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donations/${model.id}`,
+      method: "PUT",
+      data: model,
+    });
+    return result;
+  }
+
 }

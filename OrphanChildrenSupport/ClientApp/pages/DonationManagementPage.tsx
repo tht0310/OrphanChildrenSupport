@@ -1,41 +1,19 @@
 import {
   AppstoreAddOutlined,
   ExportOutlined,
-  EyeOutlined,
-  PlusOutlined,
   SearchOutlined,
-  UserAddOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
-import ChildrenProfileModal from "@Components/modals/ChildrenProfileModal";
 
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { IDonationModel } from "@Models/IDonationModel";
 import { IFilterType } from "@Models/IFilterType";
 import { IRegisterModel } from "@Models/ILoginModel";
-import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import DonationService from "@Services/DonationService";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import PersonalProfileService from "@Services/PersonalProfileService";
-import PersonService from "@Services/PersonService";
-import {
-  AutoComplete,
-  Button,
-  Checkbox,
-  Col,
-  Input,
-  message,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Table,
-  Tag,
-} from "antd";
-import { number } from "prop-types";
+
+import { Button, Col, Input, Popconfirm, Row, Space, Table, Tag } from "antd";
 
 import * as React from "react";
 import { useEffect } from "react";
@@ -129,11 +107,12 @@ const DonationManagementPage: React.FC<Props> = () => {
       key: "address",
       render: (text, record, index) => (
         <Space className="actions">
-          <Button
-            onClick={toggleModal}
-            className="btn-custom-2 blue-action-btn"
-            icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
-          />
+          <Link to={`/admin/donation/detail/${record.id}`}>
+            <Button
+              className="btn-custom-2 blue-action-btn"
+              icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
+            />
+          </Link>
           <Popconfirm
             title="Are you sure？"
             okText="Yes"
@@ -183,7 +162,7 @@ const DonationManagementPage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const res = await userService.getAll();
+    const res = await userService.getAllUser();
     if (!res.hasErrors) {
       setUserProfiles(res.value);
     }

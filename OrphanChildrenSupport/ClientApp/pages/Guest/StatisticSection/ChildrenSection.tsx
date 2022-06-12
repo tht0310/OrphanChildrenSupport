@@ -14,7 +14,7 @@ const ChildrenSection: React.FC<Props> = () => {
 
   const asyncFetch = () => {
     fetch(
-      "https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json"
+      "https://gw.alipayobjects.com/os/bmw-prod/55424a73-7cb8-4f79-b60d-3ab627ac5698.json"
     )
       .then((response) => response.json())
       .then((json) => setData(json))
@@ -24,17 +24,18 @@ const ChildrenSection: React.FC<Props> = () => {
   };
   const config = {
     data,
-    xField: "Date",
-    yField: "scales",
-    xAxis: {
-      tickCount: 5,
+    xField: "year",
+    yField: "value",
+    seriesField: "category",
+    yAxis: {
+      label: {
+        // 数值格式化为千分位
+        formatter: (v) =>
+          `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+      },
     },
-    slider: {
-      start: 0.1,
-      end: 0.5,
-    },
+    color: ["#1979C9", "#D62A0D", "#FAA219"],
   };
-
   return <Line {...config} />;
 };
 

@@ -30,10 +30,12 @@ import SupportCategoryService from "@Services/SupportCategoryService";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IRegisterModel } from "@Models/ILoginModel";
+import DonationDetailService from "@Services/DonationDetailService";
 
 const supportCategoriesService = new SupportCategoryService();
 const userService = new AccountService();
 const childrenService = new ChildrenProfileService();
+const donationService = new DonationDetailService();
 
 const inlineCol2FormLayout = {
   labelCol: {
@@ -58,6 +60,7 @@ export interface IProps {
   onCancel: () => void;
   data: IDonationDetailModel;
   donation: IDonationModel;
+  fetchDonation: () => void;
 }
 
 const DonationDetailModal: React.FC<IProps> = ({
@@ -65,6 +68,7 @@ const DonationDetailModal: React.FC<IProps> = ({
   data,
   onCancel,
   donation,
+  fetchDonation,
 }: IProps) => {
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = React.useState<string | null>();
@@ -89,9 +93,9 @@ const DonationDetailModal: React.FC<IProps> = ({
   }, [data, visible]);
 
   async function fetchData() {
-    fetchSupportCategories;
-    fetchUsers;
-    fetchChildren;
+    fetchSupportCategories();
+    fetchUsers();
+    fetchChildren();
   }
 
   async function fetchSupportCategories() {
@@ -102,9 +106,9 @@ const DonationDetailModal: React.FC<IProps> = ({
   }
 
   async function fetchUsers() {
-    const res = await userService.getAll();
+    const res = await userService.getAllUser();
     if (!res.hasErrors) {
-      setUser(res.value.items);
+      setUser(res.value);
     }
   }
 
@@ -124,9 +128,12 @@ const DonationDetailModal: React.FC<IProps> = ({
   function innitialValue() {
     form.setFieldsValue({
       id: data.id,
-      supportCategoryId: data.supportCategoryId.toString(),
+      supportCategoryId: data.supportCategoryId,
       childrenProfileId: donation?.childrenProfileId,
       accountId: donation?.accountId,
+      donationDetailStatus: data?.donationDetailStatus,
+      note: data?.note,
+      donationId: donation?.id,
     });
   }
 
@@ -143,7 +150,13 @@ const DonationDetailModal: React.FC<IProps> = ({
     }
   };
 
-  function onFinish(value) {}
+  async function onFinish(value) {
+    const res = await donationService.update(value);
+    if (!res.hasErrors) {
+      onCancel();
+      fetchDonation();
+    }
+  }
 
   function onSubmit() {
     form.submit();
@@ -158,26 +171,27 @@ const DonationDetailModal: React.FC<IProps> = ({
       visible={visible}
       onCancel={handleCancel}
       destroyOnClose={true}
-      title={data ? "Edit children" : "Add new children"}
+      title={"Edit donation detail"}
       footer={null}
-      width={1000}
-      className="antd-modal-custom"
-      style={{ top: 20, height: "300px" }}
+      width={900}
+      style={{ top: 30, height: "300px" }}
       bodyStyle={{
         overflowY: "scroll",
-        height: "calc(100vh - 105px)",
+        height: "calc(100vh - 150px)",
         marginLeft: "19px",
       }}
     >
       <Form
         form={form}
-        style={{ padding: "20px 0" }}
         onFinish={onFinish}
         labelCol={{ span: 3 }}
         wrapperCol={{ span: 20 }}
         layout="horizontal"
       >
         <Form.Item name="id" label="Id" hidden={true}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="donationId" label="Id" hidden={true}>
           <Input />
         </Form.Item>
 
@@ -210,7 +224,7 @@ const DonationDetailModal: React.FC<IProps> = ({
             <Form.Item
               style={{ width: "100%" }}
               name="supportCategoryId"
-              label="Support Category"
+              label="Support "
               className="label-custom"
               {...inlineFormLayout}
               rules={[{ required: true, message: "Please enter full name." }]}
@@ -224,11 +238,11 @@ const DonationDetailModal: React.FC<IProps> = ({
             <Row>
               <Col xs={24} lg={12}>
                 <Form.Item
-                  label="User"
+                  label="Supporter"
                   name="accountId"
                   {...inlineCol2FormLayout}
                 >
-                  <Select showSearch style={{ width: "100%" }}>
+                  <Select showSearch style={{ width: "100%" }} disabled>
                     {user.map((s) => {
                       return (
                         <Select.Option value={s.id}>{s.fullName}</Select.Option>
@@ -243,7 +257,7 @@ const DonationDetailModal: React.FC<IProps> = ({
                   name="childrenProfileId"
                   {...inlineCol2FormLayout}
                 >
-                  <Select showSearch style={{ width: "100%" }}>
+                  <Select showSearch style={{ width: "100%" }} disabled>
                     {children.map((s) => {
                       return (
                         <Select.Option value={s.id}>{s.fullName}</Select.Option>
@@ -253,96 +267,36 @@ const DonationDetailModal: React.FC<IProps> = ({
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item
-              {...inlineFormLayout}
-              label="Address"
-              style={{ marginBottom: "8px" }}
-              required
-            >
-              <Form.Item
-                name="city"
-                style={{ display: "inline-block", width: "25%" }}
-                rules={[{ required: true, message: "Please enter city" }]}
-              >
-                <Input placeholder="Enter city" />
-              </Form.Item>
-              <Form.Item
-                name="province"
-                rules={[{ required: true, message: "Please enter province ." }]}
-                style={{
-                  display: "inline-block",
-                  width: "25%",
-                }}
-              >
-                <Input placeholder="Enter province" />
-              </Form.Item>
-              <Form.Item
-                name="houseNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter street name, house number...",
-                  },
-                ]}
-                style={{
-                  display: "inline-block",
-                  width: "50%",
-                }}
-              >
-                <Input placeholder="Enter street name, house number..." />
-              </Form.Item>
-            </Form.Item>
-            <Row>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Guardian Name"
-                  name="guardianName"
-                  {...inlineCol2FormLayout}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col xs={24} lg={12}>
-                <Form.Item
-                  label="Guardian Phone"
-                  name="guardianPhoneNumber"
-                  {...inlineCol2FormLayout}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
 
-            <Form.Item
-              name="circumstance"
-              label="Circumstance"
-              className="label-custom"
-              {...inlineFormLayout}
-            >
-              {/* <TextArea rows={3} style={{ width: "100%" }} /> */}
-              <TextEditor />
-            </Form.Item>
-
-            <Form.Item
-              name="childrenCategoryGroup"
-              {...inlineFormLayout}
-              label="Need support"
-            ></Form.Item>
             <Form.Item
               label="Status"
-              name="status"
+              name="donationDetailStatus"
               {...inlineFormLayout}
-              style={{ marginTop: "30px" }}
               rules={[{ required: true, message: "Please enter status." }]}
             >
               <Select>
-                <Select.Option value="0" key="1">
-                  Waiting for support
+                <Select.Option value={0} key="0">
+                  Waiting for approval
                 </Select.Option>
-                <Select.Option value="1" key="0">
+                <Select.Option value={1} key="1">
                   Supported
                 </Select.Option>
+                <Select.Option value={2} key="2">
+                  Rejected
+                </Select.Option>
+                <Select.Option value={3} key="3">
+                  Canceled
+                </Select.Option>
               </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Note"
+              name="note"
+              {...inlineFormLayout}
+              rules={[{ required: true, message: "Please enter status." }]}
+            >
+              <Input />
             </Form.Item>
 
             {data && (

@@ -26,6 +26,7 @@ import {
   Tag,
   Upload,
   Image,
+  message,
 } from "antd";
 import * as React from "react";
 import { Edit2, Trash2 } from "react-feather";
@@ -48,6 +49,7 @@ const userService = new AccountService();
 const donationService = new DonationService();
 
 const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
+  const [form] = Form.useForm();
   const [children, setChildren] = React.useState<IChildrenProfileModel>();
   const [user, setUser] = React.useState<IRegisterModel>(null);
   const [supportCategories, setSupportCategories] = React.useState<
@@ -123,6 +125,12 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   function toggleModal() {
     setIsModal(!isModal);
   }
+
+  function onSubmit() {
+    form.submit();
+  }
+
+  function onFinish() {}
 
   function getStatus(id: number) {
     let name = "";
@@ -220,23 +228,12 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 1,
-      address:
-        "We will give this children some rice, noodles, milk and vegetables",
-      tags: ["food"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 2,
-      address: "500,000 VND",
-      tags: ["money"],
-    },
-  ];
+  async function update(value) {
+    const res = await donationService.update(value);
+    if (!res.hasErrors) {
+      message.success("Change status sucessfully");
+    }
+  }
 
   return (
     <div className="table-container">
@@ -255,16 +252,18 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               </Col>
 
               <Col span={8} style={{ paddingBottom: 0 }}>
-                <Form style={{ float: "right" }} layout="inline">
+                <Form form={form} style={{ float: "right" }} layout="inline">
                   <Form.Item label="">
                     <Select defaultValue={"1"} style={{ width: "110%" }}>
                       <Select.Option value="0">Send</Select.Option>
-                      <Select.Option value="1">Verification</Select.Option>
+                      <Select.Option value="1">
+                        Waiting for approval
+                      </Select.Option>
                       <Select.Option value="2">Donating</Select.Option>
-                      <Select.Option value="3">Finish</Select.Option>
+                      <Select.Option value="2">Finish</Select.Option>
                     </Select>
                   </Form.Item>
-                  <Button type="primary" ghost>
+                  <Button onClick={onSubmit} type="primary" ghost>
                     Save
                   </Button>
                 </Form>
@@ -280,7 +279,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           style={{ padding: "35px 35px 10px 35px" }}
         >
           <Steps.Step title="Send" />
-          <Steps.Step title="Approved" />
+          <Steps.Step title="Waiting for approved" />
           <Steps.Step title="Donating" />
           <Steps.Step title="Finish" />
         </Steps>
@@ -397,7 +396,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   className="antd-icon-custom"
                 />
                 <span style={{ fontWeight: "normal", color: "black" }}>
-                  Please contact me after 5:00 PM
+                  Note: {donation?.note}
                 </span>
               </h6>
             </Card>
@@ -426,6 +425,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         onCancel={toggleModal}
         data={modelForEdit}
         donation={donation}
+        fetchDonation={fetchDonation}
       />
     </div>
   );

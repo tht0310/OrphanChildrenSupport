@@ -187,9 +187,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             placement="topLeft"
             title={<TextEditor value={oldValue} readingMode />}
           >
-            <Button
-              style={{ border: "none", fontSize: "13px", color: "#e57905" }}
-            >
+            <Button style={{ border: "none", fontSize: "13px" }}>
               Hover to see detail...
             </Button>
           </Tooltip>
@@ -221,9 +219,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             placement="topLeft"
             title={<TextEditor value={text} readingMode />}
           >
-            <Button
-              style={{ border: "none", fontSize: "13px", color: "#e57905" }}
-            >
+            <Button style={{ border: "none", fontSize: "13px" }}>
               Hover to see detail...
             </Button>
           </Tooltip>

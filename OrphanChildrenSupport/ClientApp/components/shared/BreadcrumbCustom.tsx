@@ -42,6 +42,10 @@ const routesName = [
     path: `/admin/activitymanagement/report`,
     breadcrumb: ["Home", "User Management", "Report"],
   },
+  {
+    path: `/admin/statistic`,
+    breadcrumb: ["Home", "Statistic"],
+  },
 ];
 const { TextArea } = Input;
 
