@@ -1,23 +1,20 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using OrphanChildrenSupport.HttpClientFactory.Libraries;
-using OrphanChildrenSupport.Services.Contracts;
-using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Tools.Encryptions;
-using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
-using Microsoft.EntityFrameworkCore;
-using OrphanChildrenSupport.Services.Models.DBSets;
+using OrphanChildrenSupport.Services.Contracts;
+using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Tools.FileExtensions;
+using OrphanChildrenSupport.Tools.HttpContextExtensions;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
 {
@@ -25,22 +22,22 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        private string _folderid;
-        private string _type;
-        private ICryptoEncryptionHelper _cryptoEncryptionHelper;
+        
+       
+        
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<ChildrenProfileImageService> _logger;
 
         public ChildrenProfileImageService(IMapper mapper, ILogger<ChildrenProfileImageService> logger, IConfiguration config,
-            ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
+             IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:ChildrenProfileImageAvatarFolderId") ?? "";
-            _type = config.GetValue<string>("LibraryApi:Type") ?? "";
-            _cryptoEncryptionHelper = cryptoEncryptionHelper;
+            
+            
+            
             _httpContextHelper = httpContextHelper;
         }
 
@@ -233,5 +230,137 @@ namespace OrphanChildrenSupport.Services
 
             return apiResponse;
         }
+
+        public async Task<ApiResponse<FileStream>> ViewChildrenProfileImage(long id)
+        {
+            const string loggerHeader = "ViewChildrenProfileImage";
+            var apiResponse = new ApiResponse<FileStream>();
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    _logger.LogDebug($"{loggerHeader} - Start to ViewChildrenProfileImage with Id: {id}");
+                    var childrenProfile = await unitOfWork.ChildrenProfileImageRepository.FindFirst(d => d.Id == id && d.IsDeleted == false);
+                    var image = File.OpenRead(childrenProfile.ImagePath);
+                    apiResponse.Data = image;
+                    _logger.LogDebug($"{loggerHeader} - ViewChildrenProfileImage successfully with Id: {id}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<QueryResultResource<ChildrenProfileImageResource>>> GetImagesByChildrenProfileId(long id)
+        {
+            const string loggerHeader = "GetChildrenProfileImagesByChildrenProfileId";
+            var apiResponse = new ApiResponse<QueryResultResource<ChildrenProfileImageResource>>();
+            _logger.LogDebug($"{loggerHeader} - Start to get GetChildrenProfileImagesByChildrenProfileId with Id: {id}");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    _logger.LogDebug($"{loggerHeader} - Start to GetChildrenProfileImagesByChildrenProfileId with Id: {id}");
+                    var query = await unitOfWork.ChildrenProfileImageRepository.FindAll(d => d.ChildrenProfileId == id && d.IsDeleted == false);
+                    apiResponse.Data = _mapper.Map<QueryResult<ChildrenProfileImage>, QueryResultResource<ChildrenProfileImageResource>>(query);
+                    _logger.LogDebug($"{loggerHeader} - GetChildrenProfileImages successfully with Id: {id}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<ChildrenProfileResponse>> UploadImagesByChildrenProfileId(long id, List<IFormFile> files)
+        {
+            const string loggerHeader = "UploadChildrenProfileImage";
+
+            var apiResponse = new ApiResponse<ChildrenProfileResponse>();
+
+            foreach (var file in files)
+            {
+                if (file == null || file.Length == 0)
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File not selected";
+                    return apiResponse;
+                }
+                else if (file.Length > 5242880)
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File must be smaller than 5MB";
+                    return apiResponse;
+                }
+                else if (!file.IsImage())
+                {
+                    apiResponse.IsError = true;
+                    apiResponse.Message = "File must be an image";
+                    return apiResponse;
+                }
+                else
+                {
+                    _logger.LogDebug($"{loggerHeader} - Start to Upload ChildrenProfileImage with");
+                    using (var unitOfWork = new UnitOfWork(_connectionString))
+                    {
+                        try
+                        {
+                            string dir = Path.Combine("wwwroot", "ChildrenProfileImages");
+                            if (!Directory.Exists(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            }
+
+                            string fileName = id + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + files.IndexOf(file) + ".png";
+
+                            var newPath = Path.Combine(dir, fileName);
+                            ChildrenProfileImage childrenProfileImage = new ChildrenProfileImage();
+
+                            childrenProfileImage.ChildrenProfileId = id;
+                            childrenProfileImage.ImagePath = newPath;
+                            await unitOfWork.ChildrenProfileImageRepository.Add(childrenProfileImage);
+                            await unitOfWork.SaveChanges();
+
+                            _logger.LogDebug($"{loggerHeader} - Save file in new path: {newPath}");
+                            using (var stream = new FileStream(newPath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                            apiResponse.IsError = true;
+                            apiResponse.Message = ex.Message;
+                            await unitOfWork.SaveErrorLog(ex);
+                        }
+                        finally
+                        {
+                            unitOfWork.Dispose();
+                        }
+                    }
+                }
+            }
+
+            return apiResponse;
+        }
+
     }
 }

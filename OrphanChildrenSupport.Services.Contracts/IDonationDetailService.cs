@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts

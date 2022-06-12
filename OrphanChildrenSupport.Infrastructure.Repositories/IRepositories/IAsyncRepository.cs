@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+using OrphanChildrenSupport.DataContracts;
+using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using OrphanChildrenSupport.DataContracts;
-using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 
 namespace OrphanChildrenSupport.Infrastructure.Repositories
 {

@@ -3,10 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OrphanChildrenSupport.Infrastructure.Data;
 using Serilog;
 using System;
 using System.IO;
-using OrphanChildrenSupport.Infrastructure.Data;
 
 namespace OrphanChildrenSupport
 {

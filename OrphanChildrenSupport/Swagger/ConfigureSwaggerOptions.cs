@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using OrphanChildrenSupport.Common.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
-using OrphanChildrenSupport.Common.Settings;
 
 namespace OrphanChildrenSupport.Swagger
 {

@@ -1,6 +1,6 @@
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
-using OrphanChildrenSupport.Services.Models;
 
 namespace OrphanChildrenSupport.Models.Accounts
 {
@@ -13,11 +13,9 @@ namespace OrphanChildrenSupport.Models.Accounts
         [Required]
         public DateTime DOB { get; set; }
         [Required]
-        public string GuardianPhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Required]
-        public string DetailAddress { get; set; }
-        [Required]
-        public string PublicAddress { get; set; }
+        public string Address { get; set; }
         [Required]
         [EnumDataType(typeof(Role))]
         public string Role { get; set; }

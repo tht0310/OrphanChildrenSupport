@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OrphanChildrenSupport.DataContracts;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using OrphanChildrenSupport.DataContracts.Resources;
 using OrphanChildrenSupport.Services.Contracts;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Controllers.V1
@@ -66,6 +67,30 @@ namespace OrphanChildrenSupport.Controllers.V1
         public async Task<IActionResult> Delete(long id)
         {
             var apiResponse = await _childrenProfileImageService.DeleteChildrenProfileImage(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpGet]
+        [Route("viewImage/{id}")]
+        public async Task<IActionResult> ViewChildrenProfileImage(long id)
+        {
+            var apiResponse = await _childrenProfileImageService.ViewChildrenProfileImage(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : File(apiResponse.Data, "image/png");
+        }
+
+        [HttpGet]
+        [Route("getImagesByChildrenProfileId/{id}")]
+        public async Task<IActionResult> GetChildrenProfileImagesByChildrenProfileId(long id)
+        {
+            var apiResponse = await _childrenProfileImageService.GetImagesByChildrenProfileId(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpPost]
+        [Route("uploadImagesByChildrenProfileId/{id}")]
+        public async Task<IActionResult> UploadImagesByChildrenProfileId(long id, List<IFormFile> files)
+        {
+            var apiResponse = await _childrenProfileImageService.UploadImagesByChildrenProfileId(id, files);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

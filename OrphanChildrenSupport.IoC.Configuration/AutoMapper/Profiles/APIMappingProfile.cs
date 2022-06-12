@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using OrphanChildrenSupport.Services.Models;
 using OrphanChildrenSupport.Models.Accounts;
+using OrphanChildrenSupport.Services.Models;
 using OrphanChildrenSupport.Services.Models.DBSets;
 
 namespace OrphanChildrenSupport.IoC.Configuration.AutoMapper.Profiles
@@ -28,6 +28,8 @@ namespace OrphanChildrenSupport.IoC.Configuration.AutoMapper.Profiles
             CreateMap<Account, RegisterRequest>().ReverseMap();
             CreateMap<Account, AuthenticateResponse>().ReverseMap();
             CreateMap<Account, AccountResponse>().ReverseMap();
+            CreateMap<Account, UpdateRequest>().ReverseMap();
+            CreateMap<Account, CreateRequest>().ReverseMap();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
         }
     }

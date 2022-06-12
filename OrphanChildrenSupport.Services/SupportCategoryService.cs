@@ -2,22 +2,15 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using OrphanChildrenSupport.HttpClientFactory.Libraries;
-using OrphanChildrenSupport.Services.Contracts;
-using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Tools.Encryptions;
-using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
-using Microsoft.EntityFrameworkCore;
+using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
+using OrphanChildrenSupport.Tools.HttpContextExtensions;
+using System;
+using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
 {
@@ -25,22 +18,21 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        private string _folderid;
-        private string _type;
-        private ICryptoEncryptionHelper _cryptoEncryptionHelper;
+        
+       
+        
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<SupportCategoryService> _logger;
 
         public SupportCategoryService(IMapper mapper, ILogger<SupportCategoryService> logger, IConfiguration config,
-            ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
+             IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:SupportCategoryAvatarFolderId") ?? "";
-            _type = config.GetValue<string>("LibraryApi:Type") ?? "";
-            _cryptoEncryptionHelper = cryptoEncryptionHelper;
+            
+            
             _httpContextHelper = httpContextHelper;
         }
 
