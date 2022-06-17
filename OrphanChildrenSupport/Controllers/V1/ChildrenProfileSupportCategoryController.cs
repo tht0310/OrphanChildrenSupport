@@ -23,7 +23,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
-            var apiResponse = await _childrenProfileSupportCategoryService.GetchildrenProfileSupportCategories(queryResource);
+            var apiResponse = await _childrenProfileSupportCategoryService.GetChildrenProfileSupportCategories(queryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 

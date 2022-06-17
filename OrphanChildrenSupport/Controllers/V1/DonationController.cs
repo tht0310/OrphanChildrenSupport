@@ -73,7 +73,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("approve/{id}")]
         public async Task<IActionResult> Approve(long id)
         {
-            var apiResponse = await _donationService.Approve(id);
+            var apiResponse = await _donationService.ApproveDonation(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
@@ -81,7 +81,15 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("reject/{id}")]
         public async Task<IActionResult> Reject(long id)
         {
-            var apiResponse = await _donationService.Reject(id);
+            var apiResponse = await _donationService.RejectDonation(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpPut]
+        [Route("cancel/{id}")]
+        public async Task<IActionResult> Cancel(long id)
+        {
+            var apiResponse = await _donationService.CancelDonation(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

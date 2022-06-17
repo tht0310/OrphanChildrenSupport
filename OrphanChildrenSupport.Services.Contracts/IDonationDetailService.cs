@@ -13,9 +13,9 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<DonationDetailResource>> DeleteDonationDetail(long id, bool removeFromDB = false);
         Task<ApiResponse<DonationDetailResource>> GetDonationDetail(long id);
         Task<ApiResponse<QueryResultResource<DonationDetailResource>>> GetDonationDetails(QueryResource queryObj);
-        Task<ApiResponse<DonationDetailResource>> Finish(long id);
-        Task<ApiResponse<DonationDetailResource>> Cancel(long id);
+        Task<ApiResponse<DonationDetailResource>> FinishDonationDetail(long id);
+        Task<ApiResponse<DonationDetailResource>> CancelDonationDetail(long id);
         Task<ApiResponse<DonationDetailResource>> UploadDonationDetailImage(long id, IFormFile file);
-        Task<ApiResponse<FileStream>> GetDonationDetailImage(long id);
+        Task<ApiResponse<FileStream>> ViewDonationDetailImage(long id);
     }
 }

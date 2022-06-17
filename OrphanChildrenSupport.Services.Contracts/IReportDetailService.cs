@@ -11,8 +11,8 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ReportDetailResource>> DeleteReportDetail(long id, bool removeFromDB = false);
         Task<ApiResponse<ReportDetailResource>> GetReportDetail(long id);
         Task<ApiResponse<QueryResultResource<ReportDetailResource>>> GetReportDetails(QueryResource queryObj);
-        Task<ApiResponse<ReportDetailResource>> Approve(long id);
-        Task<ApiResponse<ReportDetailResource>> Reject(long id);
-        Task<ApiResponse<ReportDetailResource>> Cancel(long id);
+        Task<ApiResponse<ReportDetailResource>> ApproveReportDetail(long id);
+        Task<ApiResponse<ReportDetailResource>> RejectReportDetail(long id);
+        Task<ApiResponse<ReportDetailResource>> CancelReportDetail(long id);
     }
 }

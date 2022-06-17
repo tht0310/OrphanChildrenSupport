@@ -54,16 +54,23 @@ export abstract class ServiceBase {
 
       var retrievedObject = localStorage.getItem("currentUser");
       var jwtToken = "";
+<<<<<<< HEAD
       //console.log(retrievedObject)
       if (retrievedObject!=="null") {
        
+=======
+      if (retrievedObject !== null) {
+>>>>>>> 7fd023844a2da76b3c2bca53fe5086bfbcdf29d0
         const currentUser = JSON.parse(retrievedObject);
         if (currentUser) {
           jwtToken = currentUser.jwtToken;
         }
         
       }
+<<<<<<< HEAD
       //console.log(jwtToken, isNode());
+=======
+>>>>>>> 7fd023844a2da76b3c2bca53fe5086bfbcdf29d0
       axiosRequestConfig = {
         headers: {
           Authorization: "Bearer " + jwtToken,

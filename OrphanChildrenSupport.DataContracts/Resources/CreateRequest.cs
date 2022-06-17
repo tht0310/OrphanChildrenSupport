@@ -31,5 +31,6 @@ namespace OrphanChildrenSupport.Models.Accounts
         [Required]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+        public bool IsActive { get; set; }
     }
 }
