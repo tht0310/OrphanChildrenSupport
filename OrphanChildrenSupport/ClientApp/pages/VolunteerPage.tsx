@@ -189,11 +189,9 @@ const VolunteerPage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const value: IFilterType = { [filterBy]: "User" };
-    console.log(value);
-    const res = await userService.search(value);
+    const res = await userService.getAll();
     if (!res.hasErrors) {
-      setUserProfiles(res.value);
+      setUserProfiles(res.value.items);
     }
   }
 

@@ -37,6 +37,7 @@ import AdminLoginPage from "@Components/shared/Admin/AdminLoginPage";
 import AdminRoute from "@Components/shared/AdminRoute";
 import ProtectedRoute from "@Components/shared/ProtectedRoute";
 import NotAccessPage from "@Pages/NotAccessPage";
+import TempPage from "@Pages/TempPage";
 
 export const routes = (
   <Switch>
@@ -202,6 +203,7 @@ export const routes = (
       path="/accesserror"
       component={NotAccessPage}
     />
+    <AppRoute layout={DefaultLayout} exact path="/temp" component={TempPage} />
     <AdminRoute
       layout={AuthorizedLayout}
       exact

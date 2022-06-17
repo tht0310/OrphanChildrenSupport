@@ -106,9 +106,9 @@ const DonationDetailModal: React.FC<IProps> = ({
   }
 
   async function fetchUsers() {
-    const res = await userService.getAllUser();
+    const res = await userService.getAll();
     if (!res.hasErrors) {
-      setUser(res.value);
+      setUser(res.value.items);
     }
   }
 

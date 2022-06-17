@@ -21,12 +21,18 @@ import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { DataServices } from "@Services/DataServices";
 import { useState } from "react";
-import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
+import {
+  RcFile,
+  UploadChangeParam,
+  UploadFile,
+  UploadProps,
+} from "antd/lib/upload/interface";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import ChildrenSupportCategoryService from "@Services/ChildrenSupportCategoryService";
 import { IChildrenSupportCategoryModel } from "@Models/IChildrenSupportCategoryModel";
 import TextEditor from "@Components/shared/TextEditor";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -65,9 +71,10 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   data,
 }: IProps) => {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState<string | null>();
-  const [imageFile, setImageFile] = useState<UploadFile<any>>();
-  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
@@ -75,10 +82,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   React.useEffect(() => {
     if (visible === true) {
       form.resetFields();
-      setImageUrl(null);
       if (data) {
         innitialValue();
-        getImage(data.id);
       }
     }
   }, [data, visible]);
@@ -90,8 +95,10 @@ const ChildrenProfileModal: React.FC<IProps> = ({
   const handleCancel = () => {
     onCancel();
     form.resetFields();
-    setImageUrl(null);
+    handleCancelImage();
   };
+
+  const handleCancelImage = () => setPreviewVisible(false);
 
   async function fetchSupportCategories() {
     const dataRes = await supportCategoriesService.getAll();
@@ -104,43 +111,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     form.submit();
   }
 
-  async function getImage(id) {
-    const avatarUrl = await childrenProfileService.getImage(id);
-    if (!avatarUrl.hasErrors) {
-      setImageUrl(avatarUrl.value.toString());
-    } else {
-      setImageUrl(null);
-    }
-  }
-
-  function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
-
-  const handleChangeImage = (info: UploadChangeParam<UploadFile<any>>) => {
-    if (info.file.status === "uploading") {
-      setIsUploadingImage(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (imageUrlT: string) => {
-        setImageUrl(imageUrlT);
-        setImageFile(info.file);
-        setIsUploadingImage(false);
-      });
-    }
-  };
-  const uploadButton = (
-    <div>
-      <Plus />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
   async function onFinish(values: IChildrenProfileModel | any) {
+    console.log(fileList);
     values.detailAddress =
       values.city + "-" + values.province + "-" + values.houseNumber;
     values.publicAddress = values.city + "-" + values.province;
@@ -155,20 +127,14 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         });
         values.childrenProfileSupportCategories = tempList;
       }
-      const res = await childrenProfileService.updateWithFile(
-        values,
-        imageFile?.originFileObj
-      );
+      const res = await childrenProfileService.update(values);
       if (!res.hasErrors) {
         message.success(`${values.fullName} has been successfully updated`);
         onCancel();
         fetchData();
       }
     } else {
-      const res = await childrenProfileService.addWithFile(
-        values,
-        imageFile?.originFileObj
-      );
+      const res = await childrenProfileService.add(values);
 
       if (!res.hasErrors) {
         if (values.childrenCategoryGroup) {
@@ -182,12 +148,56 @@ const ChildrenProfileModal: React.FC<IProps> = ({
           values.childrenProfileSupportCategories = tempList;
         }
 
-        message.success(`${values.fullName} has been successfully added`);
-        onCancel();
-        fetchData();
+        if (fileList.length > 0) {
+          let imageRes = await childrenProfileService.addChildrenProfileImages(
+            res.value.id,
+            fileList
+          );
+          if (!imageRes?.hasErrors) {
+            message.success(`${values.fullName} has been successfully added`);
+            onCancel();
+            fetchData();
+          } else {
+            message.error(`An error occured`);
+          }
+        } else {
+          message.success(`${values.fullName} has been successfully added`);
+          onCancel();
+          fetchData();
+        }
       }
     }
   }
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewVisible(true);
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
+    );
+  };
+
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
 
   function innitialValue() {
     form.setFieldsValue({
@@ -241,94 +251,33 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         </Form.Item>
 
         <Row>
-          <Col span={6}>
-            <Row>
+          <Col span={7}>
+            <div className="image-uploading">
               <Upload
-                customRequest={DataServices.uploadFileRequest}
-                onChange={(info: any) => handleChangeImage(info)}
-                className="avatar-uploader"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
-                showUploadList={false}
-                accept=".jpg, .png, .JPEG"
-                style={{ width: "100%" }}
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
               >
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    className="icon-upload"
-                    style={{ width: "100%" }}
-                  />
-                ) : (
-                  uploadButton
-                )}
+                {fileList.length >= 4 ? null : uploadButton}
               </Upload>
-            </Row>
 
-            <Row>
-              <Col span={8}>
-                <Upload
-                  customRequest={DataServices.uploadFileRequest}
-                  onChange={(info: any) => handleChangeImage(info)}
-                  className="avatar-uploader-custom"
-                  listType="picture-card"
-                  showUploadList={false}
-                  accept=".jpg, .png, .JPEG"
-                  style={{ width: "20%" }}
-                >
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      className="icon-upload"
-                      style={{ width: "100%" }}
-                    />
-                  ) : (
-                    <Plus />
-                  )}
-                </Upload>
-              </Col>
-              <Col span={8}>
-                <Upload
-                  customRequest={DataServices.uploadFileRequest}
-                  onChange={(info: any) => handleChangeImage(info)}
-                  className="avatar-uploader-custom"
-                  listType="picture-card"
-                  showUploadList={false}
-                  accept=".jpg, .png, .JPEG"
-                >
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      className="icon-upload"
-                      style={{ width: "100%" }}
-                    />
-                  ) : (
-                    <Plus />
-                  )}
-                </Upload>
-              </Col>
-              <Col span={8}>
-                <Upload
-                  customRequest={DataServices.uploadFileRequest}
-                  onChange={(info: any) => handleChangeImage(info)}
-                  listType="picture-card"
-                  className="avatar-uploader-custom"
-                  showUploadList={false}
-                  accept=".jpg, .png, .JPEG"
-                >
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      className="icon-upload"
-                      style={{ width: "100%" }}
-                    />
-                  ) : (
-                    <Plus />
-                  )}
-                </Upload>
-              </Col>
-            </Row>
+              <Modal
+                visible={previewVisible}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancelImage}
+              >
+                <img
+                  alt="example"
+                  style={{ width: "100%" }}
+                  src={previewImage}
+                />
+              </Modal>
+            </div>
           </Col>
-          <Col span={18}>
+          <Col span={17}>
             <Form.Item
               name="fullName"
               label="Full name"
@@ -448,7 +397,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
                 <Row>
                   {supportCategories.map((s) => {
                     return (
-                      <Col span={6}>
+                      <Col span={8}>
                         <Checkbox
                           value={s.id}
                           style={{ lineHeight: "32px", paddingRight: "20px" }}

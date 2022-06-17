@@ -57,7 +57,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
   const [searchText, setSearchText] = React.useState("");
 
   useEffect(() => {
-    document.title = "Dashboard - Quy trình";
+    document.title = "Children Management";
     fetchData();
   }, []);
   useEffect(() => {

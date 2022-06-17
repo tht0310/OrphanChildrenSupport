@@ -173,9 +173,9 @@ const ReportManagementPage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const res = await userService.getAllUser();
+    const res = await userService.getAll();
     if (!res.hasErrors) {
-      setUserProfiles(res.value);
+      setUserProfiles(res.value.items);
     }
   }
 

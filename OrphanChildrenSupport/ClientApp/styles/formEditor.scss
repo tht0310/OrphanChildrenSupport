@@ -420,15 +420,24 @@
 }
 .text-editor {
   .ant-btn-icon-only > * {
-    font-size: 9px;
-    padding: 1px 0 !important;
-  }
-  .ant-btn {
-    padding: 2px 8px;
     font-size: 11px;
-    height: 27px !important;
+   
+  }
+  .ant-btn-icon-only > .anticon {
+    display: flex;
+    justify-content: left !important;
+  }
+  .heading-btn {
+    padding: 2px 8px;
+    font-size: 12px;
+    height: 29px !important;
     vertical-align: -2px !important;
   }
+  .ant-btn-primary {
+    font-size: 12px;
+  }
+  
+}
 
   .text-editor-content .ProseMirror {
     border: 1px solid #d9d9d9;
@@ -441,10 +450,33 @@
     margin-bottom: 5px !important;
   }
   
-}
+
 .text-editor-read-only .text-editor .text-editor-content .ProseMirror {
   border: none;
   padding: 1em 0px;
   min-height: 50px;
  
+}
+.image-uploading {
+  padding-right: 30px;
+  .ant-upload-list-picture-card-container:first-child {
+    width: 96%;
+    height: 200px;
+  }
+  .ant-upload.ant-upload-select-picture-card:first-child {
+    width: 96%;
+    height: 200px;
+  }
+  .ant-upload.ant-upload-select-picture-card {
+    width: 71px;
+    height: 72px;
+  }
+  .ant-upload-list-picture-card-container {
+    width: 71px;
+    height: 72px;
+  }
+  .ant-upload-list-item {
+    padding: 2px !important;
+  }
+
 }

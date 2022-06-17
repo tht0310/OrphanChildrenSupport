@@ -6,6 +6,7 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { RcFile } from "antd/lib/upload";
 import { IQueryResult } from "@Models/IQueryResult";
 import { string } from "prop-types";
+import { UploadFile } from 'antd/lib/upload/interface';
 
 type Params = {
   fullNameOrEmail?: string;
@@ -142,7 +143,7 @@ export default class ChildrenProfileService extends ServiceBase {
 
   public async addChildrenProfileImages(
     childrenId:number,
-    file: RcFile[] | null,
+    file: UploadFile[] | null,
   ): Promise<Result<IChildrenProfileModel>> {
     var result = await this.requestJson<IChildrenProfileModel>({
       url: `/api/childrenProfileImages/uploadImagesByChildrenProfileId/${childrenId}`,
@@ -151,4 +152,5 @@ export default class ChildrenProfileService extends ServiceBase {
     });
     return result;
   }
+
 }
