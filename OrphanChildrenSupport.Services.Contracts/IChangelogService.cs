@@ -6,12 +6,10 @@ namespace OrphanChildrenSupport.Services.Contracts
 {
     public interface IChangelogService
     {
-        Task<ApiResponse<DonationResource>> CreateDonation(DonationResource donationResource);
-        Task<ApiResponse<DonationResource>> UpdateDonation(long id, DonationResource donationResource);
-        Task<ApiResponse<DonationResource>> DeleteDonation(long id, bool removeFromDB = false);
-        Task<ApiResponse<DonationResource>> GetDonation(long id);
-        Task<ApiResponse<QueryResultResource<DonationResource>>> GetDonations(QueryResource queryObj);
-        Task<ApiResponse<DonationResource>> Approve(long id);
-        Task<ApiResponse<DonationResource>> Reject(long id);
+        Task<ApiResponse<ChangelogResource>> CreateChangelog(ChangelogResource changelogResource);
+        Task<ApiResponse<ChangelogResource>> UpdateChangelog(long id, ChangelogResource changelogResource);
+        Task<ApiResponse<ChangelogResource>> DeleteChangelog(long id, bool removeFromDB = false);
+        Task<ApiResponse<ChangelogResource>> GetChangelog(long id);
+        Task<ApiResponse<QueryResultResource<ChangelogResource>>> GetChangelogs(QueryResource queryObj);
     }
 }

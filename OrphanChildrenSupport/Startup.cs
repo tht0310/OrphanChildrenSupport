@@ -74,10 +74,6 @@ namespace OrphanChildrenSupport
                     services.AddSpaPrerenderer();
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                    // Add your own services here.
-                    services.AddScoped<IAccountService, AccountService>();
-                    services.AddScoped<IEmailService, EmailService>();
-
                     services.AddMvcCore().AddApiExplorer();
                     services.AddCors();
                     services.AddControllers(

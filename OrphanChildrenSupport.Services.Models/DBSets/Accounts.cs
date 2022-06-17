@@ -24,7 +24,7 @@ namespace OrphanChildrenSupport.Services.Models
         {
             return this.RefreshTokens?.Find(x => x.Token == token) != null;
         }
-        public bool IsActived { get; set; }
+        public bool IsActive { get; set; }
     }
 
 }

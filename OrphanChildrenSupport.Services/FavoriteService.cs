@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,43 +19,59 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        
-       
-        
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<FavoriteService> _logger;
+        private readonly IChangelogService _changelogService;
 
-        public FavoriteService(IMapper mapper, ILogger<FavoriteService> logger, IConfiguration config,
-             IHttpContextHelper httpContextHelper)
+        public FavoriteService(IMapper mapper, ILogger<FavoriteService> logger, IConfiguration config, IHttpContextHelper httpContextHelper, IChangelogService changelogService)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            
-            
             _httpContextHelper = httpContextHelper;
+            _changelogService = changelogService;
         }
 
-        public async Task<ApiResponse<FavoriteResource>> CreateFavorite(FavoriteResource childrenFavoriteResource)
+        public async Task<ApiResponse<FavoriteResource>> CreateFavorite(FavoriteResource favoriteResource)
         {
             const string loggerHeader = "CreateFavorite";
-
             var apiResponse = new ApiResponse<FavoriteResource>();
-            Favorite childrenFavorite = _mapper.Map<FavoriteResource, Favorite>(childrenFavoriteResource);
-
-            _logger.LogDebug($"{loggerHeader} - Start to add Favorite: {JsonConvert.SerializeObject(childrenFavorite)}");
+            Favorite favorite = _mapper.Map<FavoriteResource, Favorite>(favoriteResource);
+            _logger.LogDebug($"{loggerHeader} - Start toCreateFavorite: {JsonConvert.SerializeObject(favorite)}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    childrenFavorite.CreatedBy = _httpContextHelper.GetCurrentUser();
-                    childrenFavorite.CreatedTime = DateTime.UtcNow;
-                    await unitOfWork.FavoriteRepository.Add(childrenFavorite);
+                    var tempFavorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.ChildrenProfileId == favoriteResource.ChildrenProfileId && d.AccountId == favoriteResource.AccountId);
+                    if (tempFavorite != null)
+                    {
+                        if (tempFavorite.IsDeleted)
+                        {
+                            tempFavorite.IsDeleted = false;
+                            tempFavorite.LastModified = DateTime.UtcNow;
+                            tempFavorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                            unitOfWork.FavoriteRepository.Update(tempFavorite);
+                        }
+                    } else
+                    {
+                        favorite.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        favorite.CreatedTime = DateTime.UtcNow;
+                        await unitOfWork.FavoriteRepository.Add(favorite);
+                    }
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Add new Favorite successfully with Id: {childrenFavorite.Id}");
-                    childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == childrenFavorite.Id);
-                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
+                    favorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == favorite.Id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(favorite);
+                    _logger.LogDebug($"{loggerHeader} - CreateFavorite successfully with Id: {favorite.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "Favorite";
+                    changelogResource.API = $"{loggerHeader} - CreateFavorite successfully with Id: {favorite.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
+
                 }
                 catch (Exception ex)
                 {
@@ -68,30 +85,35 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
-        public async Task<ApiResponse<FavoriteResource>> UpdateFavorite(long id, FavoriteResource childrenFavoriteResource)
+        public async Task<ApiResponse<FavoriteResource>> UpdateFavorite(long id, FavoriteResource favoriteResource)
         {
             const string loggerHeader = "UpdateFavorite";
             var apiResponse = new ApiResponse<FavoriteResource>();
-
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
-                    childrenFavorite = _mapper.Map<FavoriteResource, Favorite>(childrenFavoriteResource, childrenFavorite);
-                    _logger.LogDebug($"{loggerHeader} - Start to update Favorite: {JsonConvert.SerializeObject(childrenFavorite)}");
-                    childrenFavorite.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                    childrenFavorite.LastModified = DateTime.UtcNow;
-                    unitOfWork.FavoriteRepository.Update(childrenFavorite);
+                    var favorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
+                    favorite = _mapper.Map<FavoriteResource, Favorite>(favoriteResource, favorite);
+                    _logger.LogDebug($"{loggerHeader} - Start to UpdateFavorite: {JsonConvert.SerializeObject(favorite)}");
+                    favorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    favorite.LastModified = DateTime.UtcNow;
+                    unitOfWork.FavoriteRepository.Update(favorite);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Update Favorite successfully with Id: {childrenFavorite.Id}");
+                    favorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == favorite.Id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(favorite);
+                    _logger.LogDebug($"{loggerHeader} - UpdateFavorite successfully with Id: {favorite.Id}");
 
-                    childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == childrenFavorite.Id);
-                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "Favorite";
+                    changelogResource.API = $"{loggerHeader} - UpdateFavorite successfully with Id: {favorite.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -105,37 +127,40 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<FavoriteResource>> DeleteFavorite(long id, bool removeFromDB = false)
         {
             const string loggerHeader = "DeleteFavorite";
-
             var apiResponse = new ApiResponse<FavoriteResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to delete Favorite with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to DeleteFavorite with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.Id == id);
+                    var favorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.Id == id);
                     if (removeFromDB)
                     {
-                        unitOfWork.FavoriteRepository.Remove(childrenFavorite);
+                        unitOfWork.FavoriteRepository.Remove(favorite);
                     }
                     else
                     {
-                        childrenFavorite.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                        childrenFavorite.IsDeleted = true;
-                        childrenFavorite.LastModified = DateTime.UtcNow;
-                        unitOfWork.FavoriteRepository.Update(childrenFavorite);
+                        favorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        favorite.IsDeleted = true;
+                        favorite.LastModified = DateTime.UtcNow;
+                        unitOfWork.FavoriteRepository.Update(favorite);
                     }
-
                     await unitOfWork.SaveChanges();
+                    _logger.LogDebug($"{loggerHeader} - DeleteFavorite successfully with Id: {favorite.Id}");
 
-                    _logger.LogDebug($"{loggerHeader} - Delete Favorite successfully with Id: {childrenFavorite.Id}");
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "Favorite";
+                    changelogResource.API = $"{loggerHeader} - DeleteFavorite successfully with Id: {favorite.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -149,25 +174,22 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<FavoriteResource>> GetFavorite(long id)
         {
             const string loggerHeader = "GetFavorite";
-
             var apiResponse = new ApiResponse<FavoriteResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to get Favorite with Id: {id}");
-
+            _logger.LogDebug($"{loggerHeader} - Start to GetFavorite with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var childrenFavorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
-                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(childrenFavorite);
-                    _logger.LogDebug($"{loggerHeader} - Get Favorite successfully with Id: {apiResponse.Data.Id}");
+                    var favorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
+                    apiResponse.Data = _mapper.Map<Favorite, FavoriteResource>(favorite);
+                    _logger.LogDebug($"{loggerHeader} - GetFavorite successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -181,26 +203,22 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<QueryResultResource<FavoriteResource>>> GetFavorites(QueryResource queryObj)
         {
             const string loggerHeader = "GetFavorites";
-
             var apiResponse = new ApiResponse<QueryResultResource<FavoriteResource>>();
             var pagingSpecification = new PagingSpecification(queryObj);
-
-            _logger.LogDebug($"{loggerHeader} - Start to getFavorites with");
-
+            _logger.LogDebug($"{loggerHeader} - Start to GetFavorites");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
-
                 try
                 {
-
-                    var query = await unitOfWork.FavoriteRepository.FindAll(predicate: d => d.IsDeleted == false,
+                    var query = await unitOfWork.FavoriteRepository.FindAll(predicate: d => d.IsDeleted == false
+                                                                            && (!queryObj.AccountId.HasValue || d.AccountId == queryObj.AccountId)
+                                                                            && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: null,
                                                                         orderBy: null,
                                                                         disableTracking: true,
@@ -220,47 +238,7 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
-        }
-
-        public async Task<string> GetAccountNameByContext()
-        {
-            const string loggerHeader = "Get Account Name";
-
-            var apiResponse = new ApiResponse<string>();
-            var currentEmail = _httpContextHelper.GetCurrentUser();
-            if (!String.IsNullOrEmpty(currentEmail))
-            {
-                _logger.LogDebug($"{loggerHeader} - Start to get Favorite with email: {currentEmail}");
-
-                using (var unitOfWork = new UnitOfWork(_connectionString))
-                {
-                    try
-                    {
-                        _logger.LogDebug($"{loggerHeader} - Get Favorite successfully with Id: {apiResponse.Data}");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
-                        apiResponse.IsError = true;
-                        apiResponse.Message = ex.Message;
-                        await unitOfWork.SaveErrorLog(ex);
-
-                        return "";
-                    }
-                    finally
-                    {
-                        unitOfWork.Dispose();
-                    }
-                }
-
-                return apiResponse.Data;
-            }
-            else
-            {
-                return "";
-            }
         }
     }
 }

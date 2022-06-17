@@ -53,11 +53,10 @@ export abstract class ServiceBase {
 
       var retrievedObject = localStorage.getItem("currentUser");
       var jwtToken = "";
-      if (retrievedObject) {
+      if (retrievedObject !== null) {
         const currentUser = JSON.parse(retrievedObject);
         jwtToken = currentUser.jwtToken;
       }
-      console.log(jwtToken, isNode());
       axiosRequestConfig = {
         headers: {
           Authorization: "Bearer " + jwtToken,

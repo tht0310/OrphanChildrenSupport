@@ -28,6 +28,8 @@ namespace OrphanChildrenSupport.IoC.Configuration.DI
                 services.AddTransient<INotificationService, NotificationService>();
                 services.AddTransient<IChangelogService, ChangelogService>();
                 services.AddTransient<IChildrenProfileImageService, ChildrenProfileImageService>();
+                services.AddTransient<IEmailService, EmailService>();
+                services.AddTransient<IAccountService, AccountService>();
             }
         }
 

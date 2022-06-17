@@ -1,5 +1,5 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -11,7 +11,6 @@ using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -20,47 +19,43 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        
-       
-        
+
+
+
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
-        private readonly ILogger<DonationService> _logger;
+        private readonly ILogger<ChangelogService> _logger;
 
-        public ChangelogService(IMapper mapper, ILogger<DonationService> logger, IConfiguration config,
+        public ChangelogService(IMapper mapper, ILogger<ChangelogService> logger, IConfiguration config,
              IHttpContextHelper httpContextHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            
-            
-            
+
+
             _httpContextHelper = httpContextHelper;
         }
 
-        public async Task<ApiResponse<DonationResource>> CreateDonation(DonationResource donationResource)
+        public async Task<ApiResponse<ChangelogResource>> CreateChangelog(ChangelogResource childrenChangelogResource)
         {
-            const string loggerHeader = "CreateDonation";
+            const string loggerHeader = "CreateChangelog";
 
-            var apiResponse = new ApiResponse<DonationResource>();
-            Donation donation = _mapper.Map<DonationResource, Donation>(donationResource);
+            var apiResponse = new ApiResponse<ChangelogResource>();
+            Changelog childrenChangelog = _mapper.Map<ChangelogResource, Changelog>(childrenChangelogResource);
 
-            _logger.LogDebug($"{loggerHeader} - Start to add Donation: {JsonConvert.SerializeObject(donation)}");
+            _logger.LogDebug($"{loggerHeader} - Start to add Changelog: {JsonConvert.SerializeObject(childrenChangelog)}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    donation.CreatedBy = _httpContextHelper.GetCurrentUser();
-                    donation.CreatedTime = DateTime.UtcNow;
-                    //donation.ApproverId = null;
-                    donation.ModifiedBy = null;
-                    await unitOfWork.DonationRepository.Add(donation);
+                    childrenChangelog.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChangelog.CreatedTime = DateTime.UtcNow;
+                    await unitOfWork.ChangelogRepository.Add(childrenChangelog);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Add new Donation successfully with Id: {donation.Id}");
-                    donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == donation.Id,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
+                    _logger.LogDebug($"{loggerHeader} - Add new Changelog successfully with Id: {childrenChangelog.Id}");
+                    childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(predicate: d => d.Id == childrenChangelog.Id);
+                    apiResponse.Data = _mapper.Map<Changelog, ChangelogResource>(childrenChangelog);
                 }
                 catch (Exception ex)
                 {
@@ -78,27 +73,26 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationResource>> UpdateDonation(long id, DonationResource donationResource)
+        public async Task<ApiResponse<ChangelogResource>> UpdateChangelog(long id, ChangelogResource childrenChangelogResource)
         {
-            const string loggerHeader = "UpdateDonation";
-            var apiResponse = new ApiResponse<DonationResource>();
+            const string loggerHeader = "UpdateChangelog";
+            var apiResponse = new ApiResponse<ChangelogResource>();
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation = _mapper.Map<DonationResource, Donation>(donationResource, donation);
-                    _logger.LogDebug($"{loggerHeader} - Start to update Donation: {JsonConvert.SerializeObject(donation)}");
-                    donation.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                    donation.LastModified = DateTime.UtcNow;
-                    unitOfWork.DonationRepository.Update(donation);
+                    var childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(predicate: d => d.Id == id);
+                    childrenChangelog = _mapper.Map<ChangelogResource, Changelog>(childrenChangelogResource, childrenChangelog);
+                    _logger.LogDebug($"{loggerHeader} - Start to update Changelog: {JsonConvert.SerializeObject(childrenChangelog)}");
+                    childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChangelog.LastModified = DateTime.UtcNow;
+                    unitOfWork.ChangelogRepository.Update(childrenChangelog);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Update Donation successfully with Id: {donation.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Update Changelog successfully with Id: {childrenChangelog.Id}");
 
-                    donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
+                    childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(predicate: d => d.Id == childrenChangelog.Id);
+                    apiResponse.Data = _mapper.Map<Changelog, ChangelogResource>(childrenChangelog);
                 }
                 catch (Exception ex)
                 {
@@ -116,33 +110,33 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationResource>> DeleteDonation(long id, bool removeFromDB = false)
+        public async Task<ApiResponse<ChangelogResource>> DeleteChangelog(long id, bool removeFromDB = false)
         {
-            const string loggerHeader = "DeleteDonation";
+            const string loggerHeader = "DeleteChangelog";
 
-            var apiResponse = new ApiResponse<DonationResource>();
+            var apiResponse = new ApiResponse<ChangelogResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to delete Donation with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to delete Changelog with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var donation = await unitOfWork.DonationRepository.FindFirst(d => d.Id == id);
+                    var childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(d => d.Id == id);
                     if (removeFromDB)
                     {
-                        unitOfWork.DonationRepository.Remove(donation);
+                        unitOfWork.ChangelogRepository.Remove(childrenChangelog);
                     }
                     else
                     {
-                        donation.ModifiedBy = _httpContextHelper.GetCurrentUser();
-                        donation.IsDeleted = true;
-                        donation.LastModified = DateTime.UtcNow;
-                        unitOfWork.DonationRepository.Update(donation);
+                        childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        childrenChangelog.IsDeleted = true;
+                        childrenChangelog.LastModified = DateTime.UtcNow;
+                        unitOfWork.ChangelogRepository.Update(childrenChangelog);
                     }
 
                     await unitOfWork.SaveChanges();
 
-                    _logger.LogDebug($"{loggerHeader} - Delete Donation successfully with Id: {donation.Id}");
+                    _logger.LogDebug($"{loggerHeader} - Delete Changelog successfully with Id: {childrenChangelog.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -160,22 +154,21 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationResource>> GetDonation(long id)
+        public async Task<ApiResponse<ChangelogResource>> GetChangelog(long id)
         {
-            const string loggerHeader = "GetDonation";
+            const string loggerHeader = "GetChangelog";
 
-            var apiResponse = new ApiResponse<DonationResource>();
+            var apiResponse = new ApiResponse<ChangelogResource>();
 
-            _logger.LogDebug($"{loggerHeader} - Start to get Donation with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to get Changelog with Id: {id}");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
-                    _logger.LogDebug($"{loggerHeader} - Get Donation successfully with Id: {apiResponse.Data.Id}");
+                    var childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(predicate: d => d.Id == id);
+                    apiResponse.Data = _mapper.Map<Changelog, ChangelogResource>(childrenChangelog);
+                    _logger.LogDebug($"{loggerHeader} - Get Changelog successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -193,14 +186,14 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<QueryResultResource<DonationResource>>> GetDonations(QueryResource queryObj)
+        public async Task<ApiResponse<QueryResultResource<ChangelogResource>>> GetChangelogs(QueryResource queryObj)
         {
-            const string loggerHeader = "GetDonations";
+            const string loggerHeader = "GetChangelogs";
 
-            var apiResponse = new ApiResponse<QueryResultResource<DonationResource>>();
+            var apiResponse = new ApiResponse<QueryResultResource<ChangelogResource>>();
             var pagingSpecification = new PagingSpecification(queryObj);
 
-            _logger.LogDebug($"{loggerHeader} - Start to get Donations with");
+            _logger.LogDebug($"{loggerHeader} - Start to getChangelogs with");
 
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
@@ -208,13 +201,13 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
 
-                    var query = await unitOfWork.DonationRepository.FindAll(predicate: d => d.IsDeleted == false,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)),
+                    var query = await unitOfWork.ChangelogRepository.FindAll(predicate: d => d.IsDeleted == false,
+                                                                        include: null,
                                                                         orderBy: null,
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
-                    apiResponse.Data = _mapper.Map<QueryResult<Donation>, QueryResultResource<DonationResource>>(query);
-                    _logger.LogDebug($"{loggerHeader} - Get Donations successfully");
+                    apiResponse.Data = _mapper.Map<QueryResult<Changelog>, QueryResultResource<ChangelogResource>>(query);
+                    _logger.LogDebug($"{loggerHeader} - GetChangelogs successfully");
                 }
                 catch (Exception ex)
                 {
@@ -232,92 +225,43 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationResource>> Approve(long id)
+        public async Task<string> GetAccountNameByContext()
         {
-            const string loggerHeader = "ApproveDonation";
+            const string loggerHeader = "Get Account Name";
 
-            var apiResponse = new ApiResponse<DonationResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to approve Donation with Id: {id}");
-
-            using (var unitOfWork = new UnitOfWork(_connectionString))
+            var apiResponse = new ApiResponse<string>();
+            var currentEmail = _httpContextHelper.GetCurrentAccount();
+            if (!String.IsNullOrEmpty(currentEmail))
             {
-                try
+                _logger.LogDebug($"{loggerHeader} - Start to get Changelog with email: {currentEmail}");
+
+                using (var unitOfWork = new UnitOfWork(_connectionString))
                 {
-                    var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation.DonationStatus = DonationStatus.Processing;
-                    var donationDetails = await unitOfWork.DonationDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
-                    foreach (var donationDetail in donationDetails)
+                    try
                     {
-                        donationDetail.DonationDetailStatus = DonationDetailStatus.Processing;
-                        unitOfWork.DonationDetailRepository.Update(donationDetail);
+                        _logger.LogDebug($"{loggerHeader} - Get Changelog successfully with Id: {apiResponse.Data}");
                     }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                        apiResponse.IsError = true;
+                        apiResponse.Message = ex.Message;
+                        await unitOfWork.SaveErrorLog(ex);
 
-                    unitOfWork.DonationRepository.Update(donation);
-                    await unitOfWork.SaveChanges();
-                    donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
-                    _logger.LogDebug($"{loggerHeader} - Get Donation successfully with Id: {apiResponse.Data.Id}");
+                        return "";
+                    }
+                    finally
+                    {
+                        unitOfWork.Dispose();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
-                    apiResponse.IsError = true;
-                    apiResponse.Message = ex.Message;
-                    await unitOfWork.SaveErrorLog(ex);
-                }
-                finally
-                {
-                    unitOfWork.Dispose();
-                }
+
+                return apiResponse.Data;
             }
-
-            return apiResponse;
-        }
-
-        public async Task<ApiResponse<DonationResource>> Reject(long id)
-        {
-            const string loggerHeader = "RejectDonation";
-
-            var apiResponse = new ApiResponse<DonationResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to reject Donation with Id: {id}");
-
-            using (var unitOfWork = new UnitOfWork(_connectionString))
+            else
             {
-                try
-                {
-                    var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation.DonationStatus = DonationStatus.Rejected;
-                    var donationDetails = await unitOfWork.DonationDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
-                    foreach (var donationDetail in donationDetails)
-                    {
-                        donationDetail.DonationDetailStatus = DonationDetailStatus.Rejected;
-                        unitOfWork.DonationDetailRepository.Update(donationDetail);
-                    }
-
-                    unitOfWork.DonationRepository.Update(donation);
-                    await unitOfWork.SaveChanges();
-                    donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
-                    apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
-                    _logger.LogDebug($"{loggerHeader} - Get Donation successfully with Id: {apiResponse.Data.Id}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
-                    apiResponse.IsError = true;
-                    apiResponse.Message = ex.Message;
-                    await unitOfWork.SaveErrorLog(ex);
-                }
-                finally
-                {
-                    unitOfWork.Dispose();
-                }
+                return "";
             }
-
-            return apiResponse;
         }
     }
 }

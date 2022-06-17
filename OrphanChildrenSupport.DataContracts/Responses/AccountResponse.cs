@@ -1,7 +1,7 @@
 using OrphanChildrenSupport.Services.Models;
 using System;
 
-namespace OrphanChildrenSupport.Models.Accounts
+namespace OrphanChildrenSupport.DataContracts.Responses
 {
     public class AccountResponse : EngineEntity
     {
@@ -13,5 +13,6 @@ namespace OrphanChildrenSupport.Models.Accounts
         public string Address { get; set; }
         public string Role { get; set; }
         public bool IsVerified { get; set; }
+        public bool IsActive { get; set; }
     }
 }

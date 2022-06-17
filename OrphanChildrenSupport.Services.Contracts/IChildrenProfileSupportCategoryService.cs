@@ -10,6 +10,6 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ChildrenProfileSupportCategoryResource>> UpdateChildrenProfileSupportCategory(long id, ChildrenProfileSupportCategoryResource childrenProfileSupportCategoryResource);
         Task<ApiResponse<ChildrenProfileSupportCategoryResource>> DeleteChildrenProfileSupportCategory(long id, bool removeFromDB = false);
         Task<ApiResponse<ChildrenProfileSupportCategoryResource>> GetChildrenProfileSupportCategory(long id);
-        Task<ApiResponse<QueryResultResource<ChildrenProfileSupportCategoryResource>>> GetchildrenProfileSupportCategories(QueryResource queryObj);
+        Task<ApiResponse<QueryResultResource<ChildrenProfileSupportCategoryResource>>> GetChildrenProfileSupportCategories(QueryResource queryObj);
     }
 }

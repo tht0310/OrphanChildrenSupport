@@ -16,13 +16,6 @@ namespace OrphanChildrenSupport.Models.Accounts
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
 
-        [EnumDataType(typeof(Role))]
-        public string Role
-        {
-            get => _role;
-            set => _role = replaceEmptyWithNull(value);
-        }
-
         [MinLength(6)]
         public string Password
         {
