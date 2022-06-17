@@ -101,7 +101,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(new { message = "Password reset successful, you can now login" });
         }
 
-        [Authorize(Role.Admin)]
+        //[Authorize(Role.Admin)]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
