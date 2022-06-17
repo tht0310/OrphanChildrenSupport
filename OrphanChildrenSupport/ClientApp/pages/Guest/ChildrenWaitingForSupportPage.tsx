@@ -136,21 +136,15 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
       </Carousel>
       <Form form={form} name="filter-form" autoComplete="off">
         <div className="content-wrapper-custom">
-          <Row>
-            <Col
-              span={12}
-              style={{
-                paddingLeft: "40px",
-                fontSize: "18px",
-              }}
-              className="title-page"
-            >
+          <Row className="custom-row">
+            <Col span={12} lg={12} xs={14} className="title-page">
               Children waiting for support
             </Col>
-            <Col span={12}>
+            <Col span={12} lg={12} xs={10}>
               <Input
                 placeholder="Seach by name"
-                style={{ width: "40%", float: "right", paddingRight: "10px" }}
+                className="custom-input"
+                style={{ float: "right", paddingRight: "10px" }}
                 prefix={<SearchOutlined className="site-form-item-icon" />}
                 onChange={(e) => {
                   onSearchFullName(e.target.value);
@@ -160,7 +154,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
           </Row>
 
           <Row>
-            <Col span={6}>
+            <Col span={6} className="custom-col">
               <div className="wrap">
                 <div className="menu">
                   <div className="mini-menu">
@@ -220,9 +214,17 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                 </div>
               </div>
             </Col>
-            <Col span={18} className="items">
+            <Col span={18} lg={18} xs={24} className="items">
               <List
-                grid={{ gutter: 18, column: 4 }}
+                grid={{
+                  gutter: 16,
+                  xs: 2,
+                  sm: 2,
+                  md: 4,
+                  lg: 4,
+                  xl: 4,
+                  xxl: 4,
+                }}
                 dataSource={childrenProfiles}
                 pagination={{
                   showSizeChanger: true,

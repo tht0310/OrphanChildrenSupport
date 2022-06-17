@@ -24,7 +24,7 @@ const ContactUsPage: React.FC<Props> = () => {
         you can help.
       </p>
       <Row className="content-wrapper">
-        <Col span={8}>
+        <Col span={8} lg={8} xs={24}>
           <div className="content">
             <Row className="first-block" align="middle">
               <Col span={10}>
@@ -45,7 +45,7 @@ const ContactUsPage: React.FC<Props> = () => {
             </Row>
           </div>
         </Col>
-        <Col span={8}>
+        <Col span={8} lg={8} xs={24}>
           <Row className="second-block" align="middle">
             <Col span={8}>
               <Mail
@@ -64,7 +64,7 @@ const ContactUsPage: React.FC<Props> = () => {
             </Col>
           </Row>
         </Col>
-        <Col span={8}>
+        <Col span={8} lg={8} xs={24}>
           <Row className="third-block" align="middle">
             <Col span={8}>
               <Facebook
@@ -85,18 +85,18 @@ const ContactUsPage: React.FC<Props> = () => {
         </Col>
       </Row>
       <div className="map-container">
-        <Row style={{ height: 500 }} className="map">
-          <Col span={11} style={{ paddingTop: "10%" }}>
+        <Row className="map">
+          <Col span={12} lg={12} xs={24} style={{ paddingTop: "10%" }}>
             <h3>Our home</h3>
             <div>
               Nam Ky Khoi Nghia Street, Hoa Phu Village, Thu Dau Mot city, Binh
               Duong Provice, VietNam.
             </div>
           </Col>
-          <Col span={12}>
+          <Col span={12} lg={12} xs={24}>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.8079981344804!2d106.66398021377069!3d11.053017357052177!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1d7df763eaf%3A0xf4323e44f2867057!2sEastern%20International%20University!5e0!3m2!1sen!2s!4v1647087588750!5m2!1sen!2s"
-              width="110%"
+              width="100%"
               height="450"
             ></iframe>
           </Col>

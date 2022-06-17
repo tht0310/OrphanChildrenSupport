@@ -100,6 +100,20 @@
   }
 }
 .aboutus-page {
+  .text-container {
+      vertical-align: middle;
+      margin-top: 80px;
+      padding-right: 100px,
+  }
+  @media screen and (max-width: 700px) {
+    .text-container {
+      margin-top: 0;
+      margin-bottom: 45px;
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+
   img {
     max-height: 400px !important;
   }
@@ -543,7 +557,7 @@
       font-size: 18px;
       line-height: 35px;
       letter-spacing: -0.03em;
-      max-width: 500px;
+  
     }
   }
 }
@@ -789,4 +803,40 @@ svg {
     }
   }
 }
-
+.page5 {
+  .ant-row {
+    padding-left: 20px;
+  }
+  .custom-col {
+    margin-left: 20px;
+    margin-right: 20px ;
+  }
+  .number {
+      color: #b42121;
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 700;
+      padding-left: 10px;
+      margin-top: "8px";
+      margin-bottom: 8px;
+  }
+  @media only screen and (max-width: 667px) {
+    .ant-row {
+      padding-left: 0px;
+    }
+    .custom-col {
+      margin-left: 0px;
+      margin-right: 0px ;
+      margin-bottom: 45px !important;
+    }
+    .number {
+      color: #b42121;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 700;
+      padding-left: 0px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+  }
+  }
+}

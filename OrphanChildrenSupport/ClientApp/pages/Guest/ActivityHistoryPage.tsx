@@ -3,10 +3,10 @@ import { Tabs } from "antd";
 
 import { RouteComponentProps } from "react-router-dom";
 
-import ReportHistoryPage from "./ReportHistoryPage";
 import DonationHistoryPage from "./DonationHistoryPage";
 import { HistoryOutlined, NotificationOutlined } from "@ant-design/icons";
 import NoficationPage from "./NoficationPage";
+import ReportHistoryPage from "./ReportHistoryPage";
 
 type Props = RouteComponentProps<{ key: string }>;
 

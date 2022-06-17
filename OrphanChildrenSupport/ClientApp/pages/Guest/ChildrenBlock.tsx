@@ -34,8 +34,6 @@ const ChildrenBlock: React.FC<IProps> = ({
       className="home-layout-wrapper3 home-case-wrapper content-wrapper-custom"
       style={{
         minHeight: "300px",
-        paddingLeft: "80px",
-        paddingRight: "50px",
         marginBottom: "20px",
       }}
     >
@@ -80,6 +78,7 @@ const ChildrenBlock: React.FC<IProps> = ({
               borderRadius: "5px",
             }}
           ></div>
+
           <i key="i" className="line" />
           <QueueAnim
             key="content"
@@ -88,11 +87,11 @@ const ChildrenBlock: React.FC<IProps> = ({
             componentProps={{ gutter: 171 }}
           >
             {children.map((d, i) => {
-              if (i > 3) {
+              if (i > 6) {
                 return null;
               }
               return (
-                <Col key={i} className="col" span={6}>
+                <Col key={i} className="col" lg={4} xs={12}>
                   <Link to={`${childrenDetailUrl}/${d.id}`} target="_blank">
                     <div className="item">
                       <Image

@@ -50,14 +50,20 @@ export abstract class ServiceBase {
       };
 
       let axiosRequestConfig: AxiosRequestConfig;
+    
 
       var retrievedObject = localStorage.getItem("currentUser");
       var jwtToken = "";
-      if (retrievedObject) {
+      //console.log(retrievedObject)
+      if (retrievedObject!=="null") {
+       
         const currentUser = JSON.parse(retrievedObject);
-        jwtToken = currentUser.jwtToken;
+        if (currentUser) {
+          jwtToken = currentUser.jwtToken;
+        }
+        
       }
-      console.log(jwtToken, isNode());
+      //console.log(jwtToken, isNode());
       axiosRequestConfig = {
         headers: {
           Authorization: "Bearer " + jwtToken,
@@ -119,6 +125,7 @@ export abstract class ServiceBase {
         showErrors(...result.errors);
       }
     } catch (error) {
+      console.log(error)
       result = new Result<T>(null, "Lỗi truy xuất");
     }
     return result;

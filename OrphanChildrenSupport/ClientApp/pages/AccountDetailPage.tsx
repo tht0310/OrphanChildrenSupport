@@ -7,13 +7,14 @@ import {
   Divider,
   Form,
   Input,
+  message,
   Row,
   Select,
   Space,
   Tag,
 } from "antd";
 import React from "react";
-import { IRegisterModel } from "@Models/ILoginModel";
+import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import {
   FacebookOutlined,
   GoogleOutlined,
@@ -21,7 +22,10 @@ import {
   SaveOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
+import AccountService from "@Services/AccountService";
 interface Props {}
+
+const userService = new AccountService();
 
 const inlineCol2FormLayout = {
   labelCol: {
@@ -42,18 +46,35 @@ const inlineFormLayout = {
 };
 
 const AccountDetailPage: React.FC<Props> = () => {
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
   React.useEffect(() => {
-    getCurrentUser();
+    getLocalUser();
   }, []);
   React.useEffect(() => {
-    innitialValue();
+    if (localUser) {
+      fetchUser(localUser.id);
+    }
+  }, [localUser]);
+  React.useEffect(() => {
+    if (currentUser) {
+      innitialValue();
+    }
   }, [currentUser]);
-  function getCurrentUser() {
+
+  async function fetchUser(id) {
+    const res = await userService.getAccount(id);
+    if (!res.hasErrors) {
+      setCurrentUser(res.value);
+    }
+  }
+
+  function getLocalUser() {
     var retrievedObject = localStorage.getItem("currentUser");
     if (retrievedObject) {
-      setCurrentUser(JSON.parse(retrievedObject));
+      setLocalUser(JSON.parse(retrievedObject));
     }
   }
 
@@ -65,11 +86,50 @@ const AccountDetailPage: React.FC<Props> = () => {
       dob: moment(currentUser?.dob),
       phoneNumber: currentUser?.phoneNumber,
       email: currentUser?.email,
+      city: currentUser?.address?.split("-")[0],
+      province: currentUser?.address?.split("-")[1],
+      houseNumber: currentUser?.address?.split("-")[2],
     });
   }
 
+  async function handleFinish(values) {
+    const temp = values;
+    temp.address =
+      values.city + "-" + values.province + "-" + values.houseNumber;
+    const res = await userService.update(temp);
+    if (!res.hasErrors) {
+      message.success("Change information sucessfully");
+      fetchUser(currentUser.id);
+    } else {
+      message.error("An error occured during updation");
+    }
+  }
+
+  async function handleChangePassword(values) {
+    const temp = currentUser;
+    temp.password = values.password;
+    temp.confirmPassword = values.confirmPassword;
+    const res = await userService.update(temp);
+    if (!res.hasErrors) {
+      message.success("Change password sucessfully");
+      form2.resetFields();
+    } else {
+      message.error("An error occured during updation");
+    }
+  }
+
+  function findName(value) {
+    if (value) {
+      const name = value.split(" ");
+      return name[name.length - 1][0];
+    }
+  }
+
   return (
-    <div className="account" style={{ margin: "3% 4%", background: "white" }}>
+    <div
+      className="account"
+      style={{ padding: "3% 3%", marginTop: "15px", background: "white" }}
+    >
       <div className="main-body">
         <div className="row">
           <div className="col-lg-4">
@@ -80,7 +140,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                     size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                     style={{ backgroundColor: "#f56a00" }}
                   >
-                    N
+                    {findName(currentUser?.fullName)}
                   </Avatar>
                   <div className="mt-3">
                     <h5>{currentUser?.fullName}</h5>
@@ -90,7 +150,7 @@ const AccountDetailPage: React.FC<Props> = () => {
               <Card style={{ width: "100%" }}>
                 <div>
                   <Row>
-                    <Col span={14}>
+                    <Col span={13}>
                       <Space>
                         <GoogleOutlined
                           style={{
@@ -104,51 +164,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                         </span>
                       </Space>
                     </Col>
-                    <Col span={9}>
-                      <div>{currentUser?.email}</div>
-                    </Col>
-                  </Row>
-                </div>
-                <Divider />
-                <div>
-                  <Row>
-                    <Col span={14}>
-                      <Space>
-                        <FacebookOutlined
-                          style={{
-                            color: "#3F63AB",
-                            marginBottom: "6px",
-                            fontSize: "23px",
-                          }}
-                        />
-                        <span style={{ color: "#505050" }}>
-                          <h6>Gmail</h6>
-                        </span>
-                      </Space>
-                    </Col>
-                    <Col span={9}>
-                      <div>{currentUser?.email}</div>
-                    </Col>
-                  </Row>
-                </div>
-                <Divider />
-                <div>
-                  <Row>
-                    <Col span={14}>
-                      <Space>
-                        <InstagramOutlined
-                          style={{
-                            color: "#C93226",
-                            marginBottom: "6px",
-                            fontSize: "23px",
-                          }}
-                        />
-                        <span style={{ color: "#505050" }}>
-                          <h6>Gmail</h6>
-                        </span>
-                      </Space>
-                    </Col>
-                    <Col span={9}>
+                    <Col span={11}>
                       <div>{currentUser?.email}</div>
                     </Col>
                   </Row>
@@ -163,6 +179,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                 labelCol={{ span: 3 }}
                 wrapperCol={{ span: 20 }}
                 layout="horizontal"
+                onFinish={handleFinish}
               >
                 <Card
                   bordered={false}
@@ -176,7 +193,12 @@ const AccountDetailPage: React.FC<Props> = () => {
                           marginTop: "px",
                         }}
                       >
-                        <Button ghost type="primary" icon={<SaveOutlined />} />
+                        <Button
+                          onClick={form.submit}
+                          ghost
+                          type="primary"
+                          icon={<SaveOutlined />}
+                        />
                       </span>
                     </>
                   }
@@ -217,7 +239,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                     </Col>
                     <Col xs={24} lg={12}>
                       <Form.Item
-                        style={{ marginLeft: "50px" }}
+                        className="custom-form-item"
                         label="Gender"
                         name="gender"
                         {...inlineCol2FormLayout}
@@ -306,10 +328,11 @@ const AccountDetailPage: React.FC<Props> = () => {
             <div>
               <div className="card" style={{ marginTop: "20px" }}>
                 <Form
-                  form={form}
+                  form={form2}
                   labelCol={{ span: 3 }}
                   wrapperCol={{ span: 20 }}
                   layout="horizontal"
+                  onFinish={handleChangePassword}
                 >
                   <Card
                     bordered={false}
@@ -323,6 +346,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                           }}
                         >
                           <Button
+                            onClick={form2.submit}
                             ghost
                             type="primary"
                             icon={<SaveOutlined />}
@@ -331,24 +355,6 @@ const AccountDetailPage: React.FC<Props> = () => {
                       </>
                     }
                   >
-                    <Form.Item
-                      name="password"
-                      {...inlineFormLayout}
-                      label="Old password"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input your password!",
-                        },
-                        {
-                          min: 6,
-                          message: "Password must be minimum 6 characters.",
-                        },
-                      ]}
-                      hasFeedback
-                    >
-                      <Input.Password />
-                    </Form.Item>
                     <Form.Item
                       name="password"
                       {...inlineFormLayout}

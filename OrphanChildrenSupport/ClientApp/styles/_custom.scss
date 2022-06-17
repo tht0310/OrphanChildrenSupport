@@ -74,8 +74,14 @@ z {
   text-align: center;
 }
 .antd-modal-custom {
+  .ant-modal-title {
+    padding-left: 25px;
+  }
   .ant-modal-body {
     padding-top: 5px;
+  }
+  svg {
+    margin-bottom: 5px;
   }
 }
 .custom-table__pagination {
@@ -269,10 +275,50 @@ z {
   .ant-input {
     padding: 2px 8px !important;
   }
-  .wrap {
-    padding: 0px 2%;
-    margin: 0 auto;
+  .custom-input {
+    width: 40%;
   }
+  .title-page {
+    padding-left: 40px;
+    font-size: 18px;
+  }
+  @media screen and (max-width: 700px) {
+    .custom-col {
+      display: none;
+      input {
+        width:100%
+      }
+    }
+    .custom-input {
+      width: 80%;
+    }
+    .title-page {
+      padding-left: 5px;
+      font-size: 17px;
+    }
+   
+    .custom-row {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .item {
+      vertical-align: top;
+      width: 150px !important;
+      height: 180px !important;
+      margin: 8px;
+      h3 {
+        font-size: 10px !important;
+      }
+     
+    }
+
+    img {
+      height: 100px !important;
+
+    }
+    
+  }
+  
   .items {
     margin-top: 21px;
   }
@@ -390,6 +436,7 @@ z {
     color: grey;
     font-family: sans-serif;
   }
+  
 
   .mini-menu {
     width: 220px;
@@ -908,5 +955,21 @@ section {
 .red-row {
   color: red !important;
 }
+.admin-login-page {
+    background:#508bfc;
+    .login-form-forgot {
+      float: right;
+      color: #0B52C5;
+    }
+    .login-form-button {
+      width: 100%;
+      background-color: #0B52C5 !important;
+      border: #0B52C5;
+      margin-bottom: 5px;
+      border-radius: 25px;
+  }
+}
+
+
     
 

@@ -9,13 +9,11 @@ const Section2: FC<Props> = () => {
   return (
     <div
       className="section2"
-      style={{ marginTop: "45px", marginBottom: "50px" }}
+      style={{ marginTop: "80px", marginBottom: "50px" }}
     >
       <div
         style={{
           textAlign: "center",
-          paddingTop: "6%",
-          fontSize: "19px",
           color: "white",
         }}
         className="title"

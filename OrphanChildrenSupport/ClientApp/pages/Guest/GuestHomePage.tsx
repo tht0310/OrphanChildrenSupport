@@ -28,7 +28,7 @@ const GuestHomePage: React.FC<Props> = () => {
   >([]);
 
   async function fetchChildrenProfile() {
-    const dataRes = await childrenProfileService.getAll({ pageSize: 4 });
+    const dataRes = await childrenProfileService.getAll({ pageSize: 6 });
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
     }
@@ -43,7 +43,8 @@ const GuestHomePage: React.FC<Props> = () => {
       {/* <Section1 /> */}
       <Section2 />
       <ChildrenBlock
-        title={"Special Circumstances"}
+        title={"Children"}
+        subTitle={"Have special circumstances"}
         children={childrenProfiles}
       />
       <ChildrenBlock

@@ -20,6 +20,8 @@ import {
   Input,
   Slider,
   Pagination,
+  Popconfirm,
+  message,
 } from "antd";
 import Meta from "antd/lib/card/Meta";
 import * as React from "react";
@@ -43,6 +45,8 @@ import {
   SearchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import FavoriteService from "@Services/FavoriteService";
+import { IFavoriteModel } from "@Models/IFavoriteModel";
 
 const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
@@ -50,6 +54,7 @@ type Props = RouteComponentProps<{}>;
 const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children/detail";
 const supportCategoriesService = new SupportCategoryService();
+const favouriteChildrenService = new FavoriteService();
 
 const ChildrenCartPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
@@ -60,18 +65,25 @@ const ChildrenCartPage: React.FC<Props> = () => {
   const [form] = Form.useForm();
   const [filterParams, setFilterParams] = React.useState<FilterParams>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [favouriteChildren, setFavouriteChildren] = React.useState<
+    IFavoriteModel[]
+  >([]);
+  const [favourites, setFavourites] = React.useState<IFavoriteModel[]>([]);
   useEffect(() => {
     document.title = "Children list";
     fetchData();
   }, []);
-  const [supportCategories, setSupportCategories] = React.useState<
-    ISupportCategoryModel[]
-  >([]);
 
   React.useEffect(() => {
-    fetchSupportCategories();
     fetchData();
+    fetchFavourite();
   }, []);
+
+  React.useEffect(() => {
+    if (childrenProfiles.length > 0 && favourites.length > 0) {
+      fetchChildrenFavourite();
+    }
+  }, [childrenProfiles, favourites]);
 
   React.useEffect(() => {
     fetchChildrenProfile(filterParams);
@@ -81,45 +93,46 @@ const ChildrenCartPage: React.FC<Props> = () => {
     fetchChildrenProfile({ childrenProfileStatus: 0 });
   }
 
-  async function fetchSupportCategories() {
-    const dataRes = await supportCategoriesService.getAll();
+  async function fetchFavourite() {
+    const dataRes = await favouriteChildrenService.getAll();
     if (!dataRes.hasErrors) {
-      setSupportCategories(dataRes.value.items);
+      setFavourites(dataRes.value.items);
     }
   }
 
-  async function fetchChildrenProfile(filterParams) {
+  async function fetchChildrenFavourite() {
+    const tempData = [];
+    for (let index = 0; index < favourites.length; index++) {
+      const findIndex = childrenProfiles.findIndex(
+        (item) => favourites[0].childrenProfileId === item.id
+      );
+      const temp: IFavoriteModel = favourites[index];
+      temp.childrenProfile = childrenProfiles[findIndex];
+      tempData.push(temp);
+    }
+    setFavouriteChildren(tempData);
+  }
+
+  async function fetchChildrenProfile(filterParams?) {
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
     }
   }
 
-  async function onSearchGender(value) {
-    fetchChildrenProfile({ gender: value, childrenProfileStatus: 0 });
-  }
-
   async function onSearchFullName(value) {
     fetchChildrenProfile({ fullName: value, childrenProfileStatus: 0 });
   }
 
-  async function onSearchAge(value) {
-    fetchChildrenProfile({
-      fromAge: value[0],
-      toAge: value[1],
-      childrenProfileStatus: 0,
-    });
-  }
-
-  function convertAddressToString(address: string) {
-    const tempAddress = address.split("-");
-    let result = "";
-    tempAddress.reverse();
-    tempAddress.map((v) => {
-      result += v + " ";
-    });
-
-    return result;
+  async function onDelete(id) {
+    const res = await favouriteChildrenService.delete(id);
+    if (!res.hasErrors) {
+      message.success("Remove sucessfully");
+      fetchData();
+      fetchFavourite();
+      fetchChildrenProfile();
+      fetchChildrenFavourite();
+    }
   }
 
   return (
@@ -141,14 +154,14 @@ const ChildrenCartPage: React.FC<Props> = () => {
             }}
           >
             <div>
-              <HeartOutlined style={{ marginTop: "50px", fontSize: "25px" }} />
+              <HeartOutlined style={{ marginTop: "75px", fontSize: "25px" }} />
             </div>
             My favourite children
           </h3>
         </div>
       </Carousel>
       <Form form={form} name="filter-form" autoComplete="off">
-        <div className="content-wrapper-custom" style={{ marginTop: "10px" }}>
+        <div className="content-wrapper-custom " style={{ marginTop: "10px" }}>
           <Row>
             <Col span={24}>
               <Input
@@ -170,56 +183,79 @@ const ChildrenCartPage: React.FC<Props> = () => {
       </Form>
 
       <div
-        className="content-wrapper-custom"
+        className="content-wrapper-custom favourite-page"
         style={{ paddingLeft: "5%", paddingRight: "5%", paddingTop: "5px" }}
       >
         <List
-          grid={{ gutter: 25, column: 5 }}
-          dataSource={childrenProfiles}
+          grid={{
+            gutter: 16,
+            xs: 2,
+            sm: 3,
+            md: 6,
+            lg: 6,
+            xl: 6,
+            xxl: 6,
+          }}
+          dataSource={favouriteChildren}
           pagination={{
             showSizeChanger: true,
             pageSizeOptions: ["5", "10", "20", "50"],
           }}
           renderItem={(item) => (
             <List.Item>
-              <Link to={`${childrenDetailUrl}/${item.id}`}>
-                <div className="item" style={{ marginBottom: "40px" }}>
-                  <Card
-                    actions={[
-                      <Link
-                        to={`${childrenDetailUrl}/${item.id}`}
-                        target="_blank"
-                      >
-                        <EyeOutlined key="setting" />
-                      </Link>,
-                      <DeleteOutlined key="setting" />,
-                    ]}
-                    bodyStyle={{ padding: "0px", paddingBottom: "8px" }}
-                    style={{ marginBottom: "40px" }}
-                  >
-                    <Image
-                      preview={false}
-                      className="img-item"
-                      src={childrenProfileService.getImageUrl(item.id)}
-                      fallback={FallBackImage}
-                      alt={"img" + item.id}
-                    />
-                    <div className="info">
-                      <h3>{item.fullName}</h3>
-                      <p className="descroption">
-                        {displayDate(item.dob)} | Gender:
-                        {item.gender ? " Boy" : " Girl"}
-                      </p>
-                      <p
-                        className="descroption"
-                        style={{ color: !item?.status ? "#009900" : "red" }}
-                      >
-                        {!item?.status ? "Waiting supporter" : "Supported"}
-                      </p>
-                    </div>
-                  </Card>
-                </div>
-              </Link>
+              <div className="item" style={{ marginBottom: "40px" }}>
+                <Card
+                  actions={[
+                    <Row className="actions">
+                      <Col span={12}>
+                        <Link to={`${childrenDetailUrl}/${item.id}`}>
+                          <EyeOutlined />
+                        </Link>
+                      </Col>
+
+                      <Col span={12}>
+                        <Popconfirm
+                          title="Are you sure？"
+                          okText="Yes"
+                          cancelText="No"
+                          onConfirm={() => onDelete(item.id)}
+                        >
+                          <DeleteOutlined />
+                        </Popconfirm>
+                      </Col>
+                    </Row>,
+                  ]}
+                  bodyStyle={{ padding: "0px", paddingBottom: "8px" }}
+                  style={{ marginBottom: "40px" }}
+                >
+                  <Image
+                    preview={false}
+                    className="img-item"
+                    src={childrenProfileService.getImageUrl(item.id)}
+                    fallback={FallBackImage}
+                    alt={"img" + item.id}
+                  />
+                  <div className="info">
+                    <h3>{item?.childrenProfile?.fullName}</h3>
+                    <p className="descroption">
+                      {displayDate(item?.childrenProfile?.dob)} | Gender:
+                      {item?.childrenProfile?.gender ? " Boy" : " Girl"}
+                    </p>
+                    <p
+                      className="descroption"
+                      style={{
+                        color: !item?.childrenProfile?.status
+                          ? "#009900"
+                          : "red",
+                      }}
+                    >
+                      {!item?.childrenProfile?.status
+                        ? "Waiting supporter"
+                        : "Supported"}
+                    </p>
+                  </div>
+                </Card>
+              </div>
             </List.Item>
           )}
         />

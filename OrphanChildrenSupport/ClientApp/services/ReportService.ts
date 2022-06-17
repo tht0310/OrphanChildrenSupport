@@ -3,6 +3,7 @@ import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
 import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
+import { IDonationModel } from '@Models/IDonationModel';
 
 export default class ReportService extends ServiceBase {
   public async add(model: IReportModel): Promise<Result<IReportModel>> {
@@ -48,6 +49,15 @@ export default class ReportService extends ServiceBase {
       method: "GET",
     });
     return res;
+  }
+
+  public async update(model: IReportModel): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/deports/${model.id}`,
+      method: "PUT",
+      data: model,
+    });
+    return result;
   }
 
 }

@@ -28,6 +28,7 @@ const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
   async function verify(token: any) {
     if (token) {
       const res = await accService.verify(token);
+
       if (!res.hasErrors) {
         setIsSuccess(true);
       }

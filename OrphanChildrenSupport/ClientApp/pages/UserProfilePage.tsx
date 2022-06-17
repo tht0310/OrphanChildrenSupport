@@ -6,6 +6,7 @@ import {
 import { CustomColumnType } from "@Components/forms/Table";
 import RegisteredUserProfileModal from "@Components/modals/RegisteredUserProfileModel";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
+import { IFilterType } from "@Models/IFilterType";
 import { IRegisterModel } from "@Models/ILoginModel";
 import AccountService from "@Services/AccountService";
 import { displayDate } from "@Services/FormatDateTimeService";
@@ -13,6 +14,7 @@ import {
   Button,
   Col,
   Input,
+  message,
   Popconfirm,
   Row,
   Select,
@@ -33,7 +35,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [userProfiles, setUserProfiles] = React.useState<IRegisterModel[]>([]);
-  const [filterBy, setFilterBy] = React.useState<string>("fullName");
+  const [filterBy, setFilterBy] = React.useState<string>("role");
   const [filterValue, setFilterValue] = React.useState<string>();
   const [isModal, setModal] = React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] = React.useState<IRegisterModel>();
@@ -77,7 +79,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
       key: "gender",
       width: "9%",
       columnSearchDataIndex: "dob",
-      render: (gender: string) => (!gender ? "Girl" : "Boy"),
+      render: (gender: string) => (!gender ? "Female" : "Male"),
     },
 
     {
@@ -150,7 +152,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
     {
       title: "Gender",
       dataIndex: "gender",
-      render: (gender: string) => (!gender ? "Girl" : "Boy"),
+      render: (gender: string) => (!gender ? "Female" : "Male"),
     },
 
     {
@@ -176,10 +178,20 @@ const RegisteredProfilePage: React.FC<Props> = () => {
     fetchUserProfile();
   }
 
-  function onDelete(id) {}
+  async function onDelete(id) {
+    const res = await userService.delete(id);
+    if (!res.hasErrors) {
+      message.success("Delete successfully");
+      fetchData();
+    } else {
+      message.error("An error occurred during deletion");
+    }
+  }
 
   async function fetchUserProfile() {
-    const res = await userService.getAllUser();
+    const value: IFilterType = { [filterBy]: "User" };
+    console.log(value);
+    const res = await userService.search(value);
     if (!res.hasErrors) {
       setUserProfiles(res.value);
     }

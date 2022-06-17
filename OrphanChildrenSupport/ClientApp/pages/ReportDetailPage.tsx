@@ -15,6 +15,7 @@ import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate } from "@Services/FormatDateTimeService";
+import ReportDetailService from "@Services/ReportDetailService";
 import ReportFieldService from "@Services/ReportFieldService";
 import ReportService from "@Services/ReportService";
 import {
@@ -22,6 +23,7 @@ import {
   Card,
   Col,
   Form,
+  message,
   Popconfirm,
   Popover,
   Radio,
@@ -37,6 +39,7 @@ import {
 import { bool } from "prop-types";
 
 import * as React from "react";
+import { Trash2 } from "react-feather";
 import { RouteComponentProps } from "react-router-dom";
 
 const options = [
@@ -55,8 +58,10 @@ const reportService = new ReportService();
 const childrenService = new ChildrenProfileService();
 const userService = new AccountService();
 const reportFieldService = new ReportFieldService();
+const reportDetailService = new ReportDetailService();
 
 const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
+  const [form] = Form.useForm();
   const [report, setReport] = React.useState<IReportModel>();
   const [children, setChildren] = React.useState<IChildrenProfileModel>();
   const [user, setUser] = React.useState<IRegisterModel>(null);
@@ -73,6 +78,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   React.useEffect(() => {
     if (report) {
+      form.setFieldsValue({ status: report?.reportStatus.toString() });
       fetchData();
     }
   }, [report]);
@@ -131,6 +137,14 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
+  function renderClassName(status) {
+    let result = "";
+    if (status === 2 || status === 3) {
+      result = "red-row";
+    }
+
+    return result;
+  }
   function convertPublicAddressToString(address: string) {
     let tempAddress = [];
     let result = "";
@@ -164,6 +178,20 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     return name;
   }
 
+  function renderTagColor(status) {
+    let result = "";
+    if (status === 0) {
+      result = "blue";
+    }
+    if (status === 1) {
+      result = "green";
+    }
+    if (status === 2 || status === 3) {
+      result = "red";
+    }
+    return result;
+  }
+
   function getCurrentValue(fieldId: number) {
     const name = findNamebyId(fieldId);
     if (name === "other") {
@@ -175,7 +203,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       oldValue = displayDate(oldValue);
     }
     if (name === "gender") {
-      oldValue = oldValue === "0" ? "Boy" : "Girl";
+      oldValue = oldValue ? "Boy" : "Girl";
     }
     if (name === "detailAddress") {
       oldValue = convertPublicAddressToString(oldValue);
@@ -249,6 +277,14 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     </Popover>
   );
 
+  async function handleDelete(id: number) {
+    const res = await reportDetailService.delete(id);
+    if (!res.hasErrors) {
+      message.success("Delete report sucessfully");
+      fetchReport();
+    }
+  }
+
   const requestColumns: CustomColumnType[] = [
     {
       title: "#",
@@ -283,7 +319,9 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "reportFieldCategoryId",
       align: "center",
       width: "10%",
-      render: (text: string, row) => <ArrowRightOutlined />,
+      render: (text: string, row) => (
+        <>{row.reportDetailStatus !== 1 && <ArrowRightOutlined />}</>
+      ),
     },
     {
       title: "Report value",
@@ -292,7 +330,11 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       key: "reportInformation",
       width: "30%",
       render: (text: string, row: IReportDetailModel) => (
-        <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
+        <>
+          {row.reportDetailStatus !== 1 && (
+            <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
+          )}
+        </>
       ),
     },
     {
@@ -302,7 +344,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       key: "reportDetailStatus",
       width: "20%",
       render: (text, row: IReportDetailModel, index) => (
-        <Tag color={row.reportDetailStatus === 2 ? "red" : ""}>
+        <Tag color={renderTagColor(row.reportDetailStatus)}>
           {getStatus(text)}
         </Tag>
       ),
@@ -312,7 +354,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "",
       key: "",
       width: "10%",
-      render: () => (
+      render: (text, row) => (
         <>
           <Space className="actions">
             <Button
@@ -320,22 +362,31 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               icon={<EditOutlined size={14} style={{ color: "#40A9FF" }} />}
               onClick={() => toggleStatusModel()}
             />
-            <Button
-              className="btn-custom-2 blue-action-btn"
-              icon={<CheckOutlined size={14} style={{ color: "#40ae29" }} />}
-              onClick={() => setReportDetailModal(!isReportDetailModal)}
-            />
+            <>
+              {row.reportDetailStatus !== 1 && (
+                <>
+                  <Button
+                    className="btn-custom-2 blue-action-btn"
+                    icon={
+                      <CheckOutlined size={14} style={{ color: "#40ae29" }} />
+                    }
+                    onClick={() => setReportDetailModal(!isReportDetailModal)}
+                  />
 
-            <Popconfirm
-              title="Do you want to delete？"
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button
-                className="btn-custom-2 red-action-btn"
-                icon={<CloseOutlined size={16} style={{ color: "#FA6D70" }} />}
-              ></Button>
-            </Popconfirm>
+                  <Popconfirm
+                    title="Do you want to delete？"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => handleDelete(row.id)}
+                  >
+                    <Button
+                      className="btn-custom-2 red-action-btn"
+                      icon={<Trash2 size={16} style={{ color: "#FA6D70" }} />}
+                    ></Button>
+                  </Popconfirm>
+                </>
+              )}
+            </>
           </Space>
         </>
       ),
@@ -366,6 +417,26 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     },
   ];
 
+  function onSubmit() {
+    form.submit();
+  }
+
+  async function handleOnSubmit(value) {
+    onUpdateStatus(value.status);
+  }
+
+  async function onUpdateStatus(value) {
+    const tempValue = report;
+    tempValue.reportStatus = value;
+    const res = await reportService.update(tempValue);
+    if (!res.hasErrors) {
+      message.success("Update donation status successfully");
+      fetchReport();
+    } else {
+      message.error("An error occured during update");
+    }
+  }
+
   return (
     <div className="table-container">
       <div style={{ padding: "6px 20px" }}>
@@ -379,16 +450,23 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               </Col>
 
               <Col span={8} style={{ paddingBottom: 0 }}>
-                <Form style={{ float: "right" }} layout="inline">
-                  <Form.Item label="">
-                    <Select defaultValue={"1"} style={{ width: "110%" }}>
-                      <Select.Option value="0">Send</Select.Option>
-                      <Select.Option value="1">Verification</Select.Option>
-                      <Select.Option value="2">Reporting</Select.Option>
-                      <Select.Option value="3">Finish</Select.Option>
+                <Form
+                  onFinish={handleOnSubmit}
+                  form={form}
+                  style={{ float: "right" }}
+                  layout="inline"
+                >
+                  <Form.Item name="status">
+                    <Select style={{ width: "150px" }}>
+                      <Select.Option value="0">
+                        Waiting for approval
+                      </Select.Option>
+                      <Select.Option value="1">Approved</Select.Option>
+                      <Select.Option value="2">Rejected</Select.Option>
+                      <Select.Option value="3">Canceled</Select.Option>
                     </Select>
                   </Form.Item>
-                  <Button type="primary" ghost danger>
+                  <Button onClick={onSubmit} type="primary" ghost>
                     Save
                   </Button>
                 </Form>
@@ -398,12 +476,17 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         </span>
 
         <Steps
-          current={1}
+          style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
+          status={
+            report?.reportStatus === 2 || report?.reportStatus === 3
+              ? "error"
+              : "process"
+          }
+          current={report?.reportStatus === 1 ? 2 : 1}
           progressDot={customDot}
-          style={{ padding: "35px 35px 10px 35px" }}
         >
           <Steps.Step title="Send" />
-          <Steps.Step title="Verification" />
+          <Steps.Step title="Waiting for approval" />
           <Steps.Step title="Finish" />
         </Steps>
 
@@ -435,7 +518,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {user?.phoneNumber.substring(1)}
+                    (+84) {user?.phoneNumber}
                   </div>
                   <div
                     style={{
@@ -471,7 +554,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {children?.guardianPhoneNumber.substring(1)}
+                    (+84) {children?.guardianPhoneNumber}
                   </div>
                   <div
                     style={{
@@ -494,7 +577,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 };
               }}
               rowClassName={(record: IReportDetailModel, index) =>
-                record.reportDetailStatus === 2 ? "red-row" : ""
+                renderClassName(record?.reportDetailStatus)
               }
               columns={requestColumns}
               dataSource={report?.reportDetails}
@@ -505,18 +588,32 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Row style={{ marginTop: "8px" }}>
           <Col span={14}></Col>
           <Col span={5} style={{ paddingRight: "8px" }}>
-            <Button danger style={{ width: "100%", height: "40px" }}>
-              Reject report
-            </Button>
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onUpdateStatus(2)}
+            >
+              <Button danger style={{ width: "100%", height: "40px" }}>
+                Reject report
+              </Button>
+            </Popconfirm>
           </Col>
           <Col span={5}>
-            <Button
-              danger
-              type="primary"
-              style={{ paddingLeft: "8px", width: "100%", height: "40px" }}
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onUpdateStatus(3)}
             >
-              Cancel report
-            </Button>
+              <Button
+                danger
+                type="primary"
+                style={{ paddingLeft: "8px", width: "100%", height: "40px" }}
+              >
+                Cancel report
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
       </div>
@@ -526,6 +623,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         onCancel={handleCancel}
         children={children}
         reportField={fields}
+        fetchData={fetchData}
         label={findName(findNamebyId(modelForEdit?.reportFieldCategoryId))}
       />
       <UpdateStatusModal

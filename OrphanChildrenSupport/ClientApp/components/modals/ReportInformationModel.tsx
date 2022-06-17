@@ -6,6 +6,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Modal,
   Popover,
   Row,
@@ -13,6 +14,7 @@ import {
   Steps,
   Table,
   Tag,
+  Tooltip,
 } from "antd";
 
 import ChildrenProfileService from "@Services/ChildrenProfileService";
@@ -20,6 +22,7 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { useState } from "react";
 import { UploadFile } from "antd/lib/upload/interface";
 import {
+  ArrowRightOutlined,
   CalendarOutlined,
   EditOutlined,
   HomeOutlined,
@@ -36,15 +39,34 @@ import { Link } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
 import { CustomColumnType } from "@Components/forms/Table";
 import { colors } from "@Components/shared/TagColor";
+import SupportCategoryService from "@Services/SupportCategoryService";
+import DonationService from "@Services/DonationService";
+import ReportService from "@Services/ReportService";
+import { IReportFieldModel } from "@Models/IReportFieldModel";
+import ReportFieldService from "@Services/ReportFieldService";
+import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
+import { displayDate } from "@Services/FormatDateTimeService";
+import TextEditor from "@Components/shared/TextEditor";
 
 export interface IProps {
   visible?: boolean;
   onCancel: () => void;
-  data?: IChildrenProfileModel;
+  data?: IReportModel;
   currentUser: IRegisterModel;
 }
-
+const options = [
+  { name: "Full Name", value: "fullName" },
+  { name: "Birthday", value: "dob" },
+  { name: "Address", value: "detailAddress" },
+  { name: "Gender", value: "gender" },
+  { name: "Circumstance", value: "circumstance" },
+  { name: "Guardian Name", value: "guardianName" },
+  { name: "Other", value: "other" },
+];
 const childrenProfileService = new ChildrenProfileService();
+const supportCategoriesService = new SupportCategoryService();
+const reportService = new ReportService();
+const reportFieldService = new ReportFieldService();
 
 const ReportInformationModal: React.FC<IProps> = ({
   visible,
@@ -55,12 +77,19 @@ const ReportInformationModal: React.FC<IProps> = ({
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<UploadFile<any>>();
+  const [childrenProfiles, setchildrenProfiles] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+  const [fields, setFields] = React.useState<IReportFieldModel[]>([]);
+  const [reportField, setReportField] = React.useState<IReportFieldModel[]>([]);
   let colorIndex = 1;
   const { Step } = Steps;
 
   React.useEffect(() => {
     if (visible) {
       form.resetFields();
+      fetchChildrenProfile();
+      fetchField();
       if (data) {
       }
     }
@@ -79,69 +108,53 @@ const ReportInformationModal: React.FC<IProps> = ({
     form.resetFields();
   };
 
-  const requestColumns: CustomColumnType[] = [
-    {
-      title: "",
-      ellipsis: true,
-      width: "8%",
-      align: "center",
-      render: (text, row, index) => index + 1,
-    },
-    {
-      title: "",
-      dataIndex: "title",
-      ellipsis: true,
-      width: "16%",
-      render: (text) => {
-        colorIndex += 1;
-        return (
-          <Tag
-            style={{
-              width: "100%",
-              textAlign: "center",
-            }}
-            color={colors[colorIndex]}
-          >
-            {text}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: "",
-      width: "50%",
-      render: (text, row) => (
-        <>
-          {row.title === "Money" ? (
-            <InputNumber
-              required
-              style={{ width: "100%", fontSize: "12px" }}
-              placeholder="Input money "
-              formatter={(value) =>
-                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              }
-            />
-          ) : (
-            <Input
-              required
-              placeholder="Input detail"
-              maxLength={25}
-              style={{ fontSize: "12px" }}
-            />
-          )}
-        </>
-      ),
-    },
-  ];
+  function getStatus(id: number) {
+    let name = "";
+    switch (id) {
+      case 0:
+        name = "Waiting For Approval";
+        break;
+      case 1:
+        name = "Approved";
+        break;
+      case 2:
+        name = "Rejected";
+        break;
+      case 3:
+        name = "Canceled";
+        break;
+    }
+    return name;
+  }
 
-  async function getImage(id) {
-    const avatarUrl = await childrenProfileService.getImage(id);
-    if (!avatarUrl.hasErrors) {
-      setImageUrl(avatarUrl.value.toString());
-    } else {
-      setImageUrl(null);
+  async function fetchChildrenProfile() {
+    const dataRes = await childrenProfileService.getAll();
+    if (!dataRes.hasErrors) {
+      setchildrenProfiles(dataRes.value.items);
     }
   }
+  function renderTagColor(status) {
+    let result = "";
+    if (status === 0) {
+      result = "blue";
+    }
+    if (status === 1) {
+      result = "green";
+    }
+    if (status === 2 || status === 3) {
+      result = "red";
+    }
+    return result;
+  }
+
+  function findUserbyId(id: number, list) {
+    let index;
+    if (id) {
+      index = list.findIndex((item) => id === item.id);
+    }
+    return index;
+  }
+
   function convertPublicAddressToString(address: string) {
     let tempAddress = [];
     let result = "";
@@ -155,6 +168,133 @@ const ReportInformationModal: React.FC<IProps> = ({
 
     return result;
   }
+
+  async function fetchField() {
+    const dataRes = await reportFieldService.getAll();
+    if (!dataRes.hasErrors) {
+      setFields(dataRes.value.items);
+    }
+  }
+
+  function findNamebyId(id) {
+    let result = "";
+    fields.map((o) => {
+      if (o.id === id) {
+        result = o.title;
+      }
+    });
+    return result;
+  }
+
+  function getRequestValue(fieldId: number, text: any) {
+    const name = findNamebyId(fieldId);
+    if (name === "other") {
+      return "";
+    }
+
+    if (name === "dob") {
+      text = displayDate(text);
+    }
+    if (name === "gender") {
+      text = text === "0" ? "Boy" : "Girl";
+    }
+    if (name === "detailAddress") {
+      text = convertPublicAddressToString(text);
+    }
+    if (name === "circumstance") {
+      return (
+        <div className="text-editor-read-only">
+          <Tooltip
+            placement="topLeft"
+            title={<TextEditor value={text} readingMode />}
+          >
+            <Button style={{ border: "none", fontSize: "13px" }}>
+              Hover to see detail...
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    return <div>{text}</div>;
+  }
+
+  function findName(v) {
+    let result = "";
+    options.map((o) => {
+      if (o.value === v) {
+        result = o.name;
+      }
+    });
+    return result;
+  }
+
+  const requestColumns: CustomColumnType[] = [
+    {
+      title: "#",
+      dataIndex: "age",
+      key: "age",
+      width: "6%",
+      render: (text, row, index) => index + 1,
+    },
+    {
+      title: "Title",
+      key: "reportFieldCategoryId",
+      dataIndex: "reportFieldCategoryId",
+      align: "center",
+      width: "15%",
+      render: (text: string) => (
+        <div className="">{findName(findNamebyId(text))}</div>
+      ),
+    },
+
+    {
+      title: "Report value",
+      dataIndex: "reportInformation",
+      align: "center",
+      key: "reportInformation",
+      width: "30%",
+      render: (text: string, row: IReportDetailModel) => (
+        <>
+          {row.reportDetailStatus !== 1 && (
+            <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "reportDetailStatus",
+      align: "center",
+      key: "reportDetailStatus",
+      width: "20%",
+      render: (text, row: IReportDetailModel, index) => (
+        <Tag color={renderTagColor(row.reportDetailStatus)}>
+          {getStatus(text)}
+        </Tag>
+      ),
+    },
+  ];
+
+  async function onCancelReport() {
+    data.reportStatus = 3;
+    const res = await reportService.update(data);
+    if (!res.hasErrors) {
+      message.success("Cancel report successfully");
+      onCancel();
+    } else {
+      message.success("An error occured during cancelation");
+    }
+  }
+
+  async function getImage(id) {
+    const avatarUrl = await childrenProfileService.getImage(id);
+    if (!avatarUrl.hasErrors) {
+      setImageUrl(avatarUrl.value.toString());
+    } else {
+      setImageUrl(null);
+    }
+  }
+
   const customDot = (dot, { status, index }) => (
     <Popover content={<span>15/05/2018</span>}>{dot}</Popover>
   );
@@ -184,17 +324,28 @@ const ReportInformationModal: React.FC<IProps> = ({
             >
               <Card
                 size="small"
-                title="Processing"
+                title={
+                  <Space>
+                    Processing -
+                    <span style={{ color: "#686868", paddingRight: "5px" }}>
+                      {getStatus(data?.reportStatus).toLocaleLowerCase()}
+                    </span>
+                  </Space>
+                }
                 style={{ marginRight: "15px", boxShadow: "none" }}
               >
                 <Steps
                   style={{ marginTop: "12px" }}
-                  current={1}
+                  status={
+                    data?.reportStatus === 2 || data?.reportStatus === 3
+                      ? "error"
+                      : "process"
+                  }
+                  current={data?.reportStatus === 1 ? 2 : 1}
                   progressDot={customDot}
                 >
                   <Step title="Send" />
-                  <Step title="Verification" />
-                  <Step title="Confirming" />
+                  <Step title="Waiting for approval" />
                   <Step title="Finish" />
                 </Steps>
               </Card>
@@ -207,7 +358,11 @@ const ReportInformationModal: React.FC<IProps> = ({
                   marginTop: "15px",
                 }}
               >
-                <Table columns={requestColumns} pagination={false} />
+                <Table
+                  columns={requestColumns}
+                  pagination={false}
+                  dataSource={data?.reportDetails}
+                />
               </Card>
             </Form>
           </Col>
@@ -255,32 +410,52 @@ const ReportInformationModal: React.FC<IProps> = ({
             >
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>{"Nguyễn Ngọc Linh"}</div>
+                  <div>
+                    {
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.fullName
+                    }
+                  </div>
                   <div>-</div>
-                  <div>{"Girl"}</div>
+                  <div>
+                    {childrenProfiles[
+                      findUserbyId(data?.childrenProfileId, childrenProfiles)
+                    ]?.gender
+                      ? "Boy"
+                      : "Girl"}
+                  </div>
                 </Space>
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
                   <CalendarOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{"10/07/2019"}</div>
+                  <div>
+                    {displayDate(
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.dob
+                    )}
+                  </div>
                 </Space>
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
                   <HomeOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{"Củ Chi - TPHCM"}</div>
-                </Space>
-              </div>
-              <div>
-                <Space size={10}>
-                  <UserOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{"Nguyễn Ngọc Thảo"}</div>
+                  <div>
+                    {convertPublicAddressToString(
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.publicAddress
+                    )}
+                  </div>
                 </Space>
               </div>
             </Card>
 
             <Button
+              onClick={onCancelReport}
+              disabled={data?.reportStatus === 0 ? false : true}
               style={{
                 marginTop: "15px",
                 width: "100%",

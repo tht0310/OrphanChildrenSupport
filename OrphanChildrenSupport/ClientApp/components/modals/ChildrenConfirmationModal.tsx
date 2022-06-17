@@ -1,13 +1,9 @@
 import {
   CalendarOutlined,
-  ContactsOutlined,
   DeleteOutlined,
   EditOutlined,
-  EnvironmentOutlined,
   HomeOutlined,
   MailOutlined,
-  MoreOutlined,
-  PhoneFilled,
   UserOutlined,
   WhatsAppOutlined,
 } from "@ant-design/icons";

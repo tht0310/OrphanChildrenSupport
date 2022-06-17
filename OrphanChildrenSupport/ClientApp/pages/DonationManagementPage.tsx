@@ -13,7 +13,17 @@ import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import DonationService from "@Services/DonationService";
 
-import { Button, Col, Input, Popconfirm, Row, Space, Table, Tag } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  message,
+  Popconfirm,
+  Row,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 
 import * as React from "react";
 import { useEffect } from "react";
@@ -45,6 +55,20 @@ const DonationManagementPage: React.FC<Props> = () => {
   useEffect(() => {
     onSearch();
   }, [filterBy, filterValue]);
+
+  function renderTagColor(status) {
+    let result = "";
+    if (status === 0) {
+      result = "blue";
+    }
+    if (status === 1) {
+      result = "green";
+    }
+    if (status === 2 || status === 3) {
+      result = "red";
+    }
+    return result;
+  }
 
   const requestColumns: CustomColumnType[] = [
     {
@@ -95,9 +119,7 @@ const DonationManagementPage: React.FC<Props> = () => {
       align: "center",
       width: "18%",
       render: (text, row, index) => (
-        <Tag color={text === 0 ? "blue" : text === 3 ? "green" : "gold"}>
-          {getStatus(text)}
-        </Tag>
+        <Tag color={renderTagColor(text)}>{getStatus(text)}</Tag>
       ),
     },
     {
@@ -148,7 +170,7 @@ const DonationManagementPage: React.FC<Props> = () => {
         name = "Rejected";
         break;
       case 3:
-        name = "Cancelle";
+        name = "Canceled";
         break;
     }
     return name;
@@ -181,11 +203,11 @@ const DonationManagementPage: React.FC<Props> = () => {
   }
 
   async function onDelete(id: number) {
-    // const res = await donationService.delete(id);
-    // if (!res.hasErrors) {
-    //   message.success(`Children deleted sucessfully`);
-    //   fetchData();
-    // }
+    const res = await donationService.delete(id);
+    if (!res.hasErrors) {
+      message.success(`Children deleted sucessfully`);
+      fetchData();
+    }
   }
 
   async function toggleModal() {
@@ -208,7 +230,7 @@ const DonationManagementPage: React.FC<Props> = () => {
           <Col span={14} className="table-title">
             Donation Information
           </Col>
-          <Col span={7}>
+          <Col span={8}>
             <div className="option-pannel">
               <Input
                 style={{
@@ -229,15 +251,7 @@ const DonationManagementPage: React.FC<Props> = () => {
               />
             </div>
           </Col>
-          <Col span={3} style={{ textAlign: "right" }}>
-            <Button
-              style={{ marginRight: "3px", padding: "4px 10px" }}
-              type="primary"
-              onClick={toggleModal}
-              danger
-            >
-              <AppstoreAddOutlined />
-            </Button>
+          <Col span={2} style={{ textAlign: "right" }}>
             <Button
               // onClick={handleClick}
               style={{ padding: "4px 10px" }}

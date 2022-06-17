@@ -1,21 +1,8 @@
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Menu,
-  Button,
-  Popover,
-  Slider,
-  Input,
-  Avatar,
-  Dropdown,
-  Form,
-  message,
-} from "antd";
+import { Row, Col, Menu, Button, Input, Avatar, Form } from "antd";
 import { Dropdown as AntdDropdown } from "antd";
-import { enquireScreen } from "enquire-js";
 import Logo from "@Images/logo.png";
-import { Link, Redirect, RouteComponentProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   DownOutlined,
   DropboxOutlined,
@@ -24,7 +11,6 @@ import {
   SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import Search from "antd/lib/input/Search";
 import { IRegisterModel } from "@Models/ILoginModel";
 
 interface Props {}
@@ -73,15 +59,14 @@ const TopMenu: React.FC<Props> = () => {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link
-          to={"/"}
+        <a
           onClick={() => (
             localStorage.setItem("currentUser", null), window.location.reload()
           )}
           className="nav-links"
         >
           Logout
-        </Link>
+        </a>
       </Menu.Item>
     </Menu>
   );
@@ -97,6 +82,12 @@ const TopMenu: React.FC<Props> = () => {
     }
   }
 
+  function findName(value) {
+    if (value) {
+      const name = value.split(" ");
+      return name[name.length - 1][0];
+    }
+  }
   const onFinish = (values: any) => {
     setSearchText(values.searchText);
     document.getElementById("button-submit").click();
@@ -148,7 +139,9 @@ const TopMenu: React.FC<Props> = () => {
                   </Link>
                   <Link to={"/myaccount"} id="preview-button">
                     <AntdDropdown overlay={menu}>
-                      <Avatar style={{ backgroundColor: "#f56a00" }}>N</Avatar>
+                      <Avatar style={{ backgroundColor: "#f56a00" }}>
+                        {findName(currentUser?.fullName)}
+                      </Avatar>
                     </AntdDropdown>
                   </Link>
                 </>

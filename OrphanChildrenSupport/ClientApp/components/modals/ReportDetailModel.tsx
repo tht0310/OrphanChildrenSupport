@@ -5,6 +5,7 @@ import {
   DatePicker,
   Form,
   Input,
+  message,
   Modal,
   Row,
   Select,
@@ -17,17 +18,22 @@ import moment from "moment";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import TextEditor from "@Components/shared/TextEditor";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
+import ReportDetailService from "@Services/ReportDetailService";
 
 const { TextArea } = Input;
 
 const inlineFormLayout = {
   labelCol: {
-    span: 4,
+    span: 0,
   },
   wrapperCol: {
-    span: 19,
+    span: 24,
   },
 };
+
+const childrenService = new ChildrenProfileService();
+const reportDetailService = new ReportDetailService();
 
 export interface IProps {
   visible?: boolean;
@@ -36,6 +42,7 @@ export interface IProps {
   children: IChildrenProfileModel;
   reportField: IReportFieldModel[];
   label: string;
+  fetchData: () => void;
 }
 
 const options = [
@@ -54,14 +61,28 @@ const ReportDetailModal: React.FC<IProps> = ({
   children,
   reportField,
   label,
+  fetchData,
 }: IProps) => {
   const [form] = Form.useForm();
 
   React.useEffect(() => {
     if (visible) {
       form.resetFields();
-
       if (data) {
+        form.setFieldsValue(children);
+        const name = findNamebyId(data?.reportFieldCategoryId);
+        let value;
+        if (name === "gender") {
+          value = data.reportInformation ? "true" : "false";
+        } else {
+          if (name == "dob") {
+            value = moment(data.reportInformation);
+          } else {
+            value = data.reportInformation;
+          }
+        }
+
+        form.setFieldsValue({ [name]: value });
       }
     }
   }, [data, visible]);
@@ -90,7 +111,7 @@ const ReportDetailModal: React.FC<IProps> = ({
     const name = findNamebyId(fieldId);
     const label = findName(name);
     let oldValue = children ? children[name] : "";
-    let result;
+    let result = <></>;
 
     switch (name) {
       case "dob":
@@ -112,11 +133,9 @@ const ReportDetailModal: React.FC<IProps> = ({
                 />
               </Col>
               <Col span={11}>
-                <DatePicker
-                  format="DD/MM/YYYY"
-                  style={{ width: "100%" }}
-                  defaultValue={moment(data?.reportInformation)}
-                />
+                <Form.Item name={name} {...inlineFormLayout}>
+                  <DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} />
+                </Form.Item>
               </Col>
             </Row>
           </>
@@ -136,7 +155,11 @@ const ReportDetailModal: React.FC<IProps> = ({
                 />
               </Col>
               <Col span={11}>
-                <TextEditor defaultValue={data?.reportInformation}></TextEditor>
+                <Form.Item {...inlineFormLayout} name={name}>
+                  <TextEditor
+                    defaultValue={data?.reportInformation}
+                  ></TextEditor>
+                </Form.Item>
               </Col>
             </Row>
           </>
@@ -156,13 +179,10 @@ const ReportDetailModal: React.FC<IProps> = ({
                 />
               </Col>
               <Col span={11}>
-                <Form.Item>
-                  <Select
-                    defaultValue={data?.reportInformation}
-                    style={{ width: "100%" }}
-                  >
-                    <Select.Option value="0">Boy</Select.Option>
-                    <Select.Option value="1">Girl</Select.Option>
+                <Form.Item {...inlineFormLayout} name={name}>
+                  <Select style={{ width: "100%" }}>
+                    <Select.Option value={"true"}>Boy</Select.Option>
+                    <Select.Option value={"false"}>Girl</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
@@ -179,11 +199,13 @@ const ReportDetailModal: React.FC<IProps> = ({
               </Col>
               <Col span={2} style={{ textAlign: "center" }}>
                 <ArrowRightOutlined
-                  style={{ color: "#e57905", marginTop: "5px" }}
+                  style={{ color: "#e57905", marginTop: "10px" }}
                 />
               </Col>
-              <Col span={11}>
-                <Input defaultValue={data?.reportInformation} />
+              <Col span={11} style={{ width: "100%" }}>
+                <Form.Item {...inlineFormLayout} name={name}>
+                  <Input width={"100%"} />
+                </Form.Item>
               </Col>
             </Row>
           </>
@@ -196,6 +218,22 @@ const ReportDetailModal: React.FC<IProps> = ({
     onCancel();
   }
 
+  async function handleFinish(value) {
+    const name = findNamebyId(data?.reportFieldCategoryId);
+    let item = children;
+    item[name] = value[name];
+    const res = await childrenService.update(item);
+    if (!res.hasErrors) {
+      data.reportDetailStatus = 1;
+      await reportDetailService.update(data);
+      message.success("Change data sucessfull");
+      onCancel();
+      fetchData();
+    } else {
+      message.error("An error occured during change data");
+    }
+  }
+
   return (
     <Modal
       visible={visible}
@@ -204,7 +242,6 @@ const ReportDetailModal: React.FC<IProps> = ({
       title={"Confirmation"}
       footer={null}
       width={700}
-      className="antd-modal-custom"
       bodyStyle={{
         padding: "10px 25px",
         minHeight: "100px",
@@ -213,9 +250,10 @@ const ReportDetailModal: React.FC<IProps> = ({
       }}
       style={{ height: "200px", top: "40" }}
     >
-      <div>Are you sure to change {label.toLowerCase()} from ?</div>
+      <div>Do you want to change {label.toLowerCase()} from ?</div>
       <Form
         form={form}
+        onFinish={handleFinish}
         style={{ padding: "20px 0" }}
         labelCol={{ span: 3 }}
         wrapperCol={{ span: 20 }}
@@ -231,7 +269,11 @@ const ReportDetailModal: React.FC<IProps> = ({
             marginTop: "20px",
           }}
         >
-          <Button type="primary" style={{ textAlign: "center" }}>
+          <Button
+            onClick={form.submit}
+            type="primary"
+            style={{ textAlign: "center" }}
+          >
             Save
           </Button>
         </Row>

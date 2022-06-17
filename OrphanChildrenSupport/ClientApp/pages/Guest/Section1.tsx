@@ -12,6 +12,8 @@ import School from "@Images/school.png";
 import Medical from "@Images/medical.png";
 import Money from "@Images/dollar.png";
 import Family from "@Images/family.png";
+import MediaQuery from "react-responsive";
+import { Col } from "antd";
 const { TweenOneGroup } = TweenOne;
 
 const featuresCN = [
@@ -69,9 +71,6 @@ const pointPos = [
 ];
 
 class Section1 extends React.PureComponent {
-  static propTypes = {
-    isMobile: PropTypes.bool.isRequired,
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -133,7 +132,7 @@ class Section1 extends React.PureComponent {
         />
       ));
       const child = (
-        <li key={i.toString()}>
+        <Col xs={12} lg={8} key={i.toString()}>
           <div
             className="page1-box"
             onMouseEnter={() => {
@@ -153,7 +152,7 @@ class Section1 extends React.PureComponent {
               }}
               resetStyleBool={false}
             >
-              {(this.props.isMobile || isHover) && pointChild}
+              {isHover && pointChild}
             </TweenOneGroup>
             <div
               className="page1-image"
@@ -172,8 +171,9 @@ class Section1 extends React.PureComponent {
             <h3>{item.title}</h3>
             <p>{item.content}</p>
           </div>
-        </li>
+        </Col>
       );
+
       children[Math.floor(i / 3)].push(child);
     });
 
@@ -184,13 +184,13 @@ class Section1 extends React.PureComponent {
         type="bottom"
         leaveReverse
         delay={[i * 100, (children.length - 1 - i) * 100]}
-        component="ul"
+        component="Row"
       >
         {item}
       </QueueAnim>
     ));
     return (
-      <div className="home-page page1" style={{ minHeight: "500px" }}>
+      <div className="home-page page1" style={{ minHeight: "600px" }}>
         <div className="home-page-wrapper" id="page1-wrapper">
           <ScrollOverPack
             id="page3"
@@ -239,7 +239,9 @@ class Section1 extends React.PureComponent {
               <span key="line" className="separator" />
             </QueueAnim>
           </ScrollOverPack>
-          <OverPack>{children}</OverPack>
+          <MediaQuery minDeviceWidth={24}>
+            <OverPack>{children}</OverPack>
+          </MediaQuery>
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Avatar,
   Button,
   Checkbox,
   Col,
@@ -17,15 +18,16 @@ import { Plus, Save } from "react-feather";
 
 import moment from "moment";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { DataServices } from "@Services/DataServices";
 import { useState } from "react";
 import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
-import SupportCategoryService from "@Services/SupportCategoryService";
+
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import { IRegisterModel } from "@Models/ILoginModel";
 import AccountService from "@Services/AccountService";
+import { SettingOutlined } from "@ant-design/icons";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 const { TextArea } = Input;
 
@@ -38,19 +40,19 @@ export interface IProps {
 
 const inlineCol2FormLayout = {
   labelCol: {
-    span: 6,
+    span: 8,
   },
   wrapperCol: {
-    span: 16,
+    span: 14,
   },
 };
 
 const inlineFormLayout = {
   labelCol: {
-    span: 3,
+    span: 4,
   },
   wrapperCol: {
-    span: 20,
+    span: 19,
   },
 };
 
@@ -63,9 +65,8 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
   item,
 }: IProps) => {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState<string | null>();
-  const [imageFile, setImageFile] = useState<UploadFile<any>>();
   const [data, setData] = useState<IRegisterModel>();
+  const [isModal, setIsModal] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (item) {
@@ -77,13 +78,45 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
   const handleCancel = () => {
     onCancel();
     form.resetFields();
+    setData(null);
   };
 
   function onSubmit() {
     form.submit();
   }
 
-  async function onFinish(values: IRegisterModel | any) {}
+  function findName(value) {
+    if (value) {
+      const name = value.split(" ");
+      return name[name.length - 1][0];
+    }
+  }
+
+  async function onFinish(values: IRegisterModel | any) {
+    values.address =
+      values.city + "-" + values.province + "-" + values.houseNumber;
+    if (data) {
+      const res = await accountService.update(values);
+      if (!res.hasErrors) {
+        message.success("Update sucessfully");
+        fetchData();
+        handleCancel();
+      } else {
+        message.error("An error occured during update");
+      }
+    } else {
+      console.log(values);
+      const res = await accountService.add(values);
+      console.log(res);
+      if (!res.hasErrors) {
+        message.success("Add sucessfully");
+        fetchData();
+        handleCancel();
+      } else {
+        message.error("An error occured during addition");
+      }
+    }
+  }
 
   function innitialValue() {
     form.setFieldsValue({
@@ -94,7 +127,14 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
       city: item.address?.split("-")[0],
       province: item.address?.split("-")[1],
       houseNumber: item.address?.split("-")[2],
+      phoneNumber: item?.phoneNumber,
+      email: item?.email,
+      role: item?.role,
     });
+  }
+
+  function toggleModel() {
+    setIsModal(!isModal);
   }
 
   return (
@@ -102,16 +142,16 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
       visible={visible}
       onCancel={handleCancel}
       destroyOnClose={true}
-      title={data ? "Edit profile" : "View profile"}
+      title={data ? "Edit user" : "Add new user"}
       footer={null}
-      width={900}
+      width={980}
       className="antd-modal-custom"
-      style={{ top: 30, height: "300px" }}
+      style={{ top: 40, height: "300px" }}
       bodyStyle={{
         overflowY: "scroll",
-        height: "calc(100vh - 140px)",
-        marginLeft: "35px",
-        padding: "10px 30px 0px 20px",
+        height: "calc(100vh - 147px)",
+        marginLeft: "19px",
+        paddingLeft: 0,
       }}
     >
       <Form
@@ -126,8 +166,40 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
           <Input />
         </Form.Item>
 
-        <Row style={{ textAlign: "center" }}>
-          <Col span={24}>
+        <Row>
+          <Col
+            span={6}
+            xs={24}
+            lg={6}
+            style={{ textAlign: "center", paddingRight: "15px" }}
+          >
+            <Avatar
+              style={{
+                backgroundColor: "#7265e6",
+                verticalAlign: "middle",
+                fontSize: "35px",
+                paddingLeft: 0,
+              }}
+              shape="square"
+              size={150}
+            >
+              {findName(item?.fullName)}
+            </Avatar>
+            {data && (
+              <div
+                style={{
+                  marginTop: "10px",
+                  fontWeight: 400,
+                  fontSize: "12px",
+                  color: "#404040",
+                }}
+                onClick={toggleModel}
+              >
+                <SettingOutlined /> Change password
+              </div>
+            )}
+          </Col>
+          <Col span={18}>
             <Form.Item
               name="fullName"
               label="Full name"
@@ -159,10 +231,10 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                 >
                   <Select>
                     <Select.Option value="false" key="1">
-                      Girl
+                      Female
                     </Select.Option>
                     <Select.Option value="true" key="0">
-                      Boy
+                      Male
                     </Select.Option>
                   </Select>
                 </Form.Item>
@@ -218,7 +290,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                       {...inlineCol2FormLayout}
                       required
                     >
-                      <Input />
+                      <Input disabled={data ? true : false} />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -228,7 +300,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   <Col span={24}>
                     <Form.Item
                       label="Mobile Phone"
-                      name="mobilePhone"
+                      name="phoneNumber"
                       {...inlineCol2FormLayout}
                       required
                     >
@@ -244,14 +316,17 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   label="Role"
                   name="role"
                   {...inlineCol2FormLayout}
-                  rules={[{ required: true, message: "Please enter status." }]}
+                  rules={[{ required: true, message: "Please enter role." }]}
                 >
-                  <Select defaultValue={"0"}>
-                    <Select.Option value="0" key="1">
+                  <Select>
+                    <Select.Option value="User" key="1">
                       Normal User
                     </Select.Option>
-                    <Select.Option value="1" key="0">
+                    <Select.Option value="SystemUser" key="0">
                       System User
+                    </Select.Option>
+                    <Select.Option value="Admin" key="2">
+                      Admin
                     </Select.Option>
                   </Select>
                 </Form.Item>
@@ -261,7 +336,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   label="Status"
                   name="status"
                   {...inlineCol2FormLayout}
-                  rules={[{ required: true, message: "Please enter status." }]}
+                  // rules={[{ required: true, message: "Please enter status." }]}
                 >
                   <Select>
                     <Select.Option value="0" key="1">
@@ -274,53 +349,56 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                 </Form.Item>
               </Col>
             </Row>
+            {!data && (
+              <>
+                <Form.Item
+                  name="password"
+                  {...inlineFormLayout}
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                    {
+                      min: 6,
+                      message: "Password must be minimum 6 characters.",
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input.Password />
+                </Form.Item>
 
-            <Form.Item
-              name="password"
-              {...inlineFormLayout}
-              label="Password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-                {
-                  min: 6,
-                  message: "Password must be minimum 6 characters.",
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name="confirmPassword"
-              {...inlineFormLayout}
-              label="Confirm "
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Please confirm your password!",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error(
-                        "The two passwords that you entered do not match!"
-                      )
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+                <Form.Item
+                  name="confirmPassword"
+                  {...inlineFormLayout}
+                  label="Confirm "
+                  dependencies={["password"]}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your password!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error(
+                            "The two passwords that you entered do not match!"
+                          )
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+              </>
+            )}
 
             {data && (
               <>
@@ -384,52 +462,23 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
           </Col>
         </Row>
 
-        {/* <Form.Item
-          name="password"
-          {...inlineFormLayout}
-          label="Password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-            { min: 6, message: "Password must be minimum 6 characters." },
-          ]}
-          hasFeedback
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="confirmPassword"
-          {...inlineFormLayout}
-          label="Confirm "
-          dependencies={["password"]}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: "Please confirm your password!",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("The two passwords that you entered do not match!")
-                );
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item> */}
         <div className="modal-actions">
-          <Button type="text" onClick={onSubmit}>
+          <Button
+            type="text"
+            danger
+            //icon={<Save color={"#72bf42"} size={22} />}
+            onClick={onSubmit}
+          >
             Submit
           </Button>
         </div>
       </Form>
+      <ChangePasswordModal
+        onCancel={toggleModel}
+        visible={isModal}
+        item={data}
+        fetchData={fetchData}
+      />
     </Modal>
   );
 };

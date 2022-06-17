@@ -8,6 +8,7 @@ import { IRegisterModel } from "@Models/ILoginModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
+import DonationDetailService from "@Services/DonationDetailService";
 import DonationService from "@Services/DonationService";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import {
@@ -47,6 +48,7 @@ const childrenService = new ChildrenProfileService();
 const supportCategoriesService = new SupportCategoryService();
 const userService = new AccountService();
 const donationService = new DonationService();
+const donationDetailService = new DonationDetailService();
 
 const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [form] = Form.useForm();
@@ -69,6 +71,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   React.useEffect(() => {
     if (donation) {
       fetchData();
+      form.setFieldsValue({ status: donation?.donationStatus.toString() });
     }
   }, [donation]);
 
@@ -110,6 +113,18 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     return index;
   }
 
+  async function onUpdateStatus(value) {
+    const tempValue = donation;
+    tempValue.donationStatus = value;
+    const res = await donationService.update(tempValue);
+    if (!res.hasErrors) {
+      message.success("Update donation status successfully");
+      fetchDonation();
+    } else {
+      message.error("An error occured during update");
+    }
+  }
+
   const customDot: StepsProps["progressDot"] = (dot, { status, index }) => (
     <Popover
       content={
@@ -130,8 +145,6 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     form.submit();
   }
 
-  function onFinish() {}
-
   function getStatus(id: number) {
     let name = "";
     switch (id) {
@@ -145,10 +158,18 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         name = "Rejected";
         break;
       case 3:
-        name = "Cancelle";
+        name = "Canceled";
         break;
     }
     return name;
+  }
+
+  async function handleDelete(id: number) {
+    const res = await donationDetailService.delete(id);
+    if (!res.hasErrors) {
+      message.success("Delete donation sucessfully");
+      fetchDonation();
+    }
   }
 
   const requestColumns: CustomColumnType[] = [
@@ -203,7 +224,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "",
       key: "",
       width: "10%",
-      render: () => (
+      render: (text, row: IDonationDetailModel) => (
         <>
           <Space className="actions">
             <Button
@@ -216,7 +237,12 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 />
               }
             />
-            <Popconfirm title="Are you sure？" okText="Yes" cancelText="No">
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              onConfirm={() => handleDelete(row.id)}
+              cancelText="No"
+            >
               <Button
                 className="btn-custom-2 red-action-btn"
                 icon={<Trash2 size={16} style={{ color: "#FA6D70" }} />}
@@ -228,11 +254,8 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     },
   ];
 
-  async function update(value) {
-    const res = await donationService.update(value);
-    if (!res.hasErrors) {
-      message.success("Change status sucessfully");
-    }
+  async function handleOnSubmit(value) {
+    onUpdateStatus(value.status);
   }
 
   return (
@@ -252,15 +275,20 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               </Col>
 
               <Col span={8} style={{ paddingBottom: 0 }}>
-                <Form form={form} style={{ float: "right" }} layout="inline">
-                  <Form.Item label="">
-                    <Select defaultValue={"1"} style={{ width: "110%" }}>
-                      <Select.Option value="0">Send</Select.Option>
-                      <Select.Option value="1">
+                <Form
+                  onFinish={handleOnSubmit}
+                  form={form}
+                  style={{ float: "right" }}
+                  layout="inline"
+                >
+                  <Form.Item name="status">
+                    <Select style={{ width: "150px" }}>
+                      <Select.Option value="0">
                         Waiting for approval
                       </Select.Option>
-                      <Select.Option value="2">Donating</Select.Option>
-                      <Select.Option value="2">Finish</Select.Option>
+                      <Select.Option value="1">Approved</Select.Option>
+                      <Select.Option value="2">Rejected</Select.Option>
+                      <Select.Option value="3">Canceled</Select.Option>
                     </Select>
                   </Form.Item>
                   <Button onClick={onSubmit} type="primary" ghost>
@@ -273,14 +301,17 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         </span>
 
         <Steps
-          current={1}
-          status="error"
+          style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
+          status={
+            donation?.donationStatus === 2 || donation?.donationStatus === 3
+              ? "error"
+              : "process"
+          }
+          current={donation?.donationStatus === 1 ? 2 : 1}
           progressDot={customDot}
-          style={{ padding: "35px 35px 10px 35px" }}
         >
           <Steps.Step title="Send" />
-          <Steps.Step title="Waiting for approved" />
-          <Steps.Step title="Donating" />
+          <Steps.Step title="Waiting for approval" />
           <Steps.Step title="Finish" />
         </Steps>
 
@@ -312,7 +343,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {user?.phoneNumber.substring(1)}
+                    (+84) {user?.phoneNumber}
                   </div>
                   <div
                     style={{
@@ -405,18 +436,32 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Row style={{ marginTop: "8px" }}>
           <Col span={14}></Col>
           <Col span={5} style={{ paddingRight: "8px" }}>
-            <Button danger style={{ width: "100%", height: "40px" }}>
-              Reject donation
-            </Button>
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onUpdateStatus(2)}
+            >
+              <Button danger style={{ width: "100%", height: "40px" }}>
+                Reject donation
+              </Button>
+            </Popconfirm>
           </Col>
           <Col span={5}>
-            <Button
-              danger
-              type="primary"
-              style={{ paddingLeft: "8px", width: "100%", height: "40px" }}
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onUpdateStatus(3)}
             >
-              Cancel donation
-            </Button>
+              <Button
+                danger
+                type="primary"
+                style={{ paddingLeft: "8px", width: "100%", height: "40px" }}
+              >
+                Cancel donation
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
       </div>

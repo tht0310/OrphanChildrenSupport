@@ -242,25 +242,91 @@ const ChildrenProfileModal: React.FC<IProps> = ({
 
         <Row>
           <Col span={6}>
-            <Upload
-              customRequest={DataServices.uploadFileRequest}
-              onChange={(info: any) => handleChangeImage(info)}
-              className="avatar-uploader"
-              listType="picture-card"
-              showUploadList={false}
-              accept=".jpg, .png, .JPEG"
-              style={{ width: "100%" }}
-            >
-              {imageUrl ? (
-                <img
-                  src={imageUrl}
-                  className="icon-upload"
-                  style={{ width: "100%" }}
-                />
-              ) : (
-                uploadButton
-              )}
-            </Upload>
+            <Row>
+              <Upload
+                customRequest={DataServices.uploadFileRequest}
+                onChange={(info: any) => handleChangeImage(info)}
+                className="avatar-uploader"
+                listType="picture-card"
+                showUploadList={false}
+                accept=".jpg, .png, .JPEG"
+                style={{ width: "100%" }}
+              >
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    className="icon-upload"
+                    style={{ width: "100%" }}
+                  />
+                ) : (
+                  uploadButton
+                )}
+              </Upload>
+            </Row>
+
+            <Row>
+              <Col span={8}>
+                <Upload
+                  customRequest={DataServices.uploadFileRequest}
+                  onChange={(info: any) => handleChangeImage(info)}
+                  className="avatar-uploader-custom"
+                  listType="picture-card"
+                  showUploadList={false}
+                  accept=".jpg, .png, .JPEG"
+                  style={{ width: "20%" }}
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      className="icon-upload"
+                      style={{ width: "100%" }}
+                    />
+                  ) : (
+                    <Plus />
+                  )}
+                </Upload>
+              </Col>
+              <Col span={8}>
+                <Upload
+                  customRequest={DataServices.uploadFileRequest}
+                  onChange={(info: any) => handleChangeImage(info)}
+                  className="avatar-uploader-custom"
+                  listType="picture-card"
+                  showUploadList={false}
+                  accept=".jpg, .png, .JPEG"
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      className="icon-upload"
+                      style={{ width: "100%" }}
+                    />
+                  ) : (
+                    <Plus />
+                  )}
+                </Upload>
+              </Col>
+              <Col span={8}>
+                <Upload
+                  customRequest={DataServices.uploadFileRequest}
+                  onChange={(info: any) => handleChangeImage(info)}
+                  listType="picture-card"
+                  className="avatar-uploader-custom"
+                  showUploadList={false}
+                  accept=".jpg, .png, .JPEG"
+                >
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      className="icon-upload"
+                      style={{ width: "100%" }}
+                    />
+                  ) : (
+                    <Plus />
+                  )}
+                </Upload>
+              </Col>
+            </Row>
           </Col>
           <Col span={18}>
             <Form.Item

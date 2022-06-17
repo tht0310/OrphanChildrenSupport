@@ -12,7 +12,17 @@ import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import AccountService from "@Services/AccountService";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import ReportService from "@Services/ReportService";
-import { Button, Col, Input, Popconfirm, Row, Space, Table, Tag } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  message,
+  Popconfirm,
+  Row,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 
 import * as React from "react";
 import { useEffect } from "react";
@@ -149,7 +159,7 @@ const ReportManagementPage: React.FC<Props> = () => {
         name = "Rejected";
         break;
       case 3:
-        name = "Cancelle";
+        name = "Canceled";
         break;
     }
     return name;
@@ -163,7 +173,7 @@ const ReportManagementPage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const res = await userService.getAll();
+    const res = await userService.getAllUser();
     if (!res.hasErrors) {
       setUserProfiles(res.value);
     }
@@ -182,11 +192,11 @@ const ReportManagementPage: React.FC<Props> = () => {
   }
 
   async function onDelete(id: number) {
-    // const res = await donationService.delete(id);
-    // if (!res.hasErrors) {
-    //   message.success(`Children deleted sucessfully`);
-    //   fetchData();
-    // }
+    const res = await reportService.delete(id);
+    if (!res.hasErrors) {
+      message.success(`Report deleted sucessfully`);
+      fetchData();
+    }
   }
 
   async function toggleModal() {
@@ -209,7 +219,7 @@ const ReportManagementPage: React.FC<Props> = () => {
           <Col span={14} className="table-title">
             Report Information
           </Col>
-          <Col span={7}>
+          <Col span={8}>
             <div className="option-pannel">
               <Input
                 style={{
@@ -230,15 +240,7 @@ const ReportManagementPage: React.FC<Props> = () => {
               />
             </div>
           </Col>
-          <Col span={3} style={{ textAlign: "right" }}>
-            <Button
-              style={{ marginRight: "3px", padding: "4px 10px" }}
-              type="primary"
-              onClick={toggleModal}
-              danger
-            >
-              <AppstoreAddOutlined />
-            </Button>
+          <Col span={2} style={{ textAlign: "right" }}>
             <Button
               // onClick={handleClick}
               style={{ padding: "4px 10px" }}

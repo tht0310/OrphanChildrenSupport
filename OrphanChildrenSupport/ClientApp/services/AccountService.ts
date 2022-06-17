@@ -4,6 +4,7 @@ import { ILoginModel } from "@Models/ILoginModel";
 import { ServiceBase } from "@Core/ServiceBase";
 import SessionManager, { IServiceUser } from "@Core/session";
 import { IQueryResult } from "@Models/IQueryResult";
+import { IFilterType } from "@Models/IFilterType";
 
 export default class AccountService extends ServiceBase {
   public async login(loginModel: ILoginModel): Promise<Result<IRegisterModel>> {
@@ -12,13 +13,13 @@ export default class AccountService extends ServiceBase {
       method: "POST",
       data: loginModel,
     });
-
+    
     if (!result.hasErrors) {
       SessionManager.setServiceUser(result.value);
-      var testObject = result.value;
+      const user:IRegisterModel = result.value
+      const testObject:ILoginModel = {id:user.id, jwtToken:user.jwtToken, fullName:user.fullName,role:user.role};
       localStorage.setItem("currentUser", JSON.stringify(testObject));  
     }
-    
     return result;
   }
 
@@ -43,6 +44,7 @@ export default class AccountService extends ServiceBase {
       method: "POST",
       data: token,
     });
+  
     return result;
   }
 
@@ -72,6 +74,14 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
+  public async getAllUser(): Promise<Result<IRegisterModel[]>> {
+    const result = await this.requestJson<IRegisterModel[]>({
+      url: `/api/accounts`,
+      method: "GET",
+    });
+    return result;
+  }
+
   
 
   public async getAccount(id: number): Promise<Result<IRegisterModel>> {
@@ -82,13 +92,48 @@ export default class AccountService extends ServiceBase {
     return res;
   }
 
-  public async getAllUser(): Promise<Result<IRegisterModel[]>> {
-    const result = await this.requestJson<IRegisterModel[]>({
-      url: `/api/accounts`,
-      method: "GET",
+
+  public async delete(id: number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/accounts/${id}`,
+      method: "DELETE",
     });
     return result;
   }
+
+  
+  public async update(model: IRegisterModel): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/accounts/${model.id}`,
+      method: "PUT",
+      data: model,
+    });
+    return result;
+  }
+
+  public async add(model: IRegisterModel): Promise<Result<IRegisterModel>> {
+    var result = await this.requestJson<IRegisterModel>({
+      url: `/api/accounts`,
+      method: "POST",
+      data: model,
+    });
+    return result;
+  }
+  
+
+  public async search(
+    value:IFilterType
+  ): Promise<Result<IRegisterModel[]>> {
+    const result = await this.requestJson<IRegisterModel[]>({
+      url: `/api/accounts`,
+      method: "GET",
+      data:value
+    });
+
+    return result;
+  }
+
+  
 
 
  

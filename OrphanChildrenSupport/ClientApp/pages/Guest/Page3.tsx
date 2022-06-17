@@ -11,22 +11,18 @@ const Page3: React.FC<Props> = () => {
     <ScrollOverPack
       id="page3"
       className="content-wrapper page"
-      //style={{ marginTop: "100px" }}
+      style={{ marginTop: "100px" }}
     >
       <Row>
-        <Col md={12} xs={24}>
+        <Col span={12} lg={12} xs={24}>
           <TweenOne
             key="image"
-            className=" image-wrapper"
+            className="image3 image-wrapper"
             animation={{ x: 0, opacity: 1, ease: "easeOutQuad" }}
             style={{ transform: "translateX(-100px)", opacity: 0 }}
           />
-          <img
-            className="index-who"
-            src="https://static.remove.bg/remove-bg-web/035676ee65d6ce9f128769532ffdff315f3005c7/assets/start-1abfb4fe2980eabfbbaaa4365a0692539f7cd2725f324f904565a9a744f8e214.jpg"
-          />
         </Col>
-        <Col md={12} xs={24}>
+        <Col span={12} lg={12} xs={24} style={{ margin: "auto" }}>
           <QueueAnim
             className="text-wrapper"
             key="text"
@@ -36,17 +32,8 @@ const Page3: React.FC<Props> = () => {
             <h2 key="h2" style={{ color: "#88181b", fontWeight: "bold" }}>
               Who we are ?
             </h2>
-            <div
-              style={{
-                borderBottom: "1px solid red",
-                width: "30px",
-                marginBottom: "15px",
-                height: "5px",
-                background: "#88181b",
-                borderRadius: "5px",
-              }}
-            ></div>
-            <p key="p" style={{ maxWidth: 500 }}>
+
+            <p key="p" style={{ maxWidth: 550 }}>
               We are volunteers to connect sponsors to orphan children. Its our
               desire for every child to experience unconditional love, hope and
               safety.

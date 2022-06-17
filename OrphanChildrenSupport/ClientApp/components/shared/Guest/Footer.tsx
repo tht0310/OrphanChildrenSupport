@@ -20,7 +20,7 @@ const Footer: FC<Props> = () => {
     <div className="footer-custom">
       <div className="container-fluid">
         <Row>
-          <Col span={10}>
+          <Col span={10} lg={10} xs={0}>
             <div className="title">Stay connected</div>
             <div className="content">
               Join us to receive weekly information about children.
@@ -30,7 +30,7 @@ const Footer: FC<Props> = () => {
                 <Input placeholder="Enter email" />
               </Col>
               <Col span={10}>
-                <Button>Submit</Button>
+                <Button style={{ zIndex: 0 }}>Submit</Button>
               </Col>
             </Row>
             <div className="icons">
@@ -45,7 +45,7 @@ const Footer: FC<Props> = () => {
               </Space>
             </div>
           </Col>
-          <Col span={10} className="middle-col">
+          <Col span={10} lg={10} xs={24} className="middle-col">
             <div className="title">INFORMATION</div>
             <div className="content">
               <Link to="/aboutUs" style={{ color: "white" }}>
@@ -64,7 +64,7 @@ const Footer: FC<Props> = () => {
             </div>
             <div className="content">Report information</div>
           </Col>
-          <Col span={4}>
+          <Col className="last-col" span={4} lg={4} xs={24}>
             <div className="title">GET HELP </div>
             <div className="content">Help center</div>
             <div className="content">Privacy Policy</div>
@@ -77,9 +77,15 @@ const Footer: FC<Props> = () => {
         </div>
         <hr />
         <Row className="policy">
-          <Col span={12}>© 2020 For the Children</Col>
-          <Col span={6}>Term</Col>
-          <Col span={6}>Policy</Col>
+          <Col span={12} lg={12} xs={14}>
+            © 2020 For the Children
+          </Col>
+          <Col span={6} lg={6} xs={5}>
+            Term
+          </Col>
+          <Col span={6} lg={6} xs={5}>
+            Policy
+          </Col>
         </Row>
       </div>
     </div>

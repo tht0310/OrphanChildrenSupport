@@ -15,20 +15,13 @@ const AppRoute: React.FC<IProps> = ({
   path: Path,
   ...rest
 }: IProps) => {
-  var isLoginPath = Path === "/";
+  var isLoginPath = Path === "/login" || Path === "/register" ? true : false;
+  try {
+    var currentUser = localStorage.getItem("currentUser");
+  } catch (error) {}
 
-  // if (!SessionManager.isAuthenticated && !isLoginPath) {
-  //   return <Redirect to="/login" />;
-  // }
-
-  // if (SessionManager.isAuthenticated && isLoginPath) {
-  //   return <Redirect to="/" />;
-  // }
-
-  if (statusCode == null) {
-    responseContext.statusCode = 200;
-  } else {
-    responseContext.statusCode = statusCode;
+  if (currentUser !== "null" && currentUser !== null && isLoginPath) {
+    return <Redirect to="/" />;
   }
 
   return (

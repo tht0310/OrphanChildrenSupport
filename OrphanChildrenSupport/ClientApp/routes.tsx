@@ -33,28 +33,83 @@ import StatisticPage from "@Pages/Guest/StatisticPage";
 import ChildrenProfilePage from "@Pages/ChildrenProfilePage";
 import ReportFieldCategoryPage from "@Pages/ReportFieldCategoryPage";
 import ReportManagementPage from "@Pages/ReportManagementPage";
+import AdminLoginPage from "@Components/shared/Admin/AdminLoginPage";
+import AdminRoute from "@Components/shared/AdminRoute";
+import ProtectedRoute from "@Components/shared/ProtectedRoute";
+import NotAccessPage from "@Pages/NotAccessPage";
 
 export const routes = (
   <Switch>
-    <AppRoute
+    {/* Admin_Calendar */}
+    <AdminRoute
       layout={AuthorizedLayout}
       exact
       path="/admin"
       component={Dashboard}
     />
-    <AppRoute
+    <AdminRoute
       layout={AuthorizedLayout}
       exact
       path="/admin/dashboard"
       component={Dashboard}
     />
-    <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage} />
-    <AppRoute
+    <AdminRoute
       layout={AuthorizedLayout}
       exact
       path="/admin/usermanagement/children"
       component={ChildrenProfilePage}
     />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/usermanagement/supportcategory"
+      component={SupportCategoryPage}
+    />
+    <ProtectedRoute
+      layout={AuthorizedLayout}
+      path="/admin/volunteer"
+      component={VolunteerPage}
+    />
+
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/user"
+      component={RegisteredProfilePage}
+    />
+
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/donation/"
+      component={DonationManagementPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/donation/detail/:id"
+      component={DonationDetailPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/report/detail/:id"
+      component={ReportDetailPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/statistic/"
+      component={StatisticPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/reportfield"
+      component={ReportFieldCategoryPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activitymanagement/report"
+      component={ReportManagementPage}
+    />
+
+    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
+    <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage} />
+
     <AppRoute
       layout={GuestLayout}
       exact
@@ -96,11 +151,7 @@ export const routes = (
       path="/children/detail/:id"
       component={ChildrenDetailPage}
     />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/usermanagement/supportcategory"
-      component={SupportCategoryPage}
-    />
+
     <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
 
     <AppRoute
@@ -124,17 +175,6 @@ export const routes = (
       component={AccountDetailPage}
     />
 
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/volunteer"
-      component={VolunteerPage}
-    />
-    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/user"
-      component={RegisteredProfilePage}
-    />
     <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
     <AppRoute
       layout={GuestLayout}
@@ -150,34 +190,23 @@ export const routes = (
     <AppRoute layout={DefaultLayout} path="/example" component={ExamplePage} />
 
     <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/activitymanagement/donation/"
-      component={DonationManagementPage}
+      layout={DefaultLayout}
+      exact
+      path="/admin/login"
+      component={AdminLoginPage}
     />
+
     <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/donation/detail/:id"
-      component={DonationDetailPage}
+      layout={DefaultLayout}
+      exact
+      path="/accesserror"
+      component={NotAccessPage}
     />
-    <AppRoute
+    <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/report/detail/:id"
-      component={ReportDetailPage}
-    />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/statistic/"
-      component={StatisticPage}
-    />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/activitymanagement/reportfield"
-      component={ReportFieldCategoryPage}
-    />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/activitymanagement/report"
-      component={ReportManagementPage}
+      exact
+      path="/admin/myaccount"
+      component={AccountDetailPage}
     />
   </Switch>
 );

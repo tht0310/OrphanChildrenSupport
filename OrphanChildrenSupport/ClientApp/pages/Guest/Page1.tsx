@@ -34,30 +34,9 @@ const data = [
 ];
 export default function Page1() {
   const children = data.map((d, i) => (
-    <Col
-      key={i.toString()}
-      md={4}
-      sm={9}
-      xs={24}
-      style={{
-        height: 80,
-        marginLeft: "35px",
-      }}
-    >
+    <Col className="custom-col" key={i.toString()} md={4} sm={9} xs={24} lg={4}>
       <img width={220} src={d.image} alt="" />
-      <div
-        style={{
-          color: "#b42121",
-          fontSize: "34px",
-          lineHeight: "42px",
-          fontWeight: 700,
-          paddingLeft: "10px",
-          marginTop: "8px",
-          marginBottom: "8px",
-        }}
-      >
-        {d.number}
-      </div>
+      <div className="number">{d.number}</div>
       <div style={{ fontSize: "14px", paddingLeft: "10px" }}>{d.title}</div>
     </Col>
   ));
@@ -91,7 +70,7 @@ export default function Page1() {
           }}
         ></div>
         <span className="separator" key="span" />
-        <Row className="page text-center" key="a">
+        <Row align="middle" className="page text-center" key="a">
           {children}
         </Row>
       </QueueAnim>

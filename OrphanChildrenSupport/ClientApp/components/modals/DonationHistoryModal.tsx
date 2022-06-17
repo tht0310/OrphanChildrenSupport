@@ -6,7 +6,9 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Modal,
+  Popconfirm,
   Popover,
   Row,
   Space,
@@ -36,15 +38,23 @@ import { Link } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
 import { CustomColumnType } from "@Components/forms/Table";
 import { colors } from "@Components/shared/TagColor";
+import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
+import { displayDate } from "@Services/FormatDateTimeService";
+import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
+import SupportCategoryService from "@Services/SupportCategoryService";
+import DonationService from "@Services/DonationService";
 
 export interface IProps {
   visible?: boolean;
   onCancel: () => void;
-  data?: IChildrenProfileModel;
+  data?: IDonationModel;
   currentUser: IRegisterModel;
 }
 
+const childrenService = new ChildrenProfileService();
 const childrenProfileService = new ChildrenProfileService();
+const supportCategoriesService = new SupportCategoryService();
+const donationService = new DonationService();
 
 const DonationHistoryModal: React.FC<IProps> = ({
   visible,
@@ -55,29 +65,98 @@ const DonationHistoryModal: React.FC<IProps> = ({
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState<string | null>();
   const [imageFile, setImageFile] = useState<UploadFile<any>>();
-  let colorIndex = 1;
+  const [childrenProfiles, setchildrenProfiles] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+  const [supportCategories, setSupportCategories] = React.useState<
+    ISupportCategoryModel[]
+  >([]);
   const { Step } = Steps;
 
   React.useEffect(() => {
     if (visible) {
+      fetchChildrenProfile();
+      fetchSupportCategories();
       form.resetFields();
       if (data) {
       }
     }
   }, [data, visible]);
 
-  React.useEffect(() => {
-    if (data) {
-      getImage(data.id);
-    } else {
-      setImageUrl(null);
-    }
-  }, [data]);
-
   const handleCancel = () => {
     onCancel();
     form.resetFields();
   };
+
+  async function onCancelDonation() {
+    data.donationStatus = 3;
+    const res = await donationService.update(data);
+    if (!res.hasErrors) {
+      message.success("Cancel donation successfully");
+      onCancel();
+    } else {
+      message.success("An error occured during cancelation");
+    }
+  }
+
+  function getStatus(id: number) {
+    let name = "";
+    switch (id) {
+      case 0:
+        name = "Waiting For Approval";
+        break;
+      case 1:
+        name = "Approved";
+        break;
+      case 2:
+        name = "Rejected";
+        break;
+      case 3:
+        name = "Canceled";
+        break;
+    }
+    return name;
+  }
+
+  async function fetchSupportCategories() {
+    const dataRes = await supportCategoriesService.getAll();
+    if (!dataRes.hasErrors) {
+      setSupportCategories(dataRes.value.items);
+    }
+  }
+  async function fetchChildrenProfile() {
+    const dataRes = await childrenService.getAll();
+    if (!dataRes.hasErrors) {
+      setchildrenProfiles(dataRes.value.items);
+    }
+  }
+
+  function renderTagColor(status) {
+    let result = "";
+    if (status === 0) {
+      result = "blue";
+    }
+    if (status === 1) {
+      result = "green";
+    }
+    if (status === 2 || status === 3) {
+      result = "red";
+    }
+    return result;
+  }
+
+  function findNamebyId(id: number, list) {
+    const index = list.findIndex((item) => id === item.id);
+    return index;
+  }
+
+  function findUserbyId(id: number, list) {
+    let index;
+    if (id) {
+      index = list.findIndex((item) => id === item.id);
+    }
+    return index;
+  }
 
   const requestColumns: CustomColumnType[] = [
     {
@@ -88,60 +167,37 @@ const DonationHistoryModal: React.FC<IProps> = ({
       render: (text, row, index) => index + 1,
     },
     {
-      title: "",
-      dataIndex: "title",
-      ellipsis: true,
-      width: "16%",
-      render: (text) => {
-        colorIndex += 1;
-        return (
-          <Tag
-            style={{
-              width: "100%",
-              textAlign: "center",
-            }}
-            color={colors[colorIndex]}
-          >
-            {text}
-          </Tag>
-        );
-      },
+      title: "Title",
+      key: "supportCategoryId",
+      dataIndex: "supportCategoryId",
+      align: "center",
+      width: "25%",
+      render: (text, row, index) =>
+        findNamebyId(row.supportCategoryId, supportCategories) >= 0
+          ? supportCategories[
+              findNamebyId(row.supportCategoryId, supportCategories)
+            ].title
+          : "",
+    },
+
+    {
+      title: "Note",
+      dataIndex: "note",
+      key: "note",
+      width: "30%",
     },
     {
-      title: "",
-      width: "50%",
-      render: (text, row) => (
-        <>
-          {row.title === "Money" ? (
-            <InputNumber
-              required
-              style={{ width: "100%", fontSize: "12px" }}
-              placeholder="Input money "
-              formatter={(value) =>
-                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-              }
-            />
-          ) : (
-            <Input
-              required
-              placeholder="Input detail"
-              maxLength={25}
-              style={{ fontSize: "12px" }}
-            />
-          )}
-        </>
+      title: "Status",
+      align: "center",
+      dataIndex: "donationDetailStatus",
+      key: "donationDetailStatus",
+      width: "30%",
+      render: (text, row, index) => (
+        <Tag color={renderTagColor(text)}>{getStatus(text)}</Tag>
       ),
     },
   ];
 
-  async function getImage(id) {
-    const avatarUrl = await childrenProfileService.getImage(id);
-    if (!avatarUrl.hasErrors) {
-      setImageUrl(avatarUrl.value.toString());
-    } else {
-      setImageUrl(null);
-    }
-  }
   function convertPublicAddressToString(address: string) {
     let tempAddress = [];
     let result = "";
@@ -167,10 +223,10 @@ const DonationHistoryModal: React.FC<IProps> = ({
       footer={null}
       width={1000}
       className="antd-modal-custom childrenConfirmation--model"
-      style={{ top: 15, height: "300px" }}
+      style={{ top: 25, height: "300px" }}
       bodyStyle={{
         overflowY: "scroll",
-        height: "calc(100vh - 30px)",
+        height: "calc(100vh - 60px)",
         padding: "4%",
       }}
     >
@@ -184,17 +240,28 @@ const DonationHistoryModal: React.FC<IProps> = ({
             >
               <Card
                 size="small"
-                title="Processing"
+                title={
+                  <Space>
+                    Processing -
+                    <span style={{ color: "#686868", paddingRight: "5px" }}>
+                      {getStatus(data?.donationStatus).toLocaleLowerCase()}
+                    </span>
+                  </Space>
+                }
                 style={{ marginRight: "15px", boxShadow: "none" }}
               >
                 <Steps
                   style={{ marginTop: "12px" }}
-                  current={1}
+                  status={
+                    data?.donationStatus === 2 || data?.donationStatus === 3
+                      ? "error"
+                      : "process"
+                  }
+                  current={data?.donationStatus === 1 ? 2 : 1}
                   progressDot={customDot}
                 >
                   <Step title="Send" />
-                  <Step title="Verification" />
-                  <Step title="Confirming" />
+                  <Step title="Waiting for approval" />
                   <Step title="Finish" />
                 </Steps>
               </Card>
@@ -207,7 +274,12 @@ const DonationHistoryModal: React.FC<IProps> = ({
                   marginTop: "15px",
                 }}
               >
-                <Table columns={requestColumns} pagination={false} />
+                <Table
+                  className="custom-table"
+                  columns={requestColumns}
+                  dataSource={data?.donationDetails}
+                  pagination={false}
+                />
               </Card>
             </Form>
           </Col>
@@ -237,7 +309,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
                 <Space size={10}>
                   <HomeOutlined style={{ color: "#b2b2b2" }} />
                   <div>
-                    {convertPublicAddressToString(currentUser?.detailAddress)}
+                    {convertPublicAddressToString(currentUser?.address)}
                   </div>
                 </Space>
               </div>
@@ -249,40 +321,73 @@ const DonationHistoryModal: React.FC<IProps> = ({
             >
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>{"Nguyễn Ngọc Linh"}</div>
+                  <div>
+                    {
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.fullName
+                    }
+                  </div>
                   <div>-</div>
-                  <div>{"Girl"}</div>
+                  <div>
+                    {childrenProfiles[
+                      findUserbyId(data?.childrenProfileId, childrenProfiles)
+                    ]?.gender
+                      ? "Boy"
+                      : "Girl"}
+                  </div>
                 </Space>
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
                   <CalendarOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{"10/07/2019"}</div>
+                  <div>
+                    {displayDate(
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.dob
+                    )}
+                  </div>
                 </Space>
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
                   <HomeOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{"Củ Chi - TPHCM"}</div>
+                  <div>
+                    {convertPublicAddressToString(
+                      childrenProfiles[
+                        findUserbyId(data?.childrenProfileId, childrenProfiles)
+                      ]?.publicAddress
+                    )}
+                  </div>
                 </Space>
               </div>
             </Card>
             <Card style={{ marginTop: "15px" }} size="small" title="Note">
-              Please contact me before 12:00 PM
+              {data?.note}
             </Card>
-            <Button
-              style={{
-                marginTop: "15px",
-                width: "100%",
-                background: "#e57905",
-                color: "white",
-                lineHeight: "18px",
-                fontSize: "15px",
-                border: "none",
-              }}
+            <Popconfirm
+              title="Are you sure？"
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onCancelDonation()}
             >
-              Cancel donation
-            </Button>
+              <Button
+                onClick={onCancelDonation}
+                disabled={data?.donationStatus === 0 ? false : true}
+                style={{
+                  marginTop: "15px",
+                  width: "100%",
+                  background: "#e57905",
+                  color: "white",
+                  lineHeight: "18px",
+                  fontSize: "15px",
+                  border: "none",
+                }}
+              >
+                Cancel donation
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
       </div>

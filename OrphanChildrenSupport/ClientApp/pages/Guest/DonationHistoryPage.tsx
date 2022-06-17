@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Space, Tag, Image, List, Card, Col, Row, Input, Button } from "antd";
+import {
+  Space,
+  Tag,
+  Image,
+  List,
+  Card,
+  Col,
+  Row,
+  Input,
+  Button,
+  Form,
+  Select,
+} from "antd";
 import {
   CalendarOutlined,
   SearchOutlined,
@@ -9,28 +21,72 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import DonationHistoryModal from "@Components/modals/DonationHistoryModal";
 import { IRegisterModel } from "@Models/ILoginModel";
 import { Link } from "react-router-dom";
+import DonationService from "@Services/DonationService";
+import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
+import { displayDate } from "@Services/FormatDateTimeService";
 
 interface Props {}
 
+const inlineCol2FormLayout = {
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 14,
+  },
+};
+
+const donationService = new DonationService();
+const childrenService = new ChildrenProfileService();
+
 const DonationHistoryPage: React.FC<Props> = () => {
   const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
-  const [modelForEdit, setmodelForEdit] =
-    React.useState<IChildrenProfileModel>();
+  const [modelForEdit, setmodelForEdit] = React.useState<IDonationModel>();
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>();
+  const [donation, setDonation] = React.useState<IDonationModel[]>([]);
+  const [childrenProfiles, setchildrenProfiles] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
 
   const [active, setActive] = useState("1");
 
-  const handleClick = (event) => {
-    setActive(event.target.id);
-  };
-
   React.useEffect(() => {
     getCurrentUser();
+    fetchDonation();
+    fetchChildrenProfile();
   }, []);
 
-  async function toggleChildrenModal() {
+  function toggleChildrenModal() {
     setChildrenModal(!isChildrenModal);
     setmodelForEdit(null);
+  }
+
+  function getStatus(id: number) {
+    let name = "";
+    switch (id) {
+      case 0:
+        name = "Waiting For Approval";
+        break;
+      case 1:
+        name = "Approved";
+        break;
+      case 2:
+        name = "Rejected";
+        break;
+      case 3:
+        name = "Canceled";
+        break;
+    }
+    return name;
+  }
+
+  function findUserbyId(id: number, list) {
+    let index;
+    if (id) {
+      index = list.findIndex((item) => id === item.id);
+    }
+    return index;
   }
 
   function getCurrentUser() {
@@ -39,154 +95,80 @@ const DonationHistoryPage: React.FC<Props> = () => {
       setCurrentUser(JSON.parse(retrievedObject));
     }
   }
-  React.useEffect(() => {}, []);
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["Clothes"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["School things"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["Clothes", "Food"],
-    },
-  ];
+  async function fetchChildrenProfile() {
+    const dataRes = await childrenService.getAll();
+    if (!dataRes.hasErrors) {
+      setchildrenProfiles(dataRes.value.items);
+    }
+  }
+
+  async function fetchDonation() {
+    const res = await donationService.getAll();
+    if (!res.hasErrors) {
+      setDonation(res.value.items);
+    }
+  }
+
   return (
     <>
       <div>
         <Row
           style={{
-            marginBottom: "15px",
-            border: "1.5px solid #e57905",
-            marginTop: "11px",
+            marginBottom: "25px",
+            padding: "22px 9% 0px 3%",
+            border: "1px solid #D8D8D8",
+            borderRadius: "6px",
           }}
         >
-          <Col
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-            }}
-            span={5}
-          >
-            <button
-              key={1}
-              id={"1"}
-              className={`btn-change-tab ${active === "1" ? "active" : ""}`}
-              onClick={handleClick}
-            >
-              All status
-            </button>
-          </Col>
-          <Col
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-            }}
-            span={5}
-          >
-            <button
-              key={2}
-              className={`btn-change-tab ${active === "2" ? "active" : ""}`}
-              id={"2"}
-              onClick={handleClick}
-            >
-              Send
-            </button>
-          </Col>
-          <Col
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-            }}
-            span={5}
-          >
-            <button
-              key={3}
-              className={`btn-change-tab ${active === "3" ? "active" : ""}`}
-              id={"3"}
-              onClick={handleClick}
-            >
-              Verification
-            </button>
-          </Col>
-          <Col
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-            }}
-            span={5}
-          >
-            <button
-              key={4}
-              id={"4"}
-              className={`btn-change-tab ${active === "4" ? "active" : ""}`}
-              onClick={handleClick}
-            >
-              Confirming
-            </button>
-          </Col>
-          <Col
-            style={{
-              fontSize: "15px",
-              textAlign: "center",
-            }}
-            span={4}
-          >
-            <button
-              key={1}
-              id={"5"}
-              className={`btn-change-tab ${active === "5" ? "active" : ""}`}
-              onClick={handleClick}
-            >
-              Finish
-            </button>
-          </Col>
-        </Row>
-        <Row style={{ marginBottom: "15px" }}>
-          <Col span={22}>
-            <Input
-              style={{ fontSize: "12px" }}
-              placeholder={"Enter children name"}
-            />
-          </Col>
-          <Col span={2} style={{ paddingLeft: "11px" }}>
-            <Button
-              style={{
-                width: "100%",
-                fontSize: "13px",
-                background: "#e57905",
-                color: "white",
-                padding: "2px 0px",
-                height: "28px",
-              }}
-            >
-              Search
-            </Button>
+          <Col span={24}>
+            <Form>
+              <Row>
+                <Col xs={22} lg={15} style={{ paddingRight: "15px" }}>
+                  <Form.Item name="title">
+                    <Input
+                      style={{ fontSize: "14px" }}
+                      placeholder={"Enter children name"}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={22} lg={8}>
+                  <Form.Item name="donationStatus">
+                    <Select defaultValue={"null"}>
+                      <Select.Option value="null">All status</Select.Option>
+                      <Select.Option value="0">Send</Select.Option>
+                      <Select.Option value="1">Verification</Select.Option>
+                      <Select.Option value="2">Reporting</Select.Option>
+                      <Select.Option value="3">Finish</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={1} xs={22} lg={1} style={{ paddingLeft: "11px" }}>
+                  <Button
+                    style={{
+                      fontSize: "14px",
+                      background: "#e57905",
+                      color: "white",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Search
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
           </Col>
         </Row>
 
         <List
           grid={{ gutter: 18, column: 1 }}
-          dataSource={data}
+          dataSource={donation}
           pagination={{
             showSizeChanger: true,
             pageSizeOptions: ["5", "10", "20", "50"],
           }}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item onClick={() => setmodelForEdit(item)}>
               <Card
                 className="ant-card-custom"
                 size="small"
@@ -194,7 +176,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
                   <>
                     <span style={{ color: "#808089", fontSize: "13px" }}>
                       <ShopOutlined style={{ color: "#808089" }} />
-                      Processing
+                      {getStatus(item?.donationStatus)}
                     </span>
                     <span style={{ float: "right" }}>
                       <button
@@ -203,6 +185,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
                           background: "#fff",
                           color: "#e57905",
                           marginRight: "20px",
+                          fontSize: "15px",
                         }}
                         onClick={toggleChildrenModal}
                       >
@@ -232,36 +215,37 @@ const DonationHistoryPage: React.FC<Props> = () => {
                             fontSize: "14px",
                           }}
                         >
-                          <Link to={"/detail/1"} style={{ color: "#e57905" }}>
-                            Lê Ngọc Linh Chi
-                          </Link>
+                          <a
+                            onClick={toggleChildrenModal}
+                            style={{ color: "#e57905" }}
+                          >
+                            {
+                              childrenProfiles[
+                                findUserbyId(
+                                  item?.childrenProfileId,
+                                  childrenProfiles
+                                )
+                              ]?.fullName
+                            }
+                          </a>
                         </div>
                         <div style={{ fontSize: "12px", color: "#b2b2b2" }}>
                           <CalendarOutlined
                             style={{ color: "#b2b2b2", fontSize: "11px" }}
                           />
-                          14/10/2019
+                          {displayDate(
+                            childrenProfiles[
+                              findUserbyId(
+                                item?.childrenProfileId,
+                                childrenProfiles
+                              )
+                            ]?.dob
+                          )}
                         </div>
                       </div>
                     </Space>
                   </Col>
-                  <Col span={9} style={{ marginTop: "20px" }}>
-                    <div style={{ fontSize: "14px" }}>
-                      {item.tags.map((tag) => {
-                        return (
-                          <Tag
-                            color="default"
-                            style={{
-                              fontSize: "13px",
-                            }}
-                            key={tag}
-                          >
-                            {tag}
-                          </Tag>
-                        );
-                      })}
-                    </div>
-                  </Col>
+                  <Col span={9} style={{ marginTop: "20px" }}></Col>
                   <Col
                     span={3}
                     style={{
@@ -272,7 +256,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
                   >
                     <div>Created date</div>
                     <div style={{ marginLeft: "2px", color: "#b2b2b2" }}>
-                      10/05/2022
+                      {displayDate(item?.createdTime)}
                     </div>
                   </Col>
                 </Row>
