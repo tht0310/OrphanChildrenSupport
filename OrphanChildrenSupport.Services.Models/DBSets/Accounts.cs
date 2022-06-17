@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OrphanChildrenSupport.Services.Models.DBSets;
+using System;
 using System.Collections.Generic;
 
 namespace OrphanChildrenSupport.Services.Models
@@ -25,6 +26,7 @@ namespace OrphanChildrenSupport.Services.Models
             return this.RefreshTokens?.Find(x => x.Token == token) != null;
         }
         public bool IsActive { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
     }
 
 }

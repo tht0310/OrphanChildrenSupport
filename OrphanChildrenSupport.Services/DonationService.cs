@@ -98,6 +98,7 @@ namespace OrphanChildrenSupport.Services
                     var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
                     donation = _mapper.Map<DonationResource, Donation>(donationResource, donation);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateDonation: {JsonConvert.SerializeObject(donation)}");
+                    await unitOfWork.DeleteDonationDetails(donation.Id);
                     donation.ModifiedBy = _httpContextHelper.GetCurrentAccount();
                     donation.LastModified = DateTime.UtcNow;
                     unitOfWork.DonationRepository.Update(donation);
@@ -157,6 +158,7 @@ namespace OrphanChildrenSupport.Services
                         donation.ModifiedBy = _httpContextHelper.GetCurrentAccount();
                         donation.IsDeleted = true;
                         donation.LastModified = DateTime.UtcNow;
+                        await unitOfWork.DeleteDonationDetails(donation.Id);
                         unitOfWork.DonationRepository.Update(donation);
                     }
                     await unitOfWork.SaveChanges();
