@@ -139,4 +139,16 @@ export default class ChildrenProfileService extends ServiceBase {
     });
     return result;
   }
+
+  public async addChildrenProfileImages(
+    childrenId:number,
+    file: RcFile[] | null,
+  ): Promise<Result<IChildrenProfileModel>> {
+    var result = await this.requestJson<IChildrenProfileModel>({
+      url: `/api/childrenProfileImages/uploadImagesByChildrenProfileId/${childrenId}`,
+      method: "POST",
+      data: file,
+    });
+    return result;
+  }
 }

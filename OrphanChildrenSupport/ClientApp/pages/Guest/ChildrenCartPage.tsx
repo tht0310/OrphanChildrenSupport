@@ -32,11 +32,8 @@ import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
 import { DatePicker, Space } from "antd";
 import Children1 from "@Images/children-banner.jpg";
 import FallBackImage from "@Images/children-default.png";
-import Search from "antd/lib/input/Search";
-import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import { FilterParams } from "@Models/IFilterType";
-import { DataServices } from "@Services/DataServices";
 import {
   DeleteOutlined,
   EllipsisOutlined,
@@ -71,6 +68,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
   const [favourites, setFavourites] = React.useState<IFavoriteModel[]>([]);
   useEffect(() => {
     document.title = "Children list";
+
     fetchData();
   }, []);
 
@@ -203,7 +201,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
           }}
           renderItem={(item) => (
             <List.Item>
-              <div className="item" style={{ marginBottom: "40px" }}>
+              <div className="item">
                 <Card
                   actions={[
                     <Row className="actions">
@@ -226,7 +224,6 @@ const ChildrenCartPage: React.FC<Props> = () => {
                     </Row>,
                   ]}
                   bodyStyle={{ padding: "0px", paddingBottom: "8px" }}
-                  style={{ marginBottom: "40px" }}
                 >
                   <Image
                     preview={false}

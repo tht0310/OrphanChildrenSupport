@@ -6,6 +6,7 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { Link } from "react-router-dom";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate } from "@Services/FormatDateTimeService";
+import { Logo } from "theme/Images";
 
 export interface IProps {
   children: IChildrenProfileModel[];
@@ -91,7 +92,13 @@ const ChildrenBlock: React.FC<IProps> = ({
                 return null;
               }
               return (
-                <Col key={i} className="col" lg={4} xs={12}>
+                <Col
+                  key={i}
+                  className="col"
+                  lg={4}
+                  xs={12}
+                  style={{ textAlign: "center" }}
+                >
                   <Link to={`${childrenDetailUrl}/${d.id}`} target="_blank">
                     <div className="item">
                       <Image

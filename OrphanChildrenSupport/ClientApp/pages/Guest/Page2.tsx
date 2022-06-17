@@ -8,7 +8,7 @@ import TweenOne from "rc-tween-one";
 
 export default function Page2() {
   return (
-    <OverPack component="section" className="page-wrapper page3">
+    <OverPack component="section" className="page-wrapper page3 container">
       <QueueAnim
         type="bottom"
         className="page text-center"

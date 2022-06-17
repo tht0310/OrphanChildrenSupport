@@ -722,19 +722,9 @@ svg {
 }
 }
 .page3 {
-  min-height: 150px;
-  margin: 40px 0px;
+ margin-bottom: 50px;
 }
-.homepage {
-  .item {
-    width: 180px !important;
-    height: 210px;
-    margin-top: 0px !important;
-    margin-bottom: 30px;
-    
-  }
-  
-}
+
 .activity-history-page {
   .ant-tabs-nav {
     width: 20%;
@@ -838,5 +828,14 @@ svg {
       margin-top: 8px;
       margin-bottom: 8px;
   }
+  }
+}
+
+.home-case {
+  .ant-row {
+    align-items: center;
+  }
+  .ant-col {
+    margin-bottom: 30px;
   }
 }

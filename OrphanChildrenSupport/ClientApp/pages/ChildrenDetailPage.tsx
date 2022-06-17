@@ -98,13 +98,13 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       childrenProfileId: children?.id,
       accountId: currentUser?.id,
     };
-
+    console.log(temp);
     const res = await favouriteService.add(temp);
 
     if (!res.hasErrors) {
       message.success("Successful");
     } else {
-      message.error("Fail");
+      message.warning("You added this child to favourite list.");
     }
   }
 
