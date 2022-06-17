@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
+using OrphanChildrenSupport.DataContracts.Responses;
 using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
@@ -12,6 +13,7 @@ using OrphanChildrenSupport.Services.Models;
 using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -229,6 +231,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     var query = await unitOfWork.DonationRepository.FindAll(predicate: d => d.IsDeleted == false
                                                                             && (!queryObj.AccountId.HasValue || d.AccountId == queryObj.AccountId)
+                                                                            && (!queryObj.ChildrenProfileId.HasValue || d.ChildrenProfileId == queryObj.ChildrenProfileId)
                                                                             && (!queryObj.DonationStatus.HasValue || d.DonationStatus == queryObj.DonationStatus)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)),
@@ -403,6 +406,62 @@ namespace OrphanChildrenSupport.Services
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<List<DonationStatusStatisticsResponse>>> GetDonationStatusStatistics()
+        {
+            const string loggerHeader = "GetDonationStatusStatistics";
+            var apiResponse = new ApiResponse<List<DonationStatusStatisticsResponse>>();
+            var donationStatusStatisticResponse = new DonationStatusStatisticsResponse();
+            _logger.LogDebug($"{loggerHeader} - Start to GetDonationStatusStatistics");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    var donations = await unitOfWork.DonationRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
+                    if (donations != null && donations.Count > 0)
+                    {
+                        var waitingDonations = donations.Where(d => d.DonationStatus == DonationStatus.WaitingForApproval);
+                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
+                        donationStatusStatisticResponse.Percentage = (waitingDonations != null && waitingDonations.Count() > 0) ? Math.Round((double)waitingDonations.Count() / donations.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(donationStatusStatisticResponse);
+
+                        var processingDonations = donations.Where(d => d.DonationStatus == DonationStatus.Processing);
+                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
+                        donationStatusStatisticResponse.Percentage = (processingDonations != null && processingDonations.Count() > 0) ? Math.Round((double)processingDonations.Count() / donations.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(donationStatusStatisticResponse);
+
+                        var cancelledDonations = donations.Where(d => d.DonationStatus == DonationStatus.Cancelled);
+                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
+                        donationStatusStatisticResponse.Percentage = (cancelledDonations != null && cancelledDonations.Count() > 0) ? Math.Round((double)cancelledDonations.Count() / donations.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(donationStatusStatisticResponse);
+
+                        var finishedDonations = donations.Where(d => d.DonationStatus == DonationStatus.Finished);
+                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
+                        donationStatusStatisticResponse.Percentage = (finishedDonations != null && finishedDonations.Count() > 0) ? Math.Round((double)finishedDonations.Count() / donations.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(donationStatusStatisticResponse);
+
+                        var rejectedDonations = donations.Where(d => d.DonationStatus == DonationStatus.Rejected);
+                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
+                        donationStatusStatisticResponse.Percentage = (rejectedDonations != null && rejectedDonations.Count() > 0) ? Math.Round((double)rejectedDonations.Count() / donations.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(donationStatusStatisticResponse);
+                    }
+
+                    _logger.LogDebug($"{loggerHeader} - GetDonationStatusStatistics successfully");
                 }
                 catch (Exception ex)
                 {

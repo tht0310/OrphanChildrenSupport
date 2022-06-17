@@ -1,5 +1,7 @@
 ﻿using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
+using OrphanChildrenSupport.DataContracts.Responses;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
@@ -14,5 +16,6 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<DonationResource>> ApproveDonation(long id);
         Task<ApiResponse<DonationResource>> RejectDonation(long id);
         Task<ApiResponse<DonationResource>> CancelDonation(long id);
+        Task<ApiResponse<List<DonationStatusStatisticsResponse>>> GetDonationStatusStatistics();
     }
 }

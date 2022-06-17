@@ -161,6 +161,15 @@ namespace OrphanChildrenSupport.Controllers.V1
         }
 
         //[Authorize]
+        [HttpPut]
+        [Route("activate-account/{id}")]
+        public async Task<IActionResult> ActivateAccount(long id)
+        {
+            var apiResponse = await _accountService.ActivateAccount(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        //[Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
