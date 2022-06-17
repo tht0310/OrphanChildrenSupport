@@ -1,5 +1,7 @@
 using OrphanChildrenSupport.Services.Models;
+using OrphanChildrenSupport.Services.Models.DBSets;
 using System;
+using System.Collections.Generic;
 
 namespace OrphanChildrenSupport.DataContracts.Responses
 {
@@ -14,5 +16,6 @@ namespace OrphanChildrenSupport.DataContracts.Responses
         public string Role { get; set; }
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
     }
 }

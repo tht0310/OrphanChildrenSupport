@@ -98,6 +98,7 @@ namespace OrphanChildrenSupport.Services
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
                     report = _mapper.Map<ReportResource, Report>(reportResource, report);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateReport: {JsonConvert.SerializeObject(report)}");
+                    await unitOfWork.DeleteReportDetails(report.Id);
                     report.ModifiedBy = _httpContextHelper.GetCurrentAccount();
                     report.LastModified = DateTime.UtcNow;
                     unitOfWork.ReportRepository.Update(report);
@@ -157,6 +158,7 @@ namespace OrphanChildrenSupport.Services
                         report.ModifiedBy = _httpContextHelper.GetCurrentAccount();
                         report.IsDeleted = true;
                         report.LastModified = DateTime.UtcNow;
+                        await unitOfWork.DeleteReportDetails(report.Id);
                         unitOfWork.ReportRepository.Update(report);
                     }
                     await unitOfWork.SaveChanges();

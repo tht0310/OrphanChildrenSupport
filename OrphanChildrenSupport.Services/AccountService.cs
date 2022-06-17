@@ -282,7 +282,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
+                    var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - GetAccount successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -465,7 +466,8 @@ namespace OrphanChildrenSupport.Services
                     if (account != null)
                     {
                         SendAlreadyRegisteredEmail(registerRequest.Email, origin);
-                    } else
+                    }
+                    else
                     {
                         account = _mapper.Map<Account>(registerRequest);
                         var isFirstAccount = unitOfWork.AccountRepository.FindAll().ToList().Count == 0;
@@ -499,7 +501,7 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-            return  apiResponse;
+            return apiResponse;
         }
 
         public async Task<ApiResponse<VerifyEmailRequest>> VerifyEmail(VerifyEmailRequest verifyEmailRequest)
@@ -558,7 +560,8 @@ namespace OrphanChildrenSupport.Services
                     if (account == null)
                     {
                         throw new AppException("Email has not registered");
-                    } else
+                    }
+                    else
                     {
                         account.ResetToken = GenerateRandomTokenString();
                         account.ResetTokenExpireTime = DateTime.UtcNow.AddDays(1);
