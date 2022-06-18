@@ -13,6 +13,7 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<AccountResponse>> UpdateAccount(long id, UpdateRequest updateRequest);
         Task<ApiResponse<AccountResponse>> UpdateRole(long id, Role role);
         Task<ApiResponse<AccountResponse>> DeactivateAccount(long id);
+        Task<ApiResponse<AccountResponse>> ActivateAccount(long id);
         Task<ApiResponse<AccountResponse>> DeleteAccount(long id, bool removeFromDB = false);
         Task<ApiResponse<AccountResponse>> GetAccount(long id);
         Task<ApiResponse<QueryResultResource<AccountResponse>>> GetAccounts(QueryResource queryObj);

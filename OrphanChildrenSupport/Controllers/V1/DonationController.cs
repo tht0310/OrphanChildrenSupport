@@ -92,5 +92,13 @@ namespace OrphanChildrenSupport.Controllers.V1
             var apiResponse = await _donationService.CancelDonation(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
+
+        [HttpGet]
+        [Route("getStatistic")]
+        public async Task<IActionResult> Statistic()
+        {
+            var apiResponse = await _donationService.GetDonationStatusStatistics();
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
     }
 }

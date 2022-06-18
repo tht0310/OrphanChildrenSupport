@@ -226,6 +226,48 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
+        public async Task<ApiResponse<AccountResponse>> ActivateAccount(long id)
+        {
+            const string loggerHeader = "ActivateAccount";
+            var apiResponse = new ApiResponse<AccountResponse>();
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
+                    _logger.LogDebug($"{loggerHeader} - Start to ActivateAccount with Id: {id}");
+                    account.IsActive = true;
+                    account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    account.LastModified = DateTime.UtcNow;
+                    unitOfWork.AccountRepository.Update(account);
+                    await unitOfWork.SaveChanges();
+                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                    apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
+                    _logger.LogDebug($"{loggerHeader} - ActivateAccount successfully with Id: {account.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "Account";
+                    changelogResource.API = $"{loggerHeader} - ActivateAccount successfully with Id: {account.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
         public async Task<ApiResponse<AccountResponse>> DeleteAccount(long id, bool removeFromDB = false)
         {
             const string loggerHeader = "DeleteAccount";
@@ -473,6 +515,7 @@ namespace OrphanChildrenSupport.Services
                         var isFirstAccount = unitOfWork.AccountRepository.FindAll().ToList().Count == 0;
                         account.Role = isFirstAccount ? Role.Admin : Role.User;
                         account.CreatedTime = DateTime.UtcNow;
+                        account.IsActive = true;
                         account.VerificationToken = GenerateRandomTokenString();
                         account.PasswordHash = BC.HashPassword(registerRequest.Password);
                         await unitOfWork.AccountRepository.Add(account);

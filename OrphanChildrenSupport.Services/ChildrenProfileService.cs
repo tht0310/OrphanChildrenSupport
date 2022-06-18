@@ -5,12 +5,14 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
+using OrphanChildrenSupport.DataContracts.Responses;
 using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -230,6 +232,41 @@ namespace OrphanChildrenSupport.Services
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<ChildrenProfile>, QueryResultResource<ChildrenProfileResponse>>(query);
                     _logger.LogDebug($"{loggerHeader} - GetChildrenProfiles successfully");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<List<ChildrenProfileStatisticsResponse>>> GetChildrenProfileStatistics(int year)
+        {
+            const string loggerHeader = "GetChildrenProfileStatistics";
+            var apiResponse = new ApiResponse<List<ChildrenProfileStatisticsResponse>>();
+            var childrenProfileStatisticsResponse = new ChildrenProfileStatisticsResponse();
+            _logger.LogDebug($"{loggerHeader} - Start to GetChildrenProfileStatistics");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    //var childrenProfiles = await unitOfWork.ChildrenProfileRepository.FindAll().Where(d => d.IsDeleted == false && d.Status == ChildrenProfileStatus.Supported).ToListAsync();
+                    //for (int i = 1; i <= 12; i++)
+                    //{
+                    //    var monthlyChildrenProfiles = childrenProfiles.Where(d => d.Donations.Any(x => (x.CreatedTime > DateTime.Parse("01" + i + year)) && (x.CreatedTime < DateTime.Parse("01" + (i + 1) + year))));
+                    //    childrenProfileStatisticsResponse.Month = i;
+                    //    childrenProfileStatisticsResponse.Value = monthlyChildrenProfiles.Count();
+                    //    apiResponse.Data.Add(childrenProfileStatisticsResponse);
+                    //}
+                    _logger.LogDebug($"{loggerHeader} - GetChildrenProfileStatistics successfully");
                 }
                 catch (Exception ex)
                 {

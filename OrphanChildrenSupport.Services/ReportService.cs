@@ -5,12 +5,14 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
+using OrphanChildrenSupport.DataContracts.Responses;
 using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -404,6 +406,57 @@ namespace OrphanChildrenSupport.Services
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
+        public async Task<ApiResponse<List<ReportStatusStatisticsResponse>>> GetReportStatusStatistics()
+        {
+            const string loggerHeader = "GetReportStatusStatistics";
+            var apiResponse = new ApiResponse<List<ReportStatusStatisticsResponse>>();
+            var reportStatusStatisticResponse = new ReportStatusStatisticsResponse();
+            _logger.LogDebug($"{loggerHeader} - Start to GetReportStatusStatistics");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    var reports = await unitOfWork.ReportRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
+                    if (reports != null && reports.Count > 0)
+                    {
+                        var approvedReports = reports.Where(d => d.ReportStatus == ReportStatus.Approved);
+                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Approved;
+                        reportStatusStatisticResponse.Percentage = (approvedReports != null && approvedReports.Count() > 0) ? Math.Round((double)approvedReports.Count() / reports.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(reportStatusStatisticResponse);
+
+                        var waitingReports = reports.Where(d => d.ReportStatus == ReportStatus.WaitingForApproval);
+                        reportStatusStatisticResponse.ReportStatus = ReportStatus.WaitingForApproval;
+                        reportStatusStatisticResponse.Percentage = (waitingReports != null && waitingReports.Count() > 0) ? Math.Round((double)waitingReports.Count() / reports.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(reportStatusStatisticResponse);
+
+                        var rejectedReports = reports.Where(d => d.ReportStatus == ReportStatus.Rejected);
+                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Rejected;
+                        reportStatusStatisticResponse.Percentage = (rejectedReports != null && rejectedReports.Count() > 0) ? Math.Round((double)rejectedReports.Count() / reports.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(reportStatusStatisticResponse);
+
+                        var cancelledReports = reports.Where(d => d.ReportStatus == ReportStatus.Cancelled);
+                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Cancelled;
+                        reportStatusStatisticResponse.Percentage = (cancelledReports != null && cancelledReports.Count() > 0) ? Math.Round((double)cancelledReports.Count() / reports.Count, 2) * 100 : 0;
+                        apiResponse.Data.Add(reportStatusStatisticResponse);
+                    }
+
+                    _logger.LogDebug($"{loggerHeader} - GetReportStatusStatistics successfully");
                 }
                 catch (Exception ex)
                 {

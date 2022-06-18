@@ -68,5 +68,13 @@ namespace OrphanChildrenSupport.Controllers.V1
             var apiResponse = await _childrenProfileService.DeleteChildrenProfile(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
+
+        [HttpGet]
+        [Route("getStatistic/{year}")]
+        public async Task<IActionResult> Statistic(int year)
+        {
+            var apiResponse = await _childrenProfileService.GetChildrenProfileStatistics(year);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
     }
 }
