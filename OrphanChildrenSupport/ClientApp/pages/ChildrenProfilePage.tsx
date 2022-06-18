@@ -177,7 +177,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
     {
       title: "#",
       ellipsis: true,
-      width: "5%",
+      width: "6%",
       align: "center",
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },

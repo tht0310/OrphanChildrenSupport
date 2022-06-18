@@ -18,3 +18,10 @@ export interface IChildrenProfileModel extends IEngineEntity {
   houseNumber?: string;
   childrenProfileSupportCategories?: IChildrenSupportCategoryModel[];
 }
+
+export interface IChildrenImage extends IEngineEntity {
+  childrenProfileId: number,
+  imagePath :string,
+}
+
+

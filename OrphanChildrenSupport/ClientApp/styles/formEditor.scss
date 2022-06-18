@@ -478,5 +478,19 @@
   .ant-upload-list-item {
     padding: 2px !important;
   }
+  .anticon-delete {
+    width: 16px !important;
+   
+  }
+
+  svg {
+    margin-left: 0 !important;
+  }
+  .ant-upload-list-item-card-actions-btn {
+    padding-left: 15px;
+  }
+  .ant-upload-list-item-actions a {
+    margin-right: 10px;
+  }
 
 }

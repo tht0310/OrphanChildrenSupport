@@ -72,6 +72,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
 }: IProps) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [imageData, setImageData] = useState<any[]>([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -79,11 +80,15 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     ISupportCategoryModel[]
   >([]);
 
+  const [deleteStore, setDeleteStore] = React.useState<any[]>([]);
+
   React.useEffect(() => {
     if (visible === true) {
+      setDeleteStore([]);
       form.resetFields();
       if (data) {
         innitialValue();
+        getImage(data.id);
       }
     }
   }, [data, visible]);
@@ -92,13 +97,24 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     fetchSupportCategories();
   }, [visible === true]);
 
+  React.useEffect(() => {
+    if (imageData.length > 0) {
+      viewImage();
+    }
+  }, [imageData]);
+
+  React.useEffect(() => {}, [deleteStore.length]);
+
   const handleCancel = () => {
+    handleCancelImage();
+    handleCancelImage();
     onCancel();
     form.resetFields();
-    handleCancelImage();
   };
 
-  const handleCancelImage = () => setPreviewVisible(false);
+  const handleCancelImage = () => {
+    setPreviewVisible(false);
+  };
 
   async function fetchSupportCategories() {
     const dataRes = await supportCategoriesService.getAll();
@@ -111,8 +127,34 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     form.submit();
   }
 
+  async function viewImage() {
+    imageData.map(async (v) => {
+      const imageRes = await childrenProfileService.getImage(Number(v.name));
+      if (!imageRes.hasErrors) {
+        v.url = imageRes.value.toString();
+      }
+    });
+    setFileList(imageData);
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+    let uid = -1;
+    let storeData = [];
+    imageData.map(async (m) => {
+      const value = {
+        url: "",
+        name: m.id.toString(),
+        uid: uid.toString(),
+      };
+      uid += 1;
+      storeData.push(value);
+    });
+    setImageData(storeData);
+  }
+
   async function onFinish(values: IChildrenProfileModel | any) {
-    console.log(fileList);
     values.detailAddress =
       values.city + "-" + values.province + "-" + values.houseNumber;
     values.publicAddress = values.city + "-" + values.province;
@@ -128,6 +170,26 @@ const ChildrenProfileModal: React.FC<IProps> = ({
         values.childrenProfileSupportCategories = tempList;
       }
       const res = await childrenProfileService.update(values);
+
+      if (deleteStore.length > 0) {
+        deleteStore.map(async (v) => {
+          const res = await childrenProfileService.deleteImage(v);
+        });
+      }
+
+      if (fileList.length > 0) {
+        const tempFile = [];
+        fileList.map((f) => {
+          if (f.originFileObj) {
+            tempFile.push(f.originFileObj);
+          }
+        });
+        await childrenProfileService.addChildrenProfileImages(
+          values.id,
+          tempFile
+        );
+      }
+
       if (!res.hasErrors) {
         message.success(`${values.fullName} has been successfully updated`);
         onCancel();
@@ -135,7 +197,6 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       }
     } else {
       const res = await childrenProfileService.add(values);
-
       if (!res.hasErrors) {
         if (values.childrenCategoryGroup) {
           const tempList = [];
@@ -147,12 +208,16 @@ const ChildrenProfileModal: React.FC<IProps> = ({
           });
           values.childrenProfileSupportCategories = tempList;
         }
+        const images = [];
+
+        fileList.map((v) => images.push(v.originFileObj));
 
         if (fileList.length > 0) {
           let imageRes = await childrenProfileService.addChildrenProfileImages(
             res.value.id,
-            fileList
+            images
           );
+
           if (!imageRes?.hasErrors) {
             message.success(`${values.fullName} has been successfully added`);
             onCancel();
@@ -195,6 +260,17 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
     );
   };
+
+  function handleDelete(value) {
+    let tempImage: any[] = [];
+    tempImage = deleteStore;
+    const index = deleteStore.findIndex((item) => item === Number(value.name));
+    console.log(index);
+    if (index === -1) {
+      tempImage.push(Number(value.name));
+      setDeleteStore(tempImage);
+    }
+  }
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
@@ -254,11 +330,11 @@ const ChildrenProfileModal: React.FC<IProps> = ({
           <Col span={7}>
             <div className="image-uploading">
               <Upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
+                onRemove={handleDelete}
               >
                 {fileList.length >= 4 ? null : uploadButton}
               </Upload>
