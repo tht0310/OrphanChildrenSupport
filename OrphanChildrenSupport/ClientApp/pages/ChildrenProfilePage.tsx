@@ -1,5 +1,6 @@
 import {
   ExportOutlined,
+  HistoryOutlined,
   SearchOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
@@ -27,6 +28,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnType, FilterConfirmProps } from "antd/lib/table/interface";
 import Highlighter from "react-highlight-words";
+import ChildrenHistoryModal from "@Components/modals/ChildrenHistotyModal";
 
 type Props = {};
 
@@ -50,6 +52,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
   const [filterBy, setFilterBy] = React.useState<string>("fullName");
   const [filterValue, setFilterValue] = React.useState<string>();
   const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
+  const [isHistoryModal, setHistoryModal] = React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] =
     React.useState<IChildrenProfileModel>();
   const [searchedColumn, setSearchedColumn] = React.useState("");
@@ -186,7 +189,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       dataIndex: "fullName",
       key: "fullName",
       ellipsis: true,
-      width: "20%",
+      width: "18%",
       ...getColumnSearchProps("fullName"),
       render: (text: string) => (
         <a className="item-title" onClick={toggleChildrenModal}>
@@ -223,13 +226,13 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       columnSearchDataIndex: "detailAddress",
       dataIndex: "detailAddress",
       ...getColumnSearchProps("detailAddress"),
-      width: "25%",
+      width: "23%",
       key: "detailAddress",
       render: (text: string) => convertAddressToString(text),
     },
     {
       title: "Status",
-      width: "18%",
+      width: "17%",
       dataIndex: "status",
       render: (text: number) =>
         text === 0 ? "Waiting for support " : "Supported",
@@ -247,7 +250,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       dataIndex: "address",
       key: "address",
       render: (text, record, index) => (
-        <Space className="actions">
+        <Space className="actions" style={{ gap: "0px" }}>
           <Button
             onClick={toggleChildrenModal}
             className="btn-custom-2 blue-action-btn"
@@ -264,6 +267,11 @@ const ChildrenProfilePage: React.FC<Props> = () => {
               icon={<Trash2 size={16} style={{ color: "#FA6D70" }} />}
             ></Button>
           </Popconfirm>
+          <Button
+            onClick={toggleHistoryModal}
+            className="btn-custom-2 blue-action-btn"
+            icon={<HistoryOutlined size={10} style={{ color: "#FFC000" }} />}
+          />
         </Space>
       ),
     },
@@ -320,6 +328,11 @@ const ChildrenProfilePage: React.FC<Props> = () => {
 
   async function toggleChildrenModal() {
     setChildrenModal(!isChildrenModal);
+    setmodelForEdit(null);
+  }
+
+  async function toggleHistoryModal() {
+    setHistoryModal(!isHistoryModal);
     setmodelForEdit(null);
   }
 
@@ -408,6 +421,10 @@ const ChildrenProfilePage: React.FC<Props> = () => {
         onCancel={toggleChildrenModal}
         data={modelForEdit}
         fetchData={fetchData}
+      />
+      <ChildrenHistoryModal
+        visible={isHistoryModal}
+        onCancel={toggleHistoryModal}
       />
     </div>
   );

@@ -86,6 +86,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     if (visible === true) {
       setDeleteStore([]);
       form.resetFields();
+      setFileList([]);
       if (data) {
         innitialValue();
         getImage(data.id);
