@@ -137,7 +137,6 @@ const ChildrenConfirmationModal: React.FC<IProps> = ({
                 onChange("note", index, e.target.value);
               }}
               placeholder="Input detail"
-              maxLength={25}
               style={{ fontSize: "12px", width: "85%" }}
             />
           )}
@@ -205,7 +204,7 @@ const ChildrenConfirmationModal: React.FC<IProps> = ({
       destroyOnClose={true}
       footer={null}
       width={1000}
-      title={"Support Confimation"}
+      title={"Donation Confimation"}
       className="childrenConfirmation--model"
       style={{ top: 30, height: "280px" }}
       bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 130px)" }}
@@ -221,7 +220,7 @@ const ChildrenConfirmationModal: React.FC<IProps> = ({
           >
             <Card
               size="small"
-              title="Support detail"
+              title="Donation detail"
               style={{ marginRight: "15px", boxShadow: "none" }}
             >
               <Table

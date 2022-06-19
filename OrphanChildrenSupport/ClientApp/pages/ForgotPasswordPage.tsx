@@ -39,7 +39,7 @@ const ForgotPasswordPage: React.FC<Props> = ({
 
   return (
     <div className="container-fuild message-layout center ">
-      <h4>Forgot Password</h4>
+      <h4 style={{ marginBottom: "30px" }}>Forgot Password</h4>
 
       <Form
         style={{}}
@@ -60,7 +60,6 @@ const ForgotPasswordPage: React.FC<Props> = ({
             },
           ]}
           name="email"
-          style={{ marginLeft: "12%" }}
         >
           <Input
             style={{ width: "360px" }}

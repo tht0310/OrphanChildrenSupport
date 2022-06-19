@@ -68,11 +68,6 @@ const SupportCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created By",
-      dataIndex: "createdBy",
-      render: (text: Date, row, index) => <>{text ? text : row.modifiedBy}</>,
-    },
-    {
       title: "Created time",
       dataIndex: "createdTime",
       render: (text: Date, row, index) => (
@@ -103,19 +98,11 @@ const SupportCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created By",
-      dataIndex: "createdBy",
-      key: "createdBy",
-      ellipsis: true,
-      width: "20%",
-      render: (text: Date, row, index) => <>{text ? text : row.modifiedBy}</>,
-    },
-    {
       title: "Created time",
       dataIndex: "createdTime",
       key: "createdTime",
       ellipsis: true,
-      width: "20%",
+      width: "36%",
       render: (text: Date, row, index) => (
         <>{text ? displayDateTime(text) : displayDateTime(row.lastModified)}</>
       ),

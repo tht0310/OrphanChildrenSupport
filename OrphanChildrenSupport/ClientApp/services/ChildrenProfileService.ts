@@ -54,10 +54,7 @@ export default class ChildrenProfileService extends ServiceBase {
 
 
 
-  public  getImageUrl(id: number): string  {
-    return `/api/childrenProfiles/${id}/getImage`;
-  }
-
+ 
 
   public async update(model: IChildrenProfileModel): Promise<Result<{}>> {
     var result = await this.requestJson({
@@ -200,6 +197,11 @@ export default class ChildrenProfileService extends ServiceBase {
     }
     return result;
   }
+
+  public  getImageUrl(id: number): string  {
+    return `/api/childrenProfileImages/viewImage/${id}`;
+  }
+
 
   
 }

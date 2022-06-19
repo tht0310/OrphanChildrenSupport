@@ -8,11 +8,12 @@ export interface IChildrenProfileModel extends IEngineEntity {
   address: string;
   guardianPhoneNumber?: string;
   guardianName?: string;
-  status: string;
+  status: string | number;
   detailAddress: string;
   publicAddress: string;
   circumstance: string;
   imagePath: string;
+  imageId: number;
   city?: string;
   province?: string;
   houseNumber?: string;

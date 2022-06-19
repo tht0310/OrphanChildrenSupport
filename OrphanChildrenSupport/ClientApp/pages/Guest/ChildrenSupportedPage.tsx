@@ -84,7 +84,31 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   async function fetchChildrenProfile(filterParams) {
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
-      setChildrenProfiles(dataRes.value.items);
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        if (tempValue[index].status === 1) {
+          let tempId = await getImage(tempValue[index].id);
+          tempValue[index].imageId = tempId;
+        }
+      }
+
+      setChildrenProfiles(tempValue);
+    }
+  }
+
+  function viewImg(id) {
+    const imageRes = childrenProfileService.getImageUrl(id);
+    return imageRes.toString();
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
     }
   }
 
@@ -100,7 +124,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
     fetchChildrenProfile({
       fromAge: value[0],
       toAge: value[1],
-      childrenProfileStatus: 0,
+      childrenProfileStatus: 1,
     });
   }
 
@@ -243,7 +267,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                         <Image
                           preview={false}
                           className="img-item"
-                          src={childrenProfileService.getImageUrl(item.id)}
+                          src={viewImg(item.imageId)}
                           fallback={FallBackImage}
                           alt={"img" + item.id}
                         />

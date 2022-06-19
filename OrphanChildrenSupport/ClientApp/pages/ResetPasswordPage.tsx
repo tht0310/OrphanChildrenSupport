@@ -69,9 +69,9 @@ const ResetPasswordPage: React.FC<Props> = ({
   async function resetPassword(values: IResetPasswordModel) {
     const res = await accService.resetPassword(values);
     if (!res.hasErrors) {
-      message.success("Reset password successfull");
+      message.success("Reset password successfully");
     } else {
-      message.error("Reset password unsuccessfull");
+      message.error("Reset password unsuccessfully");
     }
   }
 

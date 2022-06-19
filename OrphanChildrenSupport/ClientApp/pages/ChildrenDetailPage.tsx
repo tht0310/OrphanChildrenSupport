@@ -18,7 +18,7 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 
-import { IRegisterModel } from "@Models/ILoginModel";
+import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import ReporChildrenDrawer from "@Components/drawers/ReportChildrenDrawer";
 import TextEditor from "@Components/shared/TextEditor";
 import ReportFieldService from "@Services/ReportFieldService";
@@ -27,6 +27,10 @@ import { IReportFieldModel } from "@Models/IReportFieldModel";
 import { IFavoriteModel } from "@Models/IFavoriteModel";
 import FavoriteService from "@Services/FavoriteService";
 import ChildrenConfirmationModal from "@Components/modals/ChildrenConfirmationModal";
+import { UploadFile } from "antd/lib/upload/interface";
+import ChildrenBlock from "./Guest/ChildrenBlock";
+import OtherChildrenBlock from "./Guest/OtherChildrenBlock";
+import AccountService from "@Services/AccountService";
 
 type Props = RouteComponentProps<{ id: string }>;
 
@@ -34,6 +38,7 @@ const childrenService = new ChildrenProfileService();
 const supportCategoriesService = new SupportCategoryService();
 const reportFieldService = new ReportFieldService();
 const favouriteService = new FavoriteService();
+const userService = new AccountService();
 
 const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -46,23 +51,73 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isChildrenModel, setIsChildrenModel] = React.useState<boolean>(false);
   const [isChildrenDrawer, setIsChildrenDrawer] =
     React.useState<boolean>(false);
+  const [childrenProfiles, setChildrenProfiles] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
+  const [imageData, setImageData] = React.useState<any[]>([]);
   React.useEffect(() => {
     document.title = "Children Detail";
     fetchSupportCategories();
     fetchReport();
-    getCurrentUser();
+    getLocalUser();
+    fetchChildrenProfile();
   }, []);
+
+  React.useEffect(() => {
+    if (localUser) {
+      fetchUser(localUser.id);
+    }
+  }, [localUser]);
+
+  function getLocalUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setLocalUser(JSON.parse(retrievedObject));
+    }
+  }
 
   React.useEffect(() => {
     fetchData();
   }, [supportCategories]);
 
-  function getCurrentUser() {
-    var retrievedObject = localStorage.getItem("currentUser");
-    if (retrievedObject) {
-      setCurrentUser(JSON.parse(retrievedObject));
+  React.useEffect(() => {
+    if (children) {
+      getImage(children.id);
     }
+  }, [children]);
+
+  async function fetchChildrenProfile() {
+    const dataRes = await childrenService.getAll({ pageSize: 6 });
+    if (!dataRes.hasErrors) {
+      setChildrenProfiles(dataRes.value.items);
+    }
+  }
+  function viewImg(id) {
+    const imageRes = childrenService.getImageUrl(id);
+    return imageRes.toString();
+  }
+
+  function isEnable(id: number) {
+    const index = children?.childrenProfileSupportCategories.findIndex(
+      (x) => x.supportCategoryId === id
+    );
+    if (index === -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+    let tempValue = [];
+    imageData.map(async (m) => {
+      tempValue.push(m.id);
+    });
+    setImageData(tempValue);
   }
 
   async function fetchData() {
@@ -98,11 +153,10 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       childrenProfileId: children?.id,
       accountId: currentUser?.id,
     };
-    console.log(temp);
     const res = await favouriteService.add(temp);
 
     if (!res.hasErrors) {
-      message.success("Successful");
+      message.success("Add to favourites successfuly");
     } else {
       message.warning("You added this child to favourite list.");
     }
@@ -119,6 +173,13 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     const res = await childrenService.getChildren(Number(childrenId));
     if (!res.hasErrors) {
       setChildren(res.value);
+    }
+  }
+
+  async function fetchUser(id) {
+    const res = await userService.getAccount(id);
+    if (!res.hasErrors) {
+      setCurrentUser(res.value);
     }
   }
 
@@ -185,102 +246,17 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <div className="preview col-md-6">
             <div className="preview-pic tab-content">
               <Tabs tabPosition={"bottom"}>
-                <Tabs.TabPane
-                  tab={
-                    <Image
-                      preview={false}
-                      width={100}
-                      src={
-                        children?.id
-                          ? childrenService.getImageUrl(children.id)
-                          : null
+                {imageData.length > 0 &&
+                  imageData.map((v, index) => (
+                    <Tabs.TabPane
+                      tab={
+                        <Image preview={false} width={100} src={viewImg(v)} />
                       }
-                    />
-                  }
-                  key="1"
-                >
-                  <Image
-                    preview={false}
-                    width={"98%"}
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                  />
-                </Tabs.TabPane>
-                <Tabs.TabPane
-                  tab={
-                    <Image
-                      preview={false}
-                      width={100}
-                      src={
-                        children?.id
-                          ? childrenService.getImageUrl(children.id)
-                          : null
-                      }
-                    />
-                  }
-                  key="2"
-                >
-                  <Image
-                    preview={false}
-                    width={"98%"}
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                  />
-                </Tabs.TabPane>
-                <Tabs.TabPane
-                  tab={
-                    <Image
-                      preview={false}
-                      width={100}
-                      src={
-                        children?.id
-                          ? childrenService.getImageUrl(children.id)
-                          : null
-                      }
-                    />
-                  }
-                  key="3"
-                >
-                  <Image
-                    preview={false}
-                    width={"98%"}
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                  />
-                </Tabs.TabPane>
-                <Tabs.TabPane
-                  tab={
-                    <Image
-                      preview={false}
-                      width={100}
-                      src={
-                        children?.id
-                          ? childrenService.getImageUrl(children.id)
-                          : null
-                      }
-                    />
-                  }
-                  key="4"
-                >
-                  <Image
-                    preview={false}
-                    width={"98%"}
-                    src={
-                      children?.id
-                        ? childrenService.getImageUrl(children.id)
-                        : null
-                    }
-                  />
-                </Tabs.TabPane>
+                      key={index}
+                    >
+                      <Image preview={false} width={"98%"} src={viewImg(v)} />
+                    </Tabs.TabPane>
+                  ))}
               </Tabs>
             </div>
           </div>
@@ -299,6 +275,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   return (
                     <Col span={7}>
                       <Button
+                        disabled={isEnable(s.id) ? false : true}
                         onClick={(e) => {
                           handleOnClickButton(e);
                         }}
@@ -412,12 +389,21 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
-            <Row>
-              <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
-                Other Children{" "}
-              </h5>
-            </Row>
+          <Col span={24}>
+            <h5
+              style={{
+                fontSize: "16px",
+                lineHeight: "20px",
+                marginBottom: "20px",
+                paddingLeft: "7px",
+              }}
+            >
+              Other Children{" "}
+            </h5>
+            <OtherChildrenBlock
+              children={childrenProfiles}
+              id={Number(match.params.id)}
+            />
           </Col>
         </Row>
         <ChildrenConfirmationModal

@@ -82,9 +82,39 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   }
 
   async function fetchChildrenProfile(filterParams) {
+    if (!filterParams) {
+      filterParams = {
+        name: "childrenProfileStatus",
+        value: 0,
+      };
+    }
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
-      setChildrenProfiles(dataRes.value.items);
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        if (tempValue[index].status === 0) {
+          let tempId = await getImage(tempValue[index].id);
+          tempValue[index].imageId = tempId;
+        }
+      }
+      console.log(tempValue);
+      setChildrenProfiles(tempValue);
+    }
+  }
+
+  function viewImg(id) {
+    const imageRes = childrenProfileService.getImageUrl(id);
+    return imageRes.toString();
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
     }
   }
 

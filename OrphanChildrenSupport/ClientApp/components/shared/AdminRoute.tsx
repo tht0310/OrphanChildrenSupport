@@ -26,7 +26,6 @@ const AdminRoute: React.FC<IProps> = ({
     currentUser = localStorage.getItem("currentUser");
     user = JSON.parse(currentUser);
   } catch (error) {}
-  console.log(user);
   if (user === null) {
     return <Redirect to="/admin/login" />;
   }

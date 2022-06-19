@@ -162,12 +162,10 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       title: "Guardian Name",
       dataIndex: "guardianName",
       width: 200,
-      render: (text: string) => convertAddressToString(text),
     },
     {
       title: "Guardian Phone",
       dataIndex: "guardianPhoneNumber",
-      render: (text: string) => convertAddressToString(text),
     },
     {
       title: "Status",

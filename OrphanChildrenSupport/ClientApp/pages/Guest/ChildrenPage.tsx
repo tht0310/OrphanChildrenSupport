@@ -51,6 +51,7 @@ const ChildrenPage: React.FC<Props> = (props) => {
 
   const [form] = Form.useForm();
   const [keyword, setKeyWord] = React.useState<String>("");
+
   useEffect(() => {
     document.title = "Children list";
     fetchData();
@@ -82,9 +83,30 @@ const ChildrenPage: React.FC<Props> = (props) => {
 
   async function fetchChildrenProfile(filterParam) {
     const dataRes = await childrenProfileService.getAll(filterParam);
-
     if (!dataRes.hasErrors) {
-      setChildrenProfiles(dataRes.value.items);
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+
+        tempValue[index].imageId = tempId;
+      }
+      setChildrenProfiles(tempValue);
+    }
+  }
+
+  function viewImg(id) {
+    const imageRes = childrenProfileService.getImageUrl(id);
+    return imageRes.toString();
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
     }
   }
 
@@ -233,34 +255,36 @@ const ChildrenPage: React.FC<Props> = (props) => {
                   showSizeChanger: true,
                   pageSizeOptions: ["5", "10", "20", "50"],
                 }}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Link
-                      to={`${childrenDetailUrl}/${item.id}`}
-                      target="_blank"
-                    >
-                      <div className="item">
-                        <Image
-                          preview={false}
-                          className="img-item"
-                          src={childrenProfileService.getImageUrl(item.id)}
-                          fallback={FallBackImage}
-                          alt={"img" + item.id}
-                        />
-                        <div className="info">
-                          <h3>{item.fullName}</h3>
-                          <p className="descroption">
-                            {displayDate(item.dob)} | Gender:
-                            {item.gender ? " Boy" : " Girl"}
-                          </p>
-                          <p className="descroption">
-                            {convertAddressToString(item.publicAddress)}
-                          </p>
+                renderItem={(item) => {
+                  return (
+                    <List.Item>
+                      <Link
+                        to={`${childrenDetailUrl}/${item.id}`}
+                        target="_blank"
+                      >
+                        <div className="item">
+                          <Image
+                            preview={false}
+                            className="img-item"
+                            src={viewImg(item.imageId)}
+                            fallback={FallBackImage}
+                            alt={"img" + item.id}
+                          />
+                          <div className="info">
+                            <h3>{item.fullName}</h3>
+                            <p className="descroption">
+                              {displayDate(item.dob)} | Gender:
+                              {item.gender ? " Boy" : " Girl"}
+                            </p>
+                            <p className="descroption">
+                              {convertAddressToString(item.publicAddress)}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  </List.Item>
-                )}
+                      </Link>
+                    </List.Item>
+                  );
+                }}
               />
             </Col>
           </Row>
