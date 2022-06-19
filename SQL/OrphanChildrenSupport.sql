@@ -41,7 +41,7 @@ GO
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE PROCEDURE [dbo].[DeleteDonationDetails_Delete]  
+CREATE PROCEDURE [dbo].[DonationDetails_Delete]  
 	-- Add the parameters for the stored procedure here
 	@DonationId bigint
 AS
