@@ -80,7 +80,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 
         [HttpGet]
         [Route("getImagesByChildrenProfileId/{id}")]
-        public async Task<IActionResult> GetChildrenProfileImagesByChildrenProfileId(long id)
+        public async Task<IActionResult> GetImagesByChildrenProfileId(long id)
         {
             var apiResponse = await _childrenProfileImageService.GetImagesByChildrenProfileId(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
