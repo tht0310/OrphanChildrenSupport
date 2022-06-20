@@ -18,7 +18,8 @@ namespace OrphanChildrenSupport.DataContracts.Resources
         public long? AccountId { get; set; }
         public long? ChildrenProfileId { get; set; }
         public long? SupportCategoryId { get; set; }
-        public Role Role { get; set; }
+        public string SupportCategoryTitle { get; set; }
+        public Role? Role { get; set; }
         public bool? IsActive { get; set; }
         public ChildrenProfileStatus? ChildrenProfileStatus { get; set; }
         public DonationStatus? DonationStatus { get; set; }

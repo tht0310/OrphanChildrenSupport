@@ -47,7 +47,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    donationDetail.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    donationDetail.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     donationDetail.CreatedTime = DateTime.UtcNow;
                     donationDetail.ModifiedBy = null;
                     await unitOfWork.DonationDetailRepository.Add(donationDetail);
@@ -59,7 +59,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
                     changelogResource.API = $"{loggerHeader} - CreateDonationDetail successfully with Id: {donationDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -90,7 +90,7 @@ namespace OrphanChildrenSupport.Services
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
                     donationDetail = _mapper.Map<DonationDetailResource, DonationDetail>(donationDetailResource, donationDetail);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateDonationDetail: {JsonConvert.SerializeObject(donationDetail)}");
-                    donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     donationDetail.LastModified = DateTime.UtcNow;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
@@ -101,7 +101,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
                     changelogResource.API = $"{loggerHeader} - UpdateDonationDetail successfully with Id: {donationDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -137,7 +137,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         donationDetail.IsDeleted = true;
                         donationDetail.LastModified = DateTime.UtcNow;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
@@ -148,7 +148,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
                     changelogResource.API = $"{loggerHeader} - DeleteDonationDetail successfully with Id: {donationDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -253,7 +253,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
                     changelogResource.API = $"{loggerHeader} - FinishDonationDetail successfully with Id: {apiResponse.Data.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -261,7 +261,7 @@ namespace OrphanChildrenSupport.Services
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = donationDetail.Donation.AccountId;
                     notificationResource.Content = $"{loggerHeader} - FinishDonationDetail successfully with Id: {donationDetail.Id}";
-                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);
@@ -301,7 +301,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
                     changelogResource.API = $"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -371,7 +371,7 @@ namespace OrphanChildrenSupport.Services
                         }
                         _logger.LogDebug($"{loggerHeader} - UploadDonationDetailImage with Id: {donationDetail.Id}");
                         donationDetail.ImagePath = newPath;
-                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         donationDetail.LastModified = DateTime.UtcNow;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                         await unitOfWork.SaveChanges();
@@ -381,7 +381,7 @@ namespace OrphanChildrenSupport.Services
                         var changelogResource = new ChangelogResource();
                         changelogResource.Service = "DonationDetail";
                         changelogResource.API = $"{loggerHeader} - UploadDonationDetailImage successfully with Id: {apiResponse.Data.Id}";
-                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         changelogResource.CreatedTime = DateTime.UtcNow;
                         changelogResource.IsDeleted = false;
                         await _changelogService.CreateChangelog(changelogResource);

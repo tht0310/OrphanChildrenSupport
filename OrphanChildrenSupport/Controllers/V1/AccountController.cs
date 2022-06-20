@@ -53,7 +53,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("revoke-token")]
         public async Task<ActionResult<AuthenticateResponse>> RevokeToken(RevokeTokenRequest model)
         {
@@ -101,7 +101,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(new { message = "Password reset successful, you can now login" });
         }
 
-        //[Authorize(Role.Admin)]
+        [Authorize(Role.Admin, Role.SystemUser)]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
@@ -109,7 +109,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
@@ -117,7 +117,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize(Role.Admin)]
+        [Authorize(Role.Admin)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateRequest createRequest)
         {
@@ -129,7 +129,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] UpdateRequest updateRequest)
         {
@@ -142,7 +142,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize(Role.Admin, Role.SystemUser)]
         [HttpPut]
         [Route("{id}/update-role")]
         public async Task<IActionResult> UpdateRole(long id, Role role)
@@ -151,7 +151,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize(Role.Admin, Role.SystemUser)]
         [HttpPut]
         [Route("deactivate-account/{id}")]
         public async Task<IActionResult> DeactivateAccount(long id)
@@ -160,7 +160,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize(Role.Admin, Role.SystemUser)]
         [HttpPut]
         [Route("activate-account/{id}")]
         public async Task<IActionResult> ActivateAccount(long id)
@@ -169,7 +169,7 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        //[Authorize]
+        [Authorize(Role.Admin, Role.SystemUser)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {

@@ -46,7 +46,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    reportDetail.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    reportDetail.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     reportDetail.CreatedTime = DateTime.UtcNow;
                     reportDetail.ModifiedBy = null;
                     await unitOfWork.ReportDetailRepository.Add(reportDetail);
@@ -58,7 +58,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - CreateReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -89,7 +89,7 @@ namespace OrphanChildrenSupport.Services
                     var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
                     reportDetail = _mapper.Map<ReportDetailResource, ReportDetail>(reportDetailResource, reportDetail);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateReportDetail: {JsonConvert.SerializeObject(reportDetail)}");
-                    reportDetail.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    reportDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     reportDetail.LastModified = DateTime.UtcNow;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
                     await unitOfWork.SaveChanges();
@@ -101,7 +101,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - UpdateReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -137,7 +137,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        reportDetail.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        reportDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         reportDetail.IsDeleted = true;
                         reportDetail.LastModified = DateTime.UtcNow;
                         unitOfWork.ReportDetailRepository.Update(reportDetail);
@@ -148,7 +148,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - DeleteReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -286,7 +286,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - ApproveReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -294,7 +294,7 @@ namespace OrphanChildrenSupport.Services
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = reportDetail.Report.AccountId;
                     notificationResource.Content = $"{loggerHeader} - ApproveReportDetail successfully with Id: {reportDetail.Id}";
-                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);
@@ -334,7 +334,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - RejectReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -342,7 +342,7 @@ namespace OrphanChildrenSupport.Services
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = reportDetail.Report.AccountId;
                     notificationResource.Content = $"{loggerHeader} - ApproveReportDetail successfully with Id: {reportDetail.Id}";
-                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);
@@ -382,7 +382,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportDetail";
                     changelogResource.API = $"{loggerHeader} - CancelReportDetail successfully with Id: {reportDetail.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -390,7 +390,7 @@ namespace OrphanChildrenSupport.Services
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = reportDetail.Report.AccountId;
                     notificationResource.Content = $"{loggerHeader} - CancelReportDetail successfully with Id: {reportDetail.Id}";
-                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
                     await _notificationService.CreateNotification(notificationResource);

@@ -46,7 +46,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     _logger.LogDebug($"{loggerHeader} - Start to CreateChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
                     childrenProfile.Age = GetAge(childrenProfile.DOB);
-                    childrenProfile.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenProfile.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenProfile.CreatedTime = DateTime.UtcNow;
                     childrenProfile.LastModified = null;
                     childrenProfile.ModifiedBy = null;
@@ -61,7 +61,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfile";
                     changelogResource.API = $"{loggerHeader} - CreateChildrenProfile successfully with Id: {childrenProfile.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -96,7 +96,7 @@ namespace OrphanChildrenSupport.Services
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
                     await unitOfWork.DeleteChildrenProfileSupportCategories(childrenProfile.Id);
                     childrenProfile.Age = GetAge(childrenProfile.DOB);
-                    childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenProfile.LastModified = DateTime.UtcNow;
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
@@ -109,7 +109,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfile";
                     changelogResource.API = $"{loggerHeader} - UpdateChildrenProfile successfully with Id: {childrenProfile.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -148,7 +148,7 @@ namespace OrphanChildrenSupport.Services
                     else
                     {
                         childrenProfile.IsDeleted = true;
-                        childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        childrenProfile.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         childrenProfile.LastModified = DateTime.UtcNow;
                         await unitOfWork.DeleteChildrenProfileSupportCategories(childrenProfile.Id);
                         unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
@@ -159,7 +159,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfile";
                     changelogResource.API = $"{loggerHeader} - DeleteChildrenProfile successfully with Id: {childrenProfile.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -224,7 +224,7 @@ namespace OrphanChildrenSupport.Services
                                                                             && (!queryObj.FromAge.HasValue || d.Age >= queryObj.FromAge)
                                                                             && (!queryObj.ToAge.HasValue || d.Age <= queryObj.ToAge)
                                                                             && (!queryObj.ChildrenProfileStatus.HasValue || d.Status == queryObj.ChildrenProfileStatus)
-                                                                            && (!queryObj.SupportCategoryId.HasValue || d.ChildrenProfileSupportCategories.Any(s => s.SupportCategoryId == queryObj.SupportCategoryId))
+                                                                            && (!queryObj.SupportCategoryId.HasValue || d.ChildrenProfileSupportCategories.Any(s => s.SupportCategoryId == queryObj.SupportCategoryId && !s.IsDeleted))
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory),
                                                                         orderBy: null,

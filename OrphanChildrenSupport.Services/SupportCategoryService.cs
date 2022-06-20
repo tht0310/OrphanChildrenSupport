@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -8,8 +9,10 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
+using OrphanChildrenSupport.Tools;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -42,7 +45,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    supportCategory.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    supportCategory.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     supportCategory.CreatedTime = DateTime.UtcNow;
                     await unitOfWork.SupportCategoryRepository.Add(supportCategory);
                     await unitOfWork.SaveChanges();
@@ -53,7 +56,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "SupportCategory";
                     changelogResource.API = $"{loggerHeader} - CreateSupportCategory successfully with Id: {supportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -84,7 +87,7 @@ namespace OrphanChildrenSupport.Services
                     var supportCategory = await unitOfWork.SupportCategoryRepository.FindFirst(predicate: d => d.Id == id);
                     supportCategory = _mapper.Map<SupportCategoryResource, SupportCategory>(supportCategoryResource, supportCategory);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateSupportCategory: {JsonConvert.SerializeObject(supportCategory)}");
-                    supportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    supportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     supportCategory.LastModified = DateTime.UtcNow;
                     unitOfWork.SupportCategoryRepository.Update(supportCategory);
                     await unitOfWork.SaveChanges();
@@ -95,7 +98,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "SupportCategory";
                     changelogResource.API = $"{loggerHeader} - UpdateSupportCategory successfully with Id: {supportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -124,29 +127,36 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var supportCategory = await unitOfWork.SupportCategoryRepository.FindFirst(d => d.Id == id);
-                    if (removeFromDB)
+                    var supportCategory = await unitOfWork.SupportCategoryRepository.FindFirst(predicate: d => d.Id == id,
+                                                            include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)));
+                    if (supportCategory.ChildrenProfileSupportCategories.Count() > 0)
                     {
-                        unitOfWork.SupportCategoryRepository.Remove(supportCategory);
+                        throw new AppException($"Unsuccessful! Support Category {supportCategory.Title} is using.");
                     }
                     else
                     {
-                        supportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
-                        supportCategory.IsDeleted = true;
-                        supportCategory.LastModified = DateTime.UtcNow;
-                        unitOfWork.SupportCategoryRepository.Update(supportCategory);
+                        if (removeFromDB)
+                        {
+                            unitOfWork.SupportCategoryRepository.Remove(supportCategory);
+                        }
+                        else
+                        {
+                            supportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
+                            supportCategory.IsDeleted = true;
+                            supportCategory.LastModified = DateTime.UtcNow;
+                            unitOfWork.SupportCategoryRepository.Update(supportCategory);
+                        }
+                        await unitOfWork.SaveChanges();
+                        _logger.LogDebug($"{loggerHeader} - DeleteSupportCategory successfully with Id: {supportCategory.Id}");
+
+                        var changelogResource = new ChangelogResource();
+                        changelogResource.Service = "SupportCategory";
+                        changelogResource.API = $"{loggerHeader} - DeleteSupportCategory successfully with Id: {supportCategory.Id}";
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                        changelogResource.CreatedTime = DateTime.UtcNow;
+                        changelogResource.IsDeleted = false;
+                        await _changelogService.CreateChangelog(changelogResource);
                     }
-
-                    await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - DeleteSupportCategory successfully with Id: {supportCategory.Id}");
-
-                    var changelogResource = new ChangelogResource();
-                    changelogResource.Service = "SupportCategory";
-                    changelogResource.API = $"{loggerHeader} - DeleteSupportCategory successfully with Id: {supportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
-                    changelogResource.CreatedTime = DateTime.UtcNow;
-                    changelogResource.IsDeleted = false;
-                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -172,7 +182,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var supportCategory = await unitOfWork.SupportCategoryRepository.FindFirst(predicate: d => d.Id == id);
+                    var supportCategory = await unitOfWork.SupportCategoryRepository.FindFirst(d => d.Id == id);
+
                     apiResponse.Data = _mapper.Map<SupportCategory, SupportCategoryResource>(supportCategory);
                     _logger.LogDebug($"{loggerHeader} - GetSupportCategory successfully with Id: {apiResponse.Data.Id}");
                 }
