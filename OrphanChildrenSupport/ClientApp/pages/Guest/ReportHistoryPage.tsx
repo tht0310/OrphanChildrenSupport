@@ -18,8 +18,7 @@ import {
   ShopOutlined,
 } from "@ant-design/icons";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-
-import { IRegisterModel } from "@Models/ILoginModel";
+import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import { Link } from "react-router-dom";
 import ReportInformationModal from "@Components/modals/ReportInformationModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
@@ -31,6 +30,8 @@ interface Props {}
 
 const childrenService = new ChildrenProfileService();
 const reportService = new ReportService();
+import AccountService from "@Services/AccountService";
+import { IDonationModel } from "@Models/IDonationModel";
 
 const ReportHistoryPage: React.FC<Props> = () => {
   const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
@@ -39,18 +40,60 @@ const ReportHistoryPage: React.FC<Props> = () => {
   const [childrenProfiles, setchildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
+  const [form] = Form.useForm();
   const [report, setReport] = React.useState<IReportModel[]>([]);
   const [active, setActive] = useState("1");
-
-  const handleClick = (event) => {
-    setActive(event.target.id);
-  };
+  const [tempDonation, setTempDonation] = React.useState<IDonationModel[]>([]);
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
+  const userService = new AccountService();
+  const childrenProfileService = new ChildrenProfileService();
 
   React.useEffect(() => {
-    getCurrentUser();
-    fetchChildrenProfile();
-    fetchReport();
+    getLocalUser();
   }, []);
+
+  React.useEffect(() => {
+    if (localUser) {
+      fetchUser(localUser.id);
+    }
+  }, [localUser]);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      fetchChildrenProfile();
+    }
+  }, [currentUser?.id]);
+
+  React.useEffect(() => {
+    if (childrenProfiles.length > 0) {
+      fetchReport();
+    }
+  }, [childrenProfiles, report]);
+
+  function getLocalUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setLocalUser(JSON.parse(retrievedObject));
+    }
+  }
+
+  async function fetchUser(id) {
+    const res = await userService.getAccount(id);
+    if (!res.hasErrors) {
+      setCurrentUser(res.value);
+    }
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
+    }
+  }
 
   async function toggleChildrenModal() {
     setChildrenModal(!isChildrenModal);
@@ -83,28 +126,24 @@ const ReportHistoryPage: React.FC<Props> = () => {
     return name;
   }
 
-  function getCurrentUser() {
-    var retrievedObject = localStorage.getItem("currentUser");
-    if (retrievedObject) {
-      setCurrentUser(JSON.parse(retrievedObject));
-    }
-  }
-
-  function findUserbyId(id: number, list) {
-    let index;
-    if (id) {
-      index = list.findIndex((item) => id === item.id);
-    }
-    return index;
-  }
-
   async function fetchReport() {
-    const res = await reportService.getAll();
+    const res = await reportService.getAll({ accountId: currentUser?.id });
     if (!res.hasErrors) {
-      setReport(res.value.items);
+      const tempValue = res.value.items;
+
+      for (let index = 0; index < tempValue.length; index++) {
+        let findIndex = childrenProfiles.findIndex(
+          (item) => tempValue[index].childrenProfileId === item.id
+        );
+        tempValue[index].childrenProfile = childrenProfiles[findIndex];
+        tempValue[index].imageId = await getImage(
+          tempValue[index].childrenProfileId
+        );
+      }
+
+      setReport(tempValue);
     }
   }
-
   return (
     <>
       <div>
@@ -197,9 +236,7 @@ const ReportHistoryPage: React.FC<Props> = () => {
                         preview={false}
                         className="img-item"
                         width={"111px"}
-                        src={
-                          "https://anhvienmimosa.com/wp-content/uploads/2019/04/10-y-tuong-chup-anh-chan-dung-cho-dep-tuyet-1.jpg"
-                        }
+                        src={childrenProfileService.getImageUrl(item.imageId)}
                       />
                       <div style={{ marginLeft: "11px", textAlign: "left" }}>
                         <div
@@ -213,28 +250,14 @@ const ReportHistoryPage: React.FC<Props> = () => {
                             onClick={toggleChildrenModal}
                             style={{ color: "#e57905" }}
                           >
-                            {
-                              childrenProfiles[
-                                findUserbyId(
-                                  item?.childrenProfileId,
-                                  childrenProfiles
-                                )
-                              ]?.fullName
-                            }
+                            {item.childrenProfile.fullName}
                           </a>
                         </div>
                         <div style={{ fontSize: "12px", color: "#b2b2b2" }}>
                           <CalendarOutlined
                             style={{ color: "#b2b2b2", fontSize: "11px" }}
                           />
-                          {displayDate(
-                            childrenProfiles[
-                              findUserbyId(
-                                item?.childrenProfileId,
-                                childrenProfiles
-                              )
-                            ]?.dob
-                          )}
+                          {displayDate(item.childrenProfile.dob)}
                         </div>
                       </div>
                     </Space>

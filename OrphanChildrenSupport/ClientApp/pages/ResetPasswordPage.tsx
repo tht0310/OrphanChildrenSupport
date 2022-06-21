@@ -149,7 +149,7 @@ const ResetPasswordPage: React.FC<Props> = ({
             }}
             htmlType="submit"
           >
-            Register
+            Submit
           </Button>
         </Form.Item>
       </Form>

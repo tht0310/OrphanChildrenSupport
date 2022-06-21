@@ -15,6 +15,8 @@ type Params = {
   gender?: boolean;
   fromAge?: number;
   toAge?: number;
+  supportCategoryId?:number
+  
 };
 
 export type ChildrenParams = Params & IFilterType;

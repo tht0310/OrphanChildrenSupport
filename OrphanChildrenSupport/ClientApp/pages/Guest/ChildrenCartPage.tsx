@@ -44,6 +44,8 @@ import {
 } from "@ant-design/icons";
 import FavoriteService from "@Services/FavoriteService";
 import { IFavoriteModel } from "@Models/IFavoriteModel";
+import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
+import AccountService from "@Services/AccountService";
 
 const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
@@ -53,12 +55,16 @@ const childrenDetailUrl = "children/detail";
 const supportCategoriesService = new SupportCategoryService();
 const favouriteChildrenService = new FavoriteService();
 
+const userService = new AccountService();
+
 const ChildrenCartPage: React.FC<Props> = () => {
   const [page, setPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(10);
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
+  const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [form] = Form.useForm();
   const [filterParams, setFilterParams] = React.useState<FilterParams>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -73,9 +79,34 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchData();
-    fetchFavourite();
+    getLocalUser();
   }, []);
+  React.useEffect(() => {
+    if (localUser) {
+      fetchUser(localUser.id);
+    }
+  }, [localUser]);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      fetchData();
+      fetchFavourite();
+    }
+  }, [currentUser]);
+
+  async function fetchUser(id) {
+    const res = await userService.getAccount(id);
+    if (!res.hasErrors) {
+      setCurrentUser(res.value);
+    }
+  }
+
+  function getLocalUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setLocalUser(JSON.parse(retrievedObject));
+    }
+  }
 
   React.useEffect(() => {
     if (childrenProfiles.length > 0 && favourites.length > 0) {
@@ -92,7 +123,10 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   async function fetchFavourite() {
-    const dataRes = await favouriteChildrenService.getAll();
+    const dataRes = await favouriteChildrenService.getAll({
+      accountId: currentUser.id,
+    });
+    console.log(dataRes);
     if (!dataRes.hasErrors) {
       setFavourites(dataRes.value.items);
     }
@@ -102,17 +136,29 @@ const ChildrenCartPage: React.FC<Props> = () => {
     const tempData = [];
     for (let index = 0; index < favourites.length; index++) {
       const findIndex = childrenProfiles.findIndex(
-        (item) => favourites[0].childrenProfileId === item.id
+        (item) => favourites[index].childrenProfileId === item.id
       );
       const temp: IFavoriteModel = favourites[index];
       temp.childrenProfile = childrenProfiles[findIndex];
+      temp.imageId = await getImage(temp.childrenProfileId);
       tempData.push(temp);
     }
     setFavouriteChildren(tempData);
   }
 
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
+    }
+  }
+
   async function fetchChildrenProfile(filterParams?) {
-    const dataRes = await childrenProfileService.getAll(filterParams);
+    const dataRes = await childrenProfileService.getAll({});
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
     }
@@ -228,7 +274,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
                   <Image
                     preview={false}
                     className="img-item"
-                    src={childrenProfileService.getImageUrl(item.id)}
+                    src={childrenProfileService.getImageUrl(item.imageId)}
                     fallback={FallBackImage}
                     alt={"img" + item.id}
                   />

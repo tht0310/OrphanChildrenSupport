@@ -5,6 +5,18 @@ import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
 import { IDonationModel } from '@Models/IDonationModel';
 
+
+type Params = {
+  fullNameOrEmail?: string;
+  childrenProfileStatus?: number;
+  isNeedToBeAdopted?: string;
+  gender?: boolean;
+  fromAge?: number;
+  toAge?: number;
+  supportCategoryId?:number,
+  accountId?:number
+};
+export type ChildrenParams = Params & IFilterType;
 export default class ReportService extends ServiceBase {
   public async add(model: IReportModel): Promise<Result<IReportModel>> {
     var result = await this.requestJson<IReportModel>({
@@ -15,10 +27,11 @@ export default class ReportService extends ServiceBase {
     return result;
   }
 
-  public async getAll(): Promise<Result<IQueryResult<IReportModel>>> {
+  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IReportModel>>> {
     const result = await this.requestJson<IQueryResult<IReportModel>>({
       url: `/api/deports`,
       method: "GET",
+      data: param
     });
     return result;
   }

@@ -392,7 +392,7 @@ const ReportInformationModal: React.FC<IProps> = ({
                 <Space size={10}>
                   <HomeOutlined style={{ color: "#b2b2b2" }} />
                   <div>
-                    {/* {convertPublicAddressToString(currentUser?.address)} */}
+                    {convertPublicAddressToString(currentUser?.address)}
                   </div>
                 </Space>
               </div>

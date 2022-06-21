@@ -13,6 +13,7 @@ export interface IProps {
   title?: String;
   subTitle?: String;
 }
+
 const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children/detail";
 const ChildrenBlock: React.FC<IProps> = ({
@@ -30,6 +31,7 @@ const ChildrenBlock: React.FC<IProps> = ({
 
     return result;
   }
+
   return (
     <div
       className="home-layout-wrapper3 home-case-wrapper content-wrapper-custom"
@@ -88,7 +90,7 @@ const ChildrenBlock: React.FC<IProps> = ({
             componentProps={{ gutter: 171 }}
           >
             {children.map((d, i) => {
-              if (i > 6) {
+              if (i > 5) {
                 return null;
               }
               return (
@@ -104,8 +106,8 @@ const ChildrenBlock: React.FC<IProps> = ({
                       <Image
                         preview={false}
                         className="img-item"
-                        src={childrenProfileService.getImageUrl(d.id)}
-                        alt={"img" + d.id}
+                        src={childrenProfileService.getImageUrl(d?.imageId)}
+                        alt={"img" + d.imageId}
                       />
                       <div className="info">
                         <h3>{d.fullName}</h3>

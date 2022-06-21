@@ -19,12 +19,13 @@ import {
 } from "@ant-design/icons";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import DonationHistoryModal from "@Components/modals/DonationHistoryModal";
-import { IRegisterModel } from "@Models/ILoginModel";
+import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import { Link } from "react-router-dom";
 import DonationService from "@Services/DonationService";
 import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate } from "@Services/FormatDateTimeService";
+import AccountService from "@Services/AccountService";
 
 interface Props {}
 
@@ -39,8 +40,11 @@ const inlineCol2FormLayout = {
 
 const donationService = new DonationService();
 const childrenService = new ChildrenProfileService();
+const userService = new AccountService();
+const childrenProfileService = new ChildrenProfileService();
 
 const DonationHistoryPage: React.FC<Props> = () => {
+  const [form] = Form.useForm();
   const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] = React.useState<IDonationModel>();
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>();
@@ -48,15 +52,49 @@ const DonationHistoryPage: React.FC<Props> = () => {
   const [childrenProfiles, setchildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
+  const [tempDonation, setTempDonation] = React.useState<IDonationModel[]>([]);
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
 
   const [active, setActive] = useState("1");
 
   React.useEffect(() => {
-    getCurrentUser();
-    fetchDonation();
-    fetchChildrenProfile();
+    getLocalUser();
   }, []);
+  React.useEffect(() => {
+    if (localUser) {
+      fetchUser(localUser.id);
+    }
+  }, [localUser]);
 
+  React.useEffect(() => {
+    if (currentUser) {
+      fetchChildrenProfile();
+    }
+  }, [currentUser?.id]);
+
+  React.useEffect(() => {
+    if (childrenProfiles.length > 0) {
+      fetchDonation();
+    }
+  }, [childrenProfiles, donation]);
+
+  function getLocalUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setLocalUser(JSON.parse(retrievedObject));
+    }
+  }
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
+    }
+  }
   function toggleChildrenModal() {
     setChildrenModal(!isChildrenModal);
     setmodelForEdit(null);
@@ -81,18 +119,10 @@ const DonationHistoryPage: React.FC<Props> = () => {
     return name;
   }
 
-  function findUserbyId(id: number, list) {
-    let index;
-    if (id) {
-      index = list.findIndex((item) => id === item.id);
-    }
-    return index;
-  }
-
-  function getCurrentUser() {
-    var retrievedObject = localStorage.getItem("currentUser");
-    if (retrievedObject) {
-      setCurrentUser(JSON.parse(retrievedObject));
+  async function fetchUser(id) {
+    const res = await userService.getAccount(id);
+    if (!res.hasErrors) {
+      setCurrentUser(res.value);
     }
   }
 
@@ -104,9 +134,21 @@ const DonationHistoryPage: React.FC<Props> = () => {
   }
 
   async function fetchDonation() {
-    const res = await donationService.getAll();
+    const res = await donationService.getAll({ accountId: currentUser?.id });
     if (!res.hasErrors) {
-      setDonation(res.value.items);
+      const tempValue = res.value.items;
+
+      for (let index = 0; index < tempValue.length; index++) {
+        let findIndex = childrenProfiles.findIndex(
+          (item) => tempValue[index].childrenProfileId === item.id
+        );
+        tempValue[index].childrenProfile = childrenProfiles[findIndex];
+        tempValue[index].imageId = await getImage(
+          tempValue[index].childrenProfileId
+        );
+      }
+
+      setDonation(tempValue);
     }
   }
 
@@ -122,10 +164,10 @@ const DonationHistoryPage: React.FC<Props> = () => {
           }}
         >
           <Col span={24}>
-            <Form>
+            <Form form={form}>
               <Row>
                 <Col xs={22} lg={15} style={{ paddingRight: "15px" }}>
-                  <Form.Item name="title">
+                  <Form.Item name="fullName">
                     <Input
                       style={{ fontSize: "14px" }}
                       placeholder={"Enter children name"}
@@ -136,10 +178,13 @@ const DonationHistoryPage: React.FC<Props> = () => {
                   <Form.Item name="donationStatus">
                     <Select defaultValue={"null"}>
                       <Select.Option value="null">All status</Select.Option>
-                      <Select.Option value="0">Send</Select.Option>
-                      <Select.Option value="1">Verification</Select.Option>
-                      <Select.Option value="2">Reporting</Select.Option>
-                      <Select.Option value="3">Finish</Select.Option>
+                      <Select.Option value="0">
+                        Waiting for Approve
+                      </Select.Option>
+                      <Select.Option value="1">Processing</Select.Option>
+                      <Select.Option value="2">Finish</Select.Option>
+                      <Select.Option value="3">Canceled</Select.Option>
+                      <Select.Option value="4">Rejected</Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
@@ -203,9 +248,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
                         preview={false}
                         className="img-item"
                         width={"111px"}
-                        src={
-                          "https://anhvienmimosa.com/wp-content/uploads/2019/04/10-y-tuong-chup-anh-chan-dung-cho-dep-tuyet-1.jpg"
-                        }
+                        src={childrenProfileService.getImageUrl(item?.imageId)}
                       />
                       <div style={{ marginLeft: "11px", textAlign: "left" }}>
                         <div
@@ -219,28 +262,14 @@ const DonationHistoryPage: React.FC<Props> = () => {
                             onClick={toggleChildrenModal}
                             style={{ color: "#e57905" }}
                           >
-                            {
-                              childrenProfiles[
-                                findUserbyId(
-                                  item?.childrenProfileId,
-                                  childrenProfiles
-                                )
-                              ]?.fullName
-                            }
+                            {item.childrenProfile.fullName}
                           </a>
                         </div>
                         <div style={{ fontSize: "12px", color: "#b2b2b2" }}>
                           <CalendarOutlined
                             style={{ color: "#b2b2b2", fontSize: "11px" }}
                           />
-                          {displayDate(
-                            childrenProfiles[
-                              findUserbyId(
-                                item?.childrenProfileId,
-                                childrenProfiles
-                              )
-                            ]?.dob
-                          )}
+                          {displayDate(item.childrenProfile.dob)}
                         </div>
                       </div>
                     </Space>

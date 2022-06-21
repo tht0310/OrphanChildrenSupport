@@ -92,19 +92,11 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;
       for (let index = 0; index < tempValue.length; index++) {
-        if (tempValue[index].status === 0) {
-          let tempId = await getImage(tempValue[index].id);
-          tempValue[index].imageId = tempId;
-        }
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
       }
-      console.log(tempValue);
       setChildrenProfiles(tempValue);
     }
-  }
-
-  function viewImg(id) {
-    const imageRes = childrenProfileService.getImageUrl(id);
-    return imageRes.toString();
   }
 
   async function getImage(id: number) {

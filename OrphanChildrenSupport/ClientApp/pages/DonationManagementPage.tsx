@@ -58,13 +58,13 @@ const DonationManagementPage: React.FC<Props> = () => {
 
   function renderTagColor(status) {
     let result = "";
-    if (status === 0) {
-      result = "blue";
+    if (status === 0 || status === 1) {
+      result = "cyan";
     }
-    if (status === 1) {
+    if (status === 2) {
       result = "green";
     }
-    if (status === 2 || status === 3) {
+    if (status === 4 || status === 3) {
       result = "red";
     }
     return result;
@@ -164,13 +164,16 @@ const DonationManagementPage: React.FC<Props> = () => {
         name = "Waiting For Approval";
         break;
       case 1:
-        name = "Approved";
+        name = "Processing";
         break;
       case 2:
-        name = "Rejected";
+        name = "Finish";
         break;
       case 3:
         name = "Canceled";
+        break;
+      case 3:
+        name = "Rejected";
         break;
     }
     return name;

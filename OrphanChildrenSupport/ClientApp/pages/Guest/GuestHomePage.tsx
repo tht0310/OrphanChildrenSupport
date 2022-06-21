@@ -19,20 +19,75 @@ type Props = RouteComponentProps<{}>;
 const childrenProfileService = new ChildrenProfileService();
 
 const GuestHomePage: React.FC<Props> = () => {
-  React.useEffect(() => {
-    fetchChildrenProfile();
-  }, []);
-
-  const [childrenProfiles, setChildrenProfiles] = React.useState<
+  const [specialChildren, setSpecialChildren] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+  const [foodChildren, setFoodChildren] = React.useState<
     IChildrenProfileModel[]
   >([]);
 
-  async function fetchChildrenProfile() {
-    const dataRes = await childrenProfileService.getAll({ pageSize: 6 });
-    if (!dataRes.hasErrors) {
-      setChildrenProfiles(dataRes.value.items);
+  const [schoolChildren, setSchoolChildren] = React.useState<
+    IChildrenProfileModel[]
+  >([]);
+
+  React.useEffect(() => {
+    fetchSpecialChildren();
+    fetchSchoolChildren();
+    fetchChildrenNeedFood();
+  }, []);
+
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
     }
   }
+
+  async function fetchChildrenNeedFood() {
+    const dataRes = await childrenProfileService.getAll({
+      supportCategoryId: 1,
+    });
+    if (!dataRes.hasErrors) {
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
+      }
+      setFoodChildren(tempValue);
+    }
+  }
+
+  async function fetchSpecialChildren() {
+    const dataRes = await childrenProfileService.getAll({
+      supportCategoryId: 4,
+    });
+    if (!dataRes.hasErrors) {
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
+      }
+      setSpecialChildren(tempValue);
+    }
+  }
+
+  async function fetchSchoolChildren() {
+    const dataRes = await childrenProfileService.getAll({
+      supportCategoryId: 2,
+    });
+    if (!dataRes.hasErrors) {
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
+      }
+      setSchoolChildren(tempValue);
+    }
+  }
+
   return (
     <div>
       <Slider />
@@ -45,16 +100,16 @@ const GuestHomePage: React.FC<Props> = () => {
       <ChildrenBlock
         title={"Children"}
         subTitle={"Have special circumstances"}
-        children={childrenProfiles}
+        children={specialChildren}
       />
       <ChildrenBlock
         title={"Children"}
-        children={childrenProfiles}
+        children={schoolChildren}
         subTitle={"Need support school things"}
       />
       <ChildrenBlock
         title={"Children"}
-        children={childrenProfiles}
+        children={foodChildren}
         subTitle={"Need support food"}
       />
       <Page1 />

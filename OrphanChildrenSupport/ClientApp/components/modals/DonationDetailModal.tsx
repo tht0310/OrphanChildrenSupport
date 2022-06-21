@@ -6,6 +6,7 @@ import {
   DatePicker,
   Form,
   Input,
+  message,
   Modal,
   Row,
   Select,
@@ -17,7 +18,7 @@ import { IReportFieldModel } from "@Models/IReportFieldModel";
 import { IReportDetailModel } from "@Models/IReportModel";
 import moment from "moment";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, LoadingOutlined } from "@ant-design/icons";
 import TextEditor from "@Components/shared/TextEditor";
 import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
 import { displayDateTime } from "@Services/FormatDateTimeService";
@@ -73,6 +74,8 @@ const DonationDetailModal: React.FC<IProps> = ({
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = React.useState<string | null>();
   const [imageFile, setImageFile] = React.useState<UploadFile<any>>();
+  const [isUploadingImage, setIsUploadingImage] =
+    React.useState<boolean>(false);
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
@@ -86,7 +89,9 @@ const DonationDetailModal: React.FC<IProps> = ({
   React.useEffect(() => {
     if (visible) {
       form.resetFields();
+      setImageUrl(null);
       if (data) {
+        getImage(data.id);
         innitialValue();
       }
     }
@@ -96,6 +101,17 @@ const DonationDetailModal: React.FC<IProps> = ({
     fetchSupportCategories();
     fetchUsers();
     fetchChildren();
+  }
+
+  async function getImage(id) {
+    setIsUploadingImage(true);
+    const avatarUrl = await donationService.getImage(id);
+    if (!avatarUrl.hasErrors) {
+      setImageUrl(avatarUrl.value.toString());
+    } else {
+      setImageUrl(null);
+    }
+    setIsUploadingImage(false);
   }
 
   async function fetchSupportCategories() {
@@ -151,10 +167,24 @@ const DonationDetailModal: React.FC<IProps> = ({
   };
 
   async function onFinish(value) {
-    const res = await donationService.update(value);
+    let res = null;
+    if (imageFile?.originFileObj !== undefined) {
+      res = await donationService.updateWithFile(
+        value,
+        imageFile?.originFileObj
+      );
+    } else {
+      if (data.imagePath) {
+        value.imagePath = data.imagePath;
+      }
+      res = await donationService.update(value);
+    }
     if (!res.hasErrors) {
+      message.success("Update donation sucessful");
       onCancel();
       fetchDonation();
+    } else {
+      message.error("An error was occured");
     }
   }
 
@@ -163,6 +193,7 @@ const DonationDetailModal: React.FC<IProps> = ({
   }
 
   async function handleCancel() {
+    console.log(imageFile);
     onCancel();
   }
 
@@ -172,13 +203,12 @@ const DonationDetailModal: React.FC<IProps> = ({
       onCancel={handleCancel}
       destroyOnClose={true}
       title={"Edit donation detail"}
-      footer={null}
+      onOk={onSubmit}
       width={900}
-      style={{ top: 30, height: "300px" }}
+      style={{ top: 40 }}
       bodyStyle={{
         overflowY: "scroll",
-        height: "calc(100vh - 150px)",
-        marginLeft: "19px",
+        paddingBottom: 0,
       }}
     >
       <Form
@@ -214,13 +244,19 @@ const DonationDetailModal: React.FC<IProps> = ({
                 />
               ) : (
                 <div>
-                  <Plus />
-                  <div style={{ marginTop: 8 }}>Upload</div>
+                  {isUploadingImage ? (
+                    <LoadingOutlined />
+                  ) : (
+                    <>
+                      <Plus />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </>
+                  )}
                 </div>
               )}
             </Upload>
           </Col>
-          <Col span={18}>
+          <Col span={18} style={{ paddingLeft: "25px" }}>
             <Form.Item
               style={{ width: "100%" }}
               name="supportCategoryId"
@@ -279,23 +315,21 @@ const DonationDetailModal: React.FC<IProps> = ({
                   Waiting for approval
                 </Select.Option>
                 <Select.Option value={1} key="1">
-                  Supported
+                  Processing
                 </Select.Option>
                 <Select.Option value={2} key="2">
-                  Rejected
+                  Finish
                 </Select.Option>
                 <Select.Option value={3} key="3">
+                  Rejected
+                </Select.Option>
+                <Select.Option value={4} key="4">
                   Canceled
                 </Select.Option>
               </Select>
             </Form.Item>
 
-            <Form.Item
-              label="Note"
-              name="note"
-              {...inlineFormLayout}
-              rules={[{ required: true, message: "Please enter status." }]}
-            >
+            <Form.Item label="Note" name="note" {...inlineFormLayout}>
               <Input />
             </Form.Item>
 
@@ -360,16 +394,6 @@ const DonationDetailModal: React.FC<IProps> = ({
             )}
           </Col>
         </Row>
-
-        <div className="modal-actions">
-          <Button
-            type="text"
-            //icon={<Save color={"#72bf42"} size={22} />}
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
-        </div>
       </Form>
     </Modal>
   );

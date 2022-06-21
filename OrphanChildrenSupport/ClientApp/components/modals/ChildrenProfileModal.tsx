@@ -266,7 +266,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     let tempImage: any[] = [];
     tempImage = deleteStore;
     const index = deleteStore.findIndex((item) => item === Number(value.name));
-    console.log(index);
+
     if (index === -1) {
       tempImage.push(Number(value.name));
       setDeleteStore(tempImage);
@@ -303,16 +303,17 @@ const ChildrenProfileModal: React.FC<IProps> = ({
     <Modal
       visible={visible}
       onCancel={handleCancel}
+      onOk={onSubmit}
       destroyOnClose={true}
       title={data ? "Edit children" : "Add new children"}
-      footer={null}
       width={1000}
       className="antd-modal-custom"
       style={{ top: 20, height: "300px" }}
       bodyStyle={{
         overflowY: "scroll",
-        height: "calc(100vh - 105px)",
+        height: "calc(100vh - 175px)",
         marginLeft: "19px",
+        paddingBottom: 0,
       }}
     >
       <Form
@@ -565,16 +566,6 @@ const ChildrenProfileModal: React.FC<IProps> = ({
             )}
           </Col>
         </Row>
-
-        <div className="modal-actions">
-          <Button
-            type="text"
-            //icon={<Save color={"#72bf42"} size={22} />}
-            onClick={onSubmit}
-          >
-            Submit
-          </Button>
-        </div>
       </Form>
     </Modal>
   );

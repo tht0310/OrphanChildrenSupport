@@ -1,3 +1,4 @@
+import { IChildrenProfileModel } from './IChildrenProfileModel';
 import { IEngineEntity } from "./IEngineEntity";
 
 export interface IDonationDetailModel extends IEngineEntity { 
@@ -14,6 +15,8 @@ export interface IDonationModel extends IEngineEntity {
     donationStatus?: number;
     note?: string;
     donationDetails: IDonationDetailModel[];
+    childrenProfile: IChildrenProfileModel;
+    imageId: number
 }
   
   

@@ -154,7 +154,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       accountId: currentUser?.id,
     };
     const res = await favouriteService.add(temp);
-
+    console.log(res);
     if (!res.hasErrors) {
       message.success("Add to favourites successfuly");
     } else {

@@ -13,7 +13,7 @@ export interface IChildrenProfileModel extends IEngineEntity {
   publicAddress: string;
   circumstance: string;
   imagePath: string;
-  imageId: number;
+  imageId?: number;
   city?: string;
   province?: string;
   houseNumber?: string;

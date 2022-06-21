@@ -4,6 +4,18 @@ import { ServiceBase } from "@Core/ServiceBase";
 import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
 
+type Params = {
+  fullNameOrEmail?: string;
+  childrenProfileStatus?: number;
+  isNeedToBeAdopted?: string;
+  gender?: boolean;
+  fromAge?: number;
+  toAge?: number;
+  supportCategoryId?:number
+  accountId?: number
+};
+
+export type ChildrenParams = Params & IFilterType;
 export default class FavoriteService extends ServiceBase {
   
     public async add(model: IFavoriteModel): Promise<Result<IFavoriteModel>> {
@@ -15,10 +27,11 @@ export default class FavoriteService extends ServiceBase {
     return result;
   }
 
-  public async getAll(): Promise<Result<IQueryResult<IFavoriteModel>>> {
+  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IFavoriteModel>>> {
     const result = await this.requestJson<IQueryResult<IFavoriteModel>>({
       url: `/api/favorites`,
       method: "GET",
+      data: param
     });
     return result;
   }

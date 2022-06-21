@@ -14,7 +14,6 @@ import { IRegisterModel } from "@Models/ILoginModel";
 import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import PersonalProfileService from "@Services/PersonalProfileService";
 import PersonService from "@Services/PersonService";
 import {
   AutoComplete,
@@ -161,8 +160,6 @@ const RegisteredProfilePage: React.FC<Props> = () => {
   }
 
   async function onSearch() {}
-
-  async function fetchchildrenProfile() {}
 
   return (
     <div className="table-container" style={{ minHeight: "480px" }}>

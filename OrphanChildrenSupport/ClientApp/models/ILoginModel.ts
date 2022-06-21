@@ -39,4 +39,5 @@ export interface ILoginModel {
   jwtToken?:string;
   fullName?:string;
   role?:string;
+  email?:string
 }

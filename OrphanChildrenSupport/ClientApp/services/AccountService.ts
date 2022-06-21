@@ -6,6 +6,19 @@ import SessionManager, { IServiceUser } from "@Core/session";
 import { IQueryResult } from "@Models/IQueryResult";
 import { IFilterType } from "@Models/IFilterType";
 
+type Params = {
+  fullNameOrEmail?: string;
+  childrenProfileStatus?: number;
+  isNeedToBeAdopted?: string;
+  gender?: boolean;
+  fromAge?: number;
+  toAge?: number;
+  supportCategoryId?:number,
+  accountId?:number
+  role?:string
+};
+
+export type ChildrenParams = Params & IFilterType;
 export default class AccountService extends ServiceBase {
   public async login(loginModel: ILoginModel): Promise<Result<IRegisterModel>> {
     var result = await this.requestJson<any>({
@@ -17,7 +30,7 @@ export default class AccountService extends ServiceBase {
     if (!result.hasErrors) {
       SessionManager.setServiceUser(result.value);
       const user:IRegisterModel = result.value
-      const testObject:ILoginModel = {id:user.id, jwtToken:user.jwtToken, fullName:user.fullName,role:user.role};
+      const testObject:ILoginModel = {id:user.id, jwtToken:user.jwtToken, fullName:user.fullName,role:user.role, email:user.email};
       localStorage.setItem("currentUser", JSON.stringify(testObject));  
     }
     return result;
@@ -66,10 +79,11 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
-  public async getAll(): Promise<Result<IQueryResult<IRegisterModel>>> {
+  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IRegisterModel>>> {
     const result = await this.requestJson<IQueryResult<IRegisterModel>>({
       url: `/api/accounts`,
       method: "GET",
+      data: param
     });
     return result;
   }

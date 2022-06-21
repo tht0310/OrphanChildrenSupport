@@ -224,7 +224,7 @@ namespace OrphanChildrenSupport.Services
                                                                             && (!queryObj.FromAge.HasValue || d.Age >= queryObj.FromAge)
                                                                             && (!queryObj.ToAge.HasValue || d.Age <= queryObj.ToAge)
                                                                             && (!queryObj.ChildrenProfileStatus.HasValue || d.Status == queryObj.ChildrenProfileStatus)
-                                                                            && (!queryObj.SupportCategoryId.HasValue || d.ChildrenProfileSupportCategories.Any(s => s.SupportCategoryId == queryObj.SupportCategoryId))
+                                                                            && (!queryObj.SupportCategoryId.HasValue || d.ChildrenProfileSupportCategories.Any(s => s.SupportCategoryId == queryObj.SupportCategoryId && !s.IsDeleted))
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory),
                                                                         orderBy: null,

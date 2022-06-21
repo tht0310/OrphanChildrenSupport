@@ -4,6 +4,7 @@ import { ServiceBase } from "@Core/ServiceBase";
 import { IDonationDetailModel } from "@Models/IDonationModel";
 import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
+import { RcFile } from "antd/lib/upload";
 
 
 export default class DonationDetailService extends ServiceBase {
@@ -44,8 +45,8 @@ export default class DonationDetailService extends ServiceBase {
     return result;
   }
 
-  public async getdonation(id: number): Promise<Result<IDonationDetailModel>> {
-    const res = await this.requestJson<IDonationDetailModel>({
+  public async getdonation(id: number): Promise<Result<IQueryResult<IDonationDetailModel>>> {
+    const res = await this.requestJson<IQueryResult<IDonationDetailModel>>({
       url: `/api/donationDetails/${id}`,
       method: "GET",
     });
@@ -59,6 +60,55 @@ export default class DonationDetailService extends ServiceBase {
       data: model,
     });
     return result;
+  }
+
+  public async uploadImage(
+    id: number,
+    file: File
+  ): Promise<Result<IDonationDetailModel>> {
+    const data = new FormData();
+    data.append("files", file);
+    const result = (await this.sendFormData({
+      url:  `/api/donationDetails/${id}/uploadImage`,
+      method: "POST",
+      data,
+    })) as Result<IDonationDetailModel>;
+    console.log(result)
+    return result;
+  }
+
+  public async getImage(id: number): Promise<Result<{}>>  {
+    var result = await this.requestJson({
+      url:  `/api/donationDetails/viewImage/${id}`,
+      method: "GET",
+    });
+    if (!result.hasErrors) {
+      result.value=`/api/donationDetails/viewImage/${id}`
+    }
+    return result;
+  }
+
+  public  getImageUrl(id: number): string  {
+    return `/api/donationDetails/viewImage/${id}`;
+  }
+
+  public async updateWithFile(
+    model: IDonationDetailModel,
+    file?: RcFile |null,
+  ): Promise<Result<{}>> {
+    try {
+      let result = await this.update(model);
+      if (!result.hasErrors) {
+        if (file) {
+          result = await this.uploadImage(model.id, file);
+        }
+        return result;
+      }
+
+      throw new Error();
+    } catch (e) {
+      return { hasErrors: true, value: undefined, errors: [] };
+    }
   }
 
 }

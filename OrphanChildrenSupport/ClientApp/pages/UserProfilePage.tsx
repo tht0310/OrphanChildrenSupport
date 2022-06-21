@@ -189,9 +189,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const value: IFilterType = { [filterBy]: "User" };
-
-    const res = await userService.getAll();
+    const res = await userService.getAll({ role: "Admin" });
     if (!res.hasErrors) {
       setUserProfiles(res.value.items);
     }

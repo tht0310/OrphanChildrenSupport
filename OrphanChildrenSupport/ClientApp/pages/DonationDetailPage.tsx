@@ -61,6 +61,9 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [modelForEdit, setModelForEdit] =
     React.useState<IDonationDetailModel>();
   const [isModal, setIsModal] = React.useState<boolean>(false);
+  const [donationDetail, setDonationDetail] = React.useState<
+    IDonationDetailModel[]
+  >([]);
 
   React.useEffect(() => {
     document.title = "Donation Detail";
@@ -71,7 +74,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   React.useEffect(() => {
     if (donation) {
       fetchData();
-      form.setFieldsValue({ status: donation?.donationStatus.toString() });
+      form.setFieldsValue({ status: donation?.donationStatus });
     }
   }, [donation]);
 
@@ -145,6 +148,20 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     form.submit();
   }
 
+  function renderTagColor(status) {
+    let result = "";
+    if (status === 0 || status === 1) {
+      result = "cyan";
+    }
+    if (status === 2) {
+      result = "green";
+    }
+    if (status === 3 || status === 4) {
+      result = "red";
+    }
+    return result;
+  }
+
   function getStatus(id: number) {
     let name = "";
     switch (id) {
@@ -152,13 +169,16 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         name = "Waiting For Approval";
         break;
       case 1:
-        name = "Approved";
+        name = "Processing";
         break;
       case 2:
-        name = "Rejected";
+        name = "Finish";
         break;
       case 3:
         name = "Canceled";
+        break;
+      case 3:
+        name = "Rejected";
         break;
     }
     return name;
@@ -187,15 +207,12 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "supportCategoryId",
       align: "center",
       width: "15%",
-      render: (text, row, index) => (
-        <Tag color={colors[index]}>
-          {findNamebyId(row.supportCategoryId, supportCategories) >= 0
-            ? supportCategories[
-                findNamebyId(row.supportCategoryId, supportCategories)
-              ].title
-            : ""}
-        </Tag>
-      ),
+      render: (text, row, index) =>
+        findNamebyId(row.supportCategoryId, supportCategories) >= 0
+          ? supportCategories[
+              findNamebyId(row.supportCategoryId, supportCategories)
+            ].title
+          : "",
     },
     {
       title: "Note",
@@ -209,7 +226,11 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "donationDetailStatus",
       key: "donationDetailStatus",
       width: "20%",
-      render: (text, row: IDonationDetailModel, index) => getStatus(text),
+      render: (text, row: IDonationDetailModel, index) => (
+        <Tag color={renderTagColor(row.donationDetailStatus)}>
+          {getStatus(text)}
+        </Tag>
+      ),
     },
     {
       title: "Image",
@@ -217,7 +238,9 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       dataIndex: "address",
       key: "address",
       width: "20%",
-      render: (text, row: IDonationDetailModel, index) => <Image />,
+      render: (text, row: IDonationDetailModel, index) => (
+        <Image width={100} src={donationDetailService.getImageUrl(row.id)} />
+      ),
     },
     {
       title: "",
@@ -267,7 +290,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               <Col span={16}>
                 {" "}
                 <span>
-                  Donation Number{" "}
+                  Donation Number
                   <span style={{ color: "red" }}>
                     #DN{10000 + donation?.id}
                   </span>
@@ -282,13 +305,22 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   layout="inline"
                 >
                   <Form.Item name="status">
-                    <Select style={{ width: "150px" }}>
-                      <Select.Option value="0">
+                    <Select style={{ width: "100%" }}>
+                      <Select.Option value={0} key="0">
                         Waiting for approval
                       </Select.Option>
-                      <Select.Option value="1">Approved</Select.Option>
-                      <Select.Option value="2">Rejected</Select.Option>
-                      <Select.Option value="3">Canceled</Select.Option>
+                      <Select.Option value={1} key="1">
+                        Processing
+                      </Select.Option>
+                      <Select.Option value={2} key="2">
+                        Finish
+                      </Select.Option>
+                      <Select.Option value={3} key="3">
+                        Rejected
+                      </Select.Option>
+                      <Select.Option value={4} key="4">
+                        Canceled
+                      </Select.Option>
                     </Select>
                   </Form.Item>
                   <Button onClick={onSubmit} type="primary" ghost>
@@ -303,15 +335,22 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Steps
           style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
           status={
-            donation?.donationStatus === 2 || donation?.donationStatus === 3
+            donation?.donationStatus === 3 || donation?.donationStatus === 4
               ? "error"
               : "process"
           }
-          current={donation?.donationStatus === 1 ? 2 : 1}
+          current={
+            donation?.donationStatus === 2
+              ? 3
+              : donation?.donationStatus === 0
+              ? 1
+              : 2
+          }
           progressDot={customDot}
         >
           <Steps.Step title="Send" />
           <Steps.Step title="Waiting for approval" />
+          <Steps.Step title="Processing" />
           <Steps.Step title="Finish" />
         </Steps>
 
@@ -442,7 +481,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               cancelText="No"
               onConfirm={() => onUpdateStatus(2)}
             >
-              <Button danger style={{ width: "100%", height: "40px" }}>
+              <Button danger style={{ width: "100%" }}>
                 Reject donation
               </Button>
             </Popconfirm>
@@ -457,7 +496,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               <Button
                 danger
                 type="primary"
-                style={{ paddingLeft: "8px", width: "100%", height: "40px" }}
+                style={{ paddingLeft: "8px", width: "100%" }}
               >
                 Cancel donation
               </Button>

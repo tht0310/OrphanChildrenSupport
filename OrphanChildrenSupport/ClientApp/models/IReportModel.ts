@@ -1,3 +1,4 @@
+import { IChildrenProfileModel } from "./IChildrenProfileModel";
 import { IEngineEntity } from "./IEngineEntity";
 
 export interface IReportDetailModel extends IEngineEntity { 
@@ -15,6 +16,9 @@ export interface IReportModel extends IEngineEntity {
     reportStatus?: number;
     note?: string;
     reportDetails: IReportDetailModel[];
+    childrenProfile: IChildrenProfileModel;
+    imageId: number
 }
+
   
   
