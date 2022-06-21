@@ -37,25 +37,26 @@ namespace OrphanChildrenSupport.Services
         {
             const string loggerHeader = "CreateFavorite";
             var apiResponse = new ApiResponse<FavoriteResource>();
-            Favorite favorite = _mapper.Map<FavoriteResource, Favorite>(favoriteResource);
-            _logger.LogDebug($"{loggerHeader} - Start toCreateFavorite: {JsonConvert.SerializeObject(favorite)}");
+            _logger.LogDebug($"{loggerHeader} - Start to CreateFavorite");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var tempFavorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.ChildrenProfileId == favoriteResource.ChildrenProfileId && d.AccountId == favoriteResource.AccountId);
-                    if (tempFavorite != null)
+                    var favorite = await unitOfWork.FavoriteRepository.FindFirst(d => d.ChildrenProfileId == favoriteResource.ChildrenProfileId && d.AccountId == favoriteResource.AccountId);
+                    if (favorite != null)
                     {
-                        if (tempFavorite.IsDeleted)
+                        if (favorite.IsDeleted)
                         {
-                            tempFavorite.IsDeleted = false;
-                            tempFavorite.LastModified = DateTime.UtcNow;
-                            tempFavorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
-                            unitOfWork.FavoriteRepository.Update(tempFavorite);
+                            favorite.IsDeleted = false;
+                            favorite.LastModified = DateTime.UtcNow;
+                            favorite.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
+                            unitOfWork.FavoriteRepository.Update(favorite);
                         }
-                    } else
+                    }
+                    else
                     {
-                        favorite.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        favorite = _mapper.Map<FavoriteResource, Favorite>(favoriteResource);
+                        favorite.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         favorite.CreatedTime = DateTime.UtcNow;
                         await unitOfWork.FavoriteRepository.Add(favorite);
                     }
@@ -67,7 +68,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Favorite";
                     changelogResource.API = $"{loggerHeader} - CreateFavorite successfully with Id: {favorite.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -99,7 +100,7 @@ namespace OrphanChildrenSupport.Services
                     var favorite = await unitOfWork.FavoriteRepository.FindFirst(predicate: d => d.Id == id);
                     favorite = _mapper.Map<FavoriteResource, Favorite>(favoriteResource, favorite);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateFavorite: {JsonConvert.SerializeObject(favorite)}");
-                    favorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    favorite.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     favorite.LastModified = DateTime.UtcNow;
                     unitOfWork.FavoriteRepository.Update(favorite);
                     await unitOfWork.SaveChanges();
@@ -110,7 +111,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Favorite";
                     changelogResource.API = $"{loggerHeader} - UpdateFavorite successfully with Id: {favorite.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -146,7 +147,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        favorite.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        favorite.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         favorite.IsDeleted = true;
                         favorite.LastModified = DateTime.UtcNow;
                         unitOfWork.FavoriteRepository.Update(favorite);
@@ -157,7 +158,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Favorite";
                     changelogResource.API = $"{loggerHeader} - DeleteFavorite successfully with Id: {favorite.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);

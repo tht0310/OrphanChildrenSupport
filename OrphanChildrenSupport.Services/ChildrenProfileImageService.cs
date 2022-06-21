@@ -45,7 +45,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    childrenProfileImage.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenProfileImage.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenProfileImage.CreatedTime = DateTime.UtcNow;
                     childrenProfileImage.ModifiedBy = null;
                     await unitOfWork.ChildrenProfileImageRepository.Add(childrenProfileImage);
@@ -57,7 +57,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileImage";
                     changelogResource.API = $"{loggerHeader} - CreateChildrenProfileImage successfully with Id: {childrenProfileImage.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -88,7 +88,7 @@ namespace OrphanChildrenSupport.Services
                     var childrenProfileImage = await unitOfWork.ChildrenProfileImageRepository.FindFirst(predicate: d => d.Id == id);
                     childrenProfileImage = _mapper.Map<ChildrenProfileImageResource, ChildrenProfileImage>(childrenProfileImageResource, childrenProfileImage);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateChildrenProfileImage: {JsonConvert.SerializeObject(childrenProfileImage)}");
-                    childrenProfileImage.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenProfileImage.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenProfileImage.LastModified = DateTime.UtcNow;
                     unitOfWork.ChildrenProfileImageRepository.Update(childrenProfileImage);
                     await unitOfWork.SaveChanges();
@@ -99,7 +99,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileImage";
                     changelogResource.API = $"{loggerHeader} - UpdateChildrenProfileImage successfully with Id: {childrenProfileImage.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -135,7 +135,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        childrenProfileImage.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        childrenProfileImage.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         childrenProfileImage.IsDeleted = true;
                         childrenProfileImage.LastModified = DateTime.UtcNow;
                         unitOfWork.ChildrenProfileImageRepository.Update(childrenProfileImage);
@@ -146,7 +146,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileImage";
                     changelogResource.API = $"{loggerHeader} - DeleteChildrenProfileImage successfully with Id: {childrenProfileImage.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -337,7 +337,7 @@ namespace OrphanChildrenSupport.Services
                             var changelogResource = new ChangelogResource();
                             changelogResource.Service = "ChildrenProfileImage";
                             changelogResource.API = $"{loggerHeader} - UploadChildrenProfileImage successfully with Id: {childrenProfileImage.Id}";
-                            changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                            changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                             changelogResource.CreatedTime = DateTime.UtcNow;
                             changelogResource.IsDeleted = false;
                             await _changelogService.CreateChangelog(changelogResource);

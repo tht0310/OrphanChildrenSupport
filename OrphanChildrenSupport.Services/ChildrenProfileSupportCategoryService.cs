@@ -43,7 +43,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    childrenChildrenProfileSupportCategory.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChildrenProfileSupportCategory.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenChildrenProfileSupportCategory.CreatedTime = DateTime.UtcNow;
                     await unitOfWork.ChildrenProfileSupportCategoryRepository.Add(childrenChildrenProfileSupportCategory);
                     await unitOfWork.SaveChanges();
@@ -54,7 +54,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileSupportCategory";
                     changelogResource.API = $"{loggerHeader} - CreateChildrenProfileSupportCategory successfully with Id: {childrenChildrenProfileSupportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -86,7 +86,7 @@ namespace OrphanChildrenSupport.Services
                     var childrenChildrenProfileSupportCategory = await unitOfWork.ChildrenProfileSupportCategoryRepository.FindFirst(predicate: d => d.Id == id);
                     childrenChildrenProfileSupportCategory = _mapper.Map<ChildrenProfileSupportCategoryResource, ChildrenProfileSupportCategory>(childrenChildrenProfileSupportCategoryResource, childrenChildrenProfileSupportCategory);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateChildrenProfileSupportCategory: {JsonConvert.SerializeObject(childrenChildrenProfileSupportCategory)}");
-                    childrenChildrenProfileSupportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChildrenProfileSupportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenChildrenProfileSupportCategory.LastModified = DateTime.UtcNow;
                     unitOfWork.ChildrenProfileSupportCategoryRepository.Update(childrenChildrenProfileSupportCategory);
                     await unitOfWork.SaveChanges();
@@ -97,7 +97,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileSupportCategory";
                     changelogResource.API = $"{loggerHeader} - UpdateChildrenProfileSupportCategory successfully with Id: {childrenChildrenProfileSupportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -134,7 +134,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        childrenChildrenProfileSupportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        childrenChildrenProfileSupportCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         childrenChildrenProfileSupportCategory.IsDeleted = true;
                         childrenChildrenProfileSupportCategory.LastModified = DateTime.UtcNow;
                         unitOfWork.ChildrenProfileSupportCategoryRepository.Update(childrenChildrenProfileSupportCategory);
@@ -145,7 +145,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ChildrenProfileSupportCategory";
                     changelogResource.API = $"{loggerHeader} - DeleteChildrenProfileSupportCategory successfully with Id: {childrenChildrenProfileSupportCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);

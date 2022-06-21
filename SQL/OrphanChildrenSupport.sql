@@ -20,6 +20,8 @@ ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE
 GO
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
 
 CREATE PROCEDURE [dbo].[ReportDetails_Delete]  
 	-- Add the parameters for the stored procedure here
@@ -40,6 +42,8 @@ ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE
 GO
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
 
 CREATE PROCEDURE [dbo].[DonationDetails_Delete]  
 	-- Add the parameters for the stored procedure here
@@ -60,6 +64,8 @@ ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE
 GO
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
 
 CREATE PROCEDURE [dbo].[Favorites_Delete]  
 	-- Add the parameters for the stored procedure here

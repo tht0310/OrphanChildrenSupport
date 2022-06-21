@@ -49,7 +49,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    childrenChangelog.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChangelog.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenChangelog.CreatedTime = DateTime.UtcNow;
                     await unitOfWork.ChangelogRepository.Add(childrenChangelog);
                     await unitOfWork.SaveChanges();
@@ -85,7 +85,7 @@ namespace OrphanChildrenSupport.Services
                     var childrenChangelog = await unitOfWork.ChangelogRepository.FindFirst(predicate: d => d.Id == id);
                     childrenChangelog = _mapper.Map<ChangelogResource, Changelog>(childrenChangelogResource, childrenChangelog);
                     _logger.LogDebug($"{loggerHeader} - Start to update Changelog: {JsonConvert.SerializeObject(childrenChangelog)}");
-                    childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     childrenChangelog.LastModified = DateTime.UtcNow;
                     unitOfWork.ChangelogRepository.Update(childrenChangelog);
                     await unitOfWork.SaveChanges();
@@ -128,7 +128,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        childrenChangelog.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         childrenChangelog.IsDeleted = true;
                         childrenChangelog.LastModified = DateTime.UtcNow;
                         unitOfWork.ChangelogRepository.Update(childrenChangelog);
@@ -230,7 +230,7 @@ namespace OrphanChildrenSupport.Services
             const string loggerHeader = "Get Account Name";
 
             var apiResponse = new ApiResponse<string>();
-            var currentEmail = _httpContextHelper.GetCurrentAccount();
+            var currentEmail = _httpContextHelper.GetCurrentAccountEmail();
             if (!String.IsNullOrEmpty(currentEmail))
             {
                 _logger.LogDebug($"{loggerHeader} - Start to get Changelog with email: {currentEmail}");

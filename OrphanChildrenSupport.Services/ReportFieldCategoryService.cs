@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -8,8 +9,10 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
+using OrphanChildrenSupport.Tools;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -41,7 +44,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    reportFieldCategory.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    reportFieldCategory.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     reportFieldCategory.CreatedTime = DateTime.UtcNow;
                     await unitOfWork.ReportFieldCategoryRepository.Add(reportFieldCategory);
                     await unitOfWork.SaveChanges();
@@ -52,7 +55,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportFieldCategory";
                     changelogResource.API = $"{loggerHeader} - CreateReportFieldCategory successfully with Id: {reportFieldCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -84,7 +87,7 @@ namespace OrphanChildrenSupport.Services
                     var reportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(predicate: d => d.Id == id);
                     reportFieldCategory = _mapper.Map<ReportFieldCategoryResource, ReportFieldCategory>(reportFieldCategoryResource, reportFieldCategory);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateReportFieldCategory: {JsonConvert.SerializeObject(reportFieldCategory)}");
-                    reportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    reportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     reportFieldCategory.LastModified = DateTime.UtcNow;
                     unitOfWork.ReportFieldCategoryRepository.Update(reportFieldCategory);
                     await unitOfWork.SaveChanges();
@@ -95,7 +98,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "ReportFieldCategory";
                     changelogResource.API = $"{loggerHeader} - UpdateReportFieldCategory successfully with Id: {reportFieldCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -124,28 +127,36 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var reportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(d => d.Id == id);
-                    if (removeFromDB)
+                    var reportFieldCategory = await unitOfWork.ReportFieldCategoryRepository.FindFirst(d => d.Id == id,
+                                                                    include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
+                    if (reportFieldCategory.ReportDetails.Count() > 0)
                     {
-                        unitOfWork.ReportFieldCategoryRepository.Remove(reportFieldCategory);
+                        throw new AppException($"Unsuccessful! Report Field Category {reportFieldCategory.Title} is using.");
                     }
                     else
                     {
-                        reportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentAccount();
-                        reportFieldCategory.IsDeleted = true;
-                        reportFieldCategory.LastModified = DateTime.UtcNow;
-                        unitOfWork.ReportFieldCategoryRepository.Update(reportFieldCategory);
-                    }
-                    await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - DeleteReportFieldCategory successfully with Id: {reportFieldCategory.Id}");
+                        if (removeFromDB)
+                        {
+                            unitOfWork.ReportFieldCategoryRepository.Remove(reportFieldCategory);
+                        }
+                        else
+                        {
+                            reportFieldCategory.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
+                            reportFieldCategory.IsDeleted = true;
+                            reportFieldCategory.LastModified = DateTime.UtcNow;
+                            unitOfWork.ReportFieldCategoryRepository.Update(reportFieldCategory);
+                        }
+                        await unitOfWork.SaveChanges();
+                        _logger.LogDebug($"{loggerHeader} - DeleteReportFieldCategory successfully with Id: {reportFieldCategory.Id}");
 
-                    var changelogResource = new ChangelogResource();
-                    changelogResource.Service = "ReportFieldCategory";
-                    changelogResource.API = $"{loggerHeader} - DeleteReportFieldCategory successfully with Id: {reportFieldCategory.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
-                    changelogResource.CreatedTime = DateTime.UtcNow;
-                    changelogResource.IsDeleted = false;
-                    await _changelogService.CreateChangelog(changelogResource);
+                        var changelogResource = new ChangelogResource();
+                        changelogResource.Service = "ReportFieldCategory";
+                        changelogResource.API = $"{loggerHeader} - DeleteReportFieldCategory successfully with Id: {reportFieldCategory.Id}";
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                        changelogResource.CreatedTime = DateTime.UtcNow;
+                        changelogResource.IsDeleted = false;
+                        await _changelogService.CreateChangelog(changelogResource);
+                    }
                 }
                 catch (Exception ex)
                 {

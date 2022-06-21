@@ -15,17 +15,38 @@ namespace OrphanChildrenSupport.Tools
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string GetCurrentAccount()
+        public string GetCurrentAccountEmail()
         {
             try
             {
                 var account = (Account)_httpContextAccessor.HttpContext.Items["Account"];
-                return account.Email;
+                if (account == null)
+                {
+                    return "";
+                } else
+                {
+
+                    return account.Email;
+                }
             }
             catch (Exception)
             {
                 return "";
             }
+        }
+
+        public Account GetCurrentAccount()
+        {
+            var account = new Account();
+            try
+            {
+                account = (Account)_httpContextAccessor.HttpContext.Items["Account"];
+            }
+            catch (Exception)
+            {
+
+            }
+            return account;
         }
     }
 }

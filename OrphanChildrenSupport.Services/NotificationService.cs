@@ -42,7 +42,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    notification.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    notification.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notification.CreatedTime = DateTime.UtcNow;
                     await unitOfWork.NotificationRepository.Add(notification);
                     await unitOfWork.SaveChanges();
@@ -53,7 +53,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Notification";
                     changelogResource.API = $"{loggerHeader} - CreateNotification successfully with Id: {notification.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -84,7 +84,7 @@ namespace OrphanChildrenSupport.Services
                     var notification = await unitOfWork.NotificationRepository.FindFirst(predicate: d => d.Id == id);
                     notification = _mapper.Map<NotificationResource, Notification>(notificationResource, notification);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateNotification: {JsonConvert.SerializeObject(notification)}");
-                    notification.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    notification.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notification.LastModified = DateTime.UtcNow;
                     unitOfWork.NotificationRepository.Update(notification);
                     await unitOfWork.SaveChanges();
@@ -95,7 +95,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Notification";
                     changelogResource.API = $"{loggerHeader} - UpdateNotification successfully with Id: {notification.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -131,7 +131,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        notification.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        notification.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         notification.IsDeleted = true;
                         notification.LastModified = DateTime.UtcNow;
                         unitOfWork.NotificationRepository.Update(notification);
@@ -142,7 +142,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Notification";
                     changelogResource.API = $"{loggerHeader} - DeleteNotification successfully with Id: {notification.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -233,7 +233,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     var notification = await unitOfWork.NotificationRepository.FindFirst(predicate: d => d.Id == id);
                     _logger.LogDebug($"{loggerHeader} - Start to SeenNotification");
-                    notification.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    notification.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notification.SeenTime = DateTime.UtcNow;
                     notification.IsSeen = true;
                     unitOfWork.NotificationRepository.Update(notification);
@@ -245,7 +245,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Notification";
                     changelogResource.API = $"{loggerHeader} - SeenNotification successfully with Id: {notification.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);

@@ -61,7 +61,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        account.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        account.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         account.CreatedTime = DateTime.UtcNow;
                         account.VerifiedTime = DateTime.UtcNow;
                         account.PasswordHash = BC.HashPassword(createRequest.Password);
@@ -75,7 +75,7 @@ namespace OrphanChildrenSupport.Services
                         var changelogResource = new ChangelogResource();
                         changelogResource.Service = "Account";
                         changelogResource.API = $"{loggerHeader} - CreateAccount successfully with Id: {account.Id}";
-                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         changelogResource.CreatedTime = DateTime.UtcNow;
                         changelogResource.IsDeleted = false;
                         await _changelogService.CreateChangelog(changelogResource);
@@ -107,7 +107,7 @@ namespace OrphanChildrenSupport.Services
                     var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
                     account = _mapper.Map<UpdateRequest, Account>(updateRequest, account);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateAccount with Id: {id}");
-                    account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    account.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     if (!string.IsNullOrEmpty(updateRequest.Password))
                     {
                         account.PasswordHash = BC.HashPassword(updateRequest.Password);
@@ -122,7 +122,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - UpdateAccount successfully with Id: {account.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -153,7 +153,7 @@ namespace OrphanChildrenSupport.Services
                     var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateRole with Id: {id}");
                     account.Role = role;
-                    account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    account.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
@@ -164,7 +164,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - UpdateRole successfully with Id: {account.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -195,7 +195,7 @@ namespace OrphanChildrenSupport.Services
                     var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
                     _logger.LogDebug($"{loggerHeader} - Start to DeactivateAccount with Id: {id}");
                     account.IsActive = false;
-                    account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    account.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
@@ -206,7 +206,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - DeactivateAccount successfully with Id: {account.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -237,7 +237,7 @@ namespace OrphanChildrenSupport.Services
                     var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id);
                     _logger.LogDebug($"{loggerHeader} - Start to ActivateAccount with Id: {id}");
                     account.IsActive = true;
-                    account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                    account.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
@@ -248,7 +248,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - ActivateAccount successfully with Id: {account.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -284,7 +284,7 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        account.ModifiedBy = _httpContextHelper.GetCurrentAccount();
+                        account.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         account.IsDeleted = true;
                         account.LastModified = DateTime.UtcNow;
                         unitOfWork.AccountRepository.Update(account);
@@ -295,7 +295,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - DeleteAccount successfully with Id: {account.Id}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -357,6 +357,7 @@ namespace OrphanChildrenSupport.Services
 
                     var query = await unitOfWork.AccountRepository.FindAll(predicate: d => d.IsDeleted == false
                                                                             && ((!queryObj.Gender.HasValue ? (d.Gender == true || d.Gender == false) : d.Gender == queryObj.Gender))
+                                                                            && (!queryObj.Role.HasValue || d.Role == queryObj.Role)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))
                                                                             && ((String.IsNullOrEmpty(queryObj.Email)) || EF.Functions.Like(d.Email, $"%{queryObj.Email}%")))
                                                                             && (!queryObj.IsActive.HasValue || d.IsActive == queryObj.IsActive),
@@ -526,7 +527,7 @@ namespace OrphanChildrenSupport.Services
                         var changelogResource = new ChangelogResource();
                         changelogResource.Service = "Account";
                         changelogResource.API = $"{loggerHeader} - Register successfully with Email: {account.Email}";
-                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         changelogResource.CreatedTime = DateTime.UtcNow;
                         changelogResource.IsDeleted = false;
                         await _changelogService.CreateChangelog(changelogResource);
@@ -570,7 +571,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - VerifyEmail successfully with Email: {account.Email}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
@@ -616,7 +617,7 @@ namespace OrphanChildrenSupport.Services
                         var changelogResource = new ChangelogResource();
                         changelogResource.Service = "Account";
                         changelogResource.API = $"{loggerHeader} - ForgotPassword successfully with Email: {account.Email}";
-                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                         changelogResource.CreatedTime = DateTime.UtcNow;
                         changelogResource.IsDeleted = false;
                         await _changelogService.CreateChangelog(changelogResource);
@@ -693,7 +694,7 @@ namespace OrphanChildrenSupport.Services
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "Account";
                     changelogResource.API = $"{loggerHeader} - ResetPassword successfully with Email: {account.Email}";
-                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccount();
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
