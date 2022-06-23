@@ -11,8 +11,7 @@ namespace OrphanChildrenSupport.DataContracts
         public long AccountId { get; set; }
         [Required]
         public long ChildrenProfileId { get; set; }
-        public long? ApproverId { get; set; }
-        public DonationStatus DonationStatus { get; set; }
+        public DonationStatus Status { get; set; }
         public string Note { get; set; }
         public ICollection<DonationDetailResource> DonationDetails { get; set; }
     }

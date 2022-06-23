@@ -12,5 +12,8 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         public string Content { get; set; }
         public bool IsSeen { get; set; }
         public DateTime SeenTime { get; set; }
+        #region  Foreign
+        public Account Account { get; set; }
+        #endregion
     }
 }

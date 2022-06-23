@@ -232,7 +232,7 @@ namespace OrphanChildrenSupport.Services
                     var query = await unitOfWork.DonationRepository.FindAll(predicate: d => d.IsDeleted == false
                                                                             && (!queryObj.AccountId.HasValue || d.AccountId == queryObj.AccountId)
                                                                             && (!queryObj.ChildrenProfileId.HasValue || d.ChildrenProfileId == queryObj.ChildrenProfileId)
-                                                                            && (!queryObj.DonationStatus.HasValue || d.DonationStatus == queryObj.DonationStatus)
+                                                                            && (!queryObj.DonationStatus.HasValue || d.Status == queryObj.DonationStatus)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)),
                                                                         orderBy: null,
@@ -266,11 +266,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation.DonationStatus = DonationStatus.Processing;
+                    donation.Status = DonationStatus.Processing;
                     var donationDetails = await unitOfWork.DonationDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
                     foreach (var donationDetail in donationDetails)
                     {
-                        donationDetail.DonationDetailStatus = DonationDetailStatus.Processing;
+                        donationDetail.Status = DonationDetailStatus.Processing;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                     }
                     unitOfWork.DonationRepository.Update(donation);
@@ -321,11 +321,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation.DonationStatus = DonationStatus.Rejected;
+                    donation.Status = DonationStatus.Rejected;
                     var donationDetails = await unitOfWork.DonationDetailRepository.FindAll().Where(d => d.DonationId == id && d.IsDeleted == false).ToListAsync();
                     foreach (var donationDetail in donationDetails)
                     {
-                        donationDetail.DonationDetailStatus = DonationDetailStatus.Rejected;
+                        donationDetail.Status = DonationDetailStatus.Rejected;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                     }
                     unitOfWork.DonationRepository.Update(donation);
@@ -377,11 +377,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id);
-                    donation.DonationStatus = DonationStatus.Cancelled;
+                    donation.Status = DonationStatus.Cancelled;
                     var donationDetails = await unitOfWork.DonationDetailRepository.FindAll().Where(d => d.DonationId == id && d.IsDeleted == false).ToListAsync();
                     foreach (var donationDetail in donationDetails)
                     {
-                        donationDetail.DonationDetailStatus = DonationDetailStatus.Cancelled;
+                        donationDetail.Status = DonationDetailStatus.Cancelled;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                     }
                     unitOfWork.DonationRepository.Update(donation);
@@ -435,27 +435,27 @@ namespace OrphanChildrenSupport.Services
                     var donations = await unitOfWork.DonationRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
                     if (donations != null && donations.Count > 0)
                     {
-                        var waitingDonations = donations.Where(d => d.DonationStatus == DonationStatus.WaitingForApproval);
+                        var waitingDonations = donations.Where(d => d.Status == DonationStatus.WaitingForApproval);
                         donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
                         donationStatusStatisticResponse.Percentage = (waitingDonations != null && waitingDonations.Count() > 0) ? Math.Round((double)waitingDonations.Count() / donations.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(donationStatusStatisticResponse);
 
-                        var processingDonations = donations.Where(d => d.DonationStatus == DonationStatus.Processing);
+                        var processingDonations = donations.Where(d => d.Status == DonationStatus.Processing);
                         donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
                         donationStatusStatisticResponse.Percentage = (processingDonations != null && processingDonations.Count() > 0) ? Math.Round((double)processingDonations.Count() / donations.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(donationStatusStatisticResponse);
 
-                        var cancelledDonations = donations.Where(d => d.DonationStatus == DonationStatus.Cancelled);
+                        var cancelledDonations = donations.Where(d => d.Status == DonationStatus.Cancelled);
                         donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
                         donationStatusStatisticResponse.Percentage = (cancelledDonations != null && cancelledDonations.Count() > 0) ? Math.Round((double)cancelledDonations.Count() / donations.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(donationStatusStatisticResponse);
 
-                        var finishedDonations = donations.Where(d => d.DonationStatus == DonationStatus.Finished);
+                        var approvedDonations = donations.Where(d => d.Status == DonationStatus.Approved);
                         donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (finishedDonations != null && finishedDonations.Count() > 0) ? Math.Round((double)finishedDonations.Count() / donations.Count, 2) * 100 : 0;
+                        donationStatusStatisticResponse.Percentage = (approvedDonations != null && approvedDonations.Count() > 0) ? Math.Round((double)approvedDonations.Count() / donations.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(donationStatusStatisticResponse);
 
-                        var rejectedDonations = donations.Where(d => d.DonationStatus == DonationStatus.Rejected);
+                        var rejectedDonations = donations.Where(d => d.Status == DonationStatus.Rejected);
                         donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
                         donationStatusStatisticResponse.Percentage = (rejectedDonations != null && rejectedDonations.Count() > 0) ? Math.Round((double)rejectedDonations.Count() / donations.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(donationStatusStatisticResponse);

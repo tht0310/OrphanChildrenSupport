@@ -96,7 +96,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 
         [HttpGet]
         [Route("viewImage/{id}")]
-        public async Task<IActionResult> ViewChildrenProfileImage(long id)
+        public async Task<IActionResult> ViewDonationDetailImage(long id)
         {
             var apiResponse = await _donationDetailService.ViewDonationDetailImage(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : File(apiResponse.Data, "image/png");

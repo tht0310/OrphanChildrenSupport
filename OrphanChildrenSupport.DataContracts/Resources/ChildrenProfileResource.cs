@@ -15,7 +15,6 @@ namespace OrphanChildrenSupport.DataContracts
         public string DetailAddress { get; set; }
         public string PublicAddress { get; set; }
         public string Circumstance { get; set; }
-        public string ImagePath { get; set; }
         public ChildrenProfileStatus Status { get; set; }
         public ICollection<ChildrenProfileSupportCategoryResource> ChildrenProfileSupportCategories { get; set; }
     }

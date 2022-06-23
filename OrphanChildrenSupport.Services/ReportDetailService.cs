@@ -239,7 +239,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    reportDetail.ReportDetailStatus = ReportDetailStatus.Approved;
+                    reportDetail.Status = ReportDetailStatus.Approved;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
 
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == reportDetail.Report.ChildrenProfileId);
@@ -324,7 +324,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    reportDetail.ReportDetailStatus = ReportDetailStatus.Rejected;
+                    reportDetail.Status = ReportDetailStatus.Rejected;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
                     await unitOfWork.SaveChanges();
                     reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == reportDetail.Id);
@@ -372,7 +372,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    reportDetail.ReportDetailStatus = ReportDetailStatus.Cancelled;
+                    reportDetail.Status = ReportDetailStatus.Cancelled;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
                     await unitOfWork.SaveChanges();
                     reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == reportDetail.Id);

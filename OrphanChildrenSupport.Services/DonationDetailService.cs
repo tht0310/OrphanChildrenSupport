@@ -243,7 +243,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    donationDetail.DonationDetailStatus = DonationDetailStatus.Finished;
+                    donationDetail.Status = DonationDetailStatus.Approved;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
@@ -291,7 +291,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    donationDetail.DonationDetailStatus = DonationDetailStatus.Cancelled;
+                    donationDetail.Status = DonationDetailStatus.Cancelled;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);

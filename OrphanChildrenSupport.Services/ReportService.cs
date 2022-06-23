@@ -230,7 +230,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     var query = await unitOfWork.ReportRepository.FindAll(predicate: d => d.IsDeleted == false
                                                                             && (!queryObj.AccountId.HasValue || d.AccountId == queryObj.AccountId)
-                                                                            && (!queryObj.ReportStatus.HasValue || d.ReportStatus == queryObj.ReportStatus)
+                                                                            && (!queryObj.ReportStatus.HasValue || d.Status == queryObj.ReportStatus)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)),
                                                                         orderBy: null,
@@ -264,11 +264,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
-                    report.ReportStatus = ReportStatus.Approved;
+                    report.Status = ReportStatus.Approved;
                     var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.ReportId == id && d.IsDeleted == false).ToListAsync();
                     foreach (var reportDetail in reportDetails)
                     {
-                        reportDetail.ReportDetailStatus = ReportDetailStatus.Processing;
+                        reportDetail.Status = ReportDetailStatus.Processing;
                         unitOfWork.ReportDetailRepository.Update(reportDetail);
                     }
                     unitOfWork.ReportRepository.Update(report);
@@ -322,11 +322,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
-                    report.ReportStatus = ReportStatus.Rejected;
+                    report.Status = ReportStatus.Rejected;
                     var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
                     foreach (var reportDetail in reportDetails)
                     {
-                        reportDetail.ReportDetailStatus = ReportDetailStatus.Rejected;
+                        reportDetail.Status = ReportDetailStatus.Rejected;
                         unitOfWork.ReportDetailRepository.Update(reportDetail);
                     }
                     unitOfWork.ReportRepository.Update(report);
@@ -377,11 +377,11 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
-                    report.ReportStatus = ReportStatus.Rejected;
+                    report.Status = ReportStatus.Rejected;
                     var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
                     foreach (var reportDetail in reportDetails)
                     {
-                        reportDetail.ReportDetailStatus = ReportDetailStatus.Rejected;
+                        reportDetail.Status = ReportDetailStatus.Rejected;
                         unitOfWork.ReportDetailRepository.Update(reportDetail);
                     }
                     unitOfWork.ReportRepository.Update(report);
@@ -435,22 +435,22 @@ namespace OrphanChildrenSupport.Services
                     var reports = await unitOfWork.ReportRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
                     if (reports != null && reports.Count > 0)
                     {
-                        var approvedReports = reports.Where(d => d.ReportStatus == ReportStatus.Approved);
+                        var approvedReports = reports.Where(d => d.Status == ReportStatus.Approved);
                         reportStatusStatisticResponse.ReportStatus = ReportStatus.Approved;
                         reportStatusStatisticResponse.Percentage = (approvedReports != null && approvedReports.Count() > 0) ? Math.Round((double)approvedReports.Count() / reports.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(reportStatusStatisticResponse);
 
-                        var waitingReports = reports.Where(d => d.ReportStatus == ReportStatus.WaitingForApproval);
+                        var waitingReports = reports.Where(d => d.Status == ReportStatus.WaitingForApproval);
                         reportStatusStatisticResponse.ReportStatus = ReportStatus.WaitingForApproval;
                         reportStatusStatisticResponse.Percentage = (waitingReports != null && waitingReports.Count() > 0) ? Math.Round((double)waitingReports.Count() / reports.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(reportStatusStatisticResponse);
 
-                        var rejectedReports = reports.Where(d => d.ReportStatus == ReportStatus.Rejected);
+                        var rejectedReports = reports.Where(d => d.Status == ReportStatus.Rejected);
                         reportStatusStatisticResponse.ReportStatus = ReportStatus.Rejected;
                         reportStatusStatisticResponse.Percentage = (rejectedReports != null && rejectedReports.Count() > 0) ? Math.Round((double)rejectedReports.Count() / reports.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(reportStatusStatisticResponse);
 
-                        var cancelledReports = reports.Where(d => d.ReportStatus == ReportStatus.Cancelled);
+                        var cancelledReports = reports.Where(d => d.Status == ReportStatus.Cancelled);
                         reportStatusStatisticResponse.ReportStatus = ReportStatus.Cancelled;
                         reportStatusStatisticResponse.Percentage = (cancelledReports != null && cancelledReports.Count() > 0) ? Math.Round((double)cancelledReports.Count() / reports.Count, 2) * 100 : 0;
                         apiResponse.Data.Add(reportStatusStatisticResponse);

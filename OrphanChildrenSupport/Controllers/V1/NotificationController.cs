@@ -70,7 +70,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         }
 
         [HttpPut]
-        [Route("seen/${id}")]
+        [Route("seen/{id}")]
         public async Task<IActionResult> Seen(long id)
         {
             var apiResponse = await _notificationService.SeenNotification(id);

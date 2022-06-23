@@ -27,6 +27,8 @@ namespace OrphanChildrenSupport.Services.Models
         }
         public bool IsActive { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
     }
 
 }

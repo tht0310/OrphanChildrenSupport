@@ -6,13 +6,13 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
 {
     public class Report : EngineEntity
     {
-        [ForeignKey("Account")]
+        [ForeignKey("Account")] 
         [Required]
         public long AccountId { get; set; }
         [ForeignKey("ChildrenProfile")]
         [Required]
         public long ChildrenProfileId { get; set; }
-        public ReportStatus ReportStatus { get; set; }
+        public ReportStatus Status { get; set; }
         public ICollection<ReportDetail> ReportDetails { get; set; }
         public string Note { get; set; }
         #region  Foreign

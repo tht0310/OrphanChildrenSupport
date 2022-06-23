@@ -11,9 +11,8 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("ReportFieldCategory")]
         [Required]
         public long ReportFieldCategoryId { get; set; }
-        public long? ApproverId { get; set; }
         public string ReportInformation { get; set; }
-        public ReportDetailStatus ReportDetailStatus { get; set; }
+        public ReportDetailStatus Status { get; set; }
         public string Note { get; set; }
         #region  Foreign
         public Report Report { get; set; }

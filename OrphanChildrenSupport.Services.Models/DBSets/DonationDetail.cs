@@ -11,7 +11,7 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("SupportCategory")]
         [Required]
         public long SupportCategoryId { get; set; }
-        public DonationDetailStatus DonationDetailStatus { get; set; }
+        public DonationDetailStatus Status { get; set; }
         public string Note { get; set; }
         public string ImagePath { get; set; }
         #region  Foreign

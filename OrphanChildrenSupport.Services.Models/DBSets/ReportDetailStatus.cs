@@ -4,6 +4,8 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
 {
     public enum ReportDetailStatus
     {
+        [Description("WaitingForApproval")]
+        WaitingForApproval,
         [Description("Processing")]
         Processing,
         [Description("Approved")]
