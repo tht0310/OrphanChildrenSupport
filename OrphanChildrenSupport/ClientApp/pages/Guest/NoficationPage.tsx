@@ -1,12 +1,13 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import NotificationModal from "@Components/modals/NotificationModal";
+import NotificationModal from "@Components/modals/User/NotificationModal";
+
 import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import { INotificationModel } from "@Models/INotificationModel";
 import AccountService from "@Services/AccountService";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
+import { displayDateTime } from "@Services/FormatDateTimeService";
 import NotificationService from "@Services/NotificationService";
 import { message, Popconfirm, Space, Tag } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
+import Table from "antd/lib/table";
 import React, { useState } from "react";
 
 interface Props {}

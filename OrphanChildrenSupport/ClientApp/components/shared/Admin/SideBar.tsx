@@ -28,7 +28,7 @@ const Sidebar: FC<Props> = ({ isCollapsed = false }: Props) => {
   {
     return (
       <CSidebar position="fixed" visible={!isCollapsed}>
-        <Link to="/admin">
+        <Link to="/admin/dashboard">
           <CSidebarBrand className="d-none d-md-flex logo-container">
             <img src={Logo} alt="" className="logo" />
           </CSidebarBrand>

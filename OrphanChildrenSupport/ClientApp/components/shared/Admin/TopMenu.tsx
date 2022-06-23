@@ -78,7 +78,7 @@ const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="/">Users</CNavLink>
+            <CNavLink href="/">Home Page</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>

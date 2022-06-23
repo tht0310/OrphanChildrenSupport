@@ -131,7 +131,7 @@ const TopMenu: React.FC<Props> = () => {
               {currentUser ? (
                 <>
                   <Link
-                    to={"/cart"}
+                    to={"/favourite"}
                     id="preview-button"
                     style={{ paddingRight: "30px" }}
                   >

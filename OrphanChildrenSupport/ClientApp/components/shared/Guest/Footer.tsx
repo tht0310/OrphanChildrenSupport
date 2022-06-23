@@ -7,7 +7,6 @@ import {
   WhatsAppOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons";
-import { CContainer } from "@coreui/react";
 import { Button, Col, Input, Row, Space } from "antd";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";

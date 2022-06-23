@@ -1,40 +1,27 @@
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import ChildrenProfileService, {
-  ChildrenParams,
-} from "@Services/ChildrenProfileService";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
 import {
-  Avatar,
-  Button,
-  Card,
   Col,
   List,
   Row,
-  Select,
-  Skeleton,
-  Spin,
-  Tag,
   Image,
   Checkbox,
   Carousel,
   Form,
   Input,
   Slider,
-  Pagination,
 } from "antd";
-import Meta from "antd/lib/card/Meta";
+
 import * as React from "react";
 import { useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import { DatePicker, Space } from "antd";
+import { displayDate } from "@Services/FormatDateTimeService";
+import { DatePicker } from "antd";
 import Children1 from "@Images/children-banner.jpg";
 import FallBackImage from "@Images/children-default.png";
-import Search from "antd/lib/input/Search";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import SupportCategoryService from "@Services/SupportCategoryService";
-import { FilterParams } from "@Models/IFilterType";
-import { DataServices } from "@Services/DataServices";
 import { SearchOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
@@ -258,10 +245,7 @@ const ChildrenPage: React.FC<Props> = (props) => {
                 renderItem={(item) => {
                   return (
                     <List.Item>
-                      <Link
-                        to={`${childrenDetailUrl}/${item.id}`}
-                        target="_blank"
-                      >
+                      <Link to={`${childrenDetailUrl}/${item.id}`}>
                         <div className="item">
                           <Image
                             preview={false}

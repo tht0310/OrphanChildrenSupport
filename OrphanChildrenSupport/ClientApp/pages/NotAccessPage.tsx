@@ -6,11 +6,12 @@ type Props = RouteComponentProps<{}>;
 
 const NotAccessPage: React.FC<Props> = () => {
   return (
-    <div>
-      <br />
-      <p className="text-center" style={{ fontSize: "3rem" }}>
-        You can not access to this page
-      </p>
+    <div className="not-access-page">
+      <div className="lock"></div>
+      <div className="message">
+        <h1>Access to this page is restricted</h1>
+        <p>Please contact admin if you believe this is a mistake.</p>
+      </div>
     </div>
   );
 };

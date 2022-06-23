@@ -1,18 +1,16 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import Page1 from "./Page1";
-import Page2 from "./Page2";
 
-import InformationSection2 from "./Section1";
 import Slider from "@Components/shared/Guest/Slider";
-import Section from "@Components/shared/Guest/Section";
-import Page3 from "./Page3";
-import Section1 from "./Section1";
-import Section2 from "@Components/shared/Guest/Section2";
-import ChildrenBlock from "./ChildrenBlock";
+import Section from "@Components/shared/Section/Section";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import TextEditor from "@Components/shared/TextEditor";
+import Section2 from "@Components/shared/Section/Section2";
+import Section1 from "@Components/shared/Section/Section1";
+import Section5 from "@Components/shared/Section/Section5";
+import Section4 from "@Components/shared/Section/Section4";
+import Section3 from "@Components/shared/Section/Section3";
+import ChildrenBlock from "@Components/shared/Section/ChildrenBlock";
 
 type Props = RouteComponentProps<{}>;
 
@@ -92,8 +90,8 @@ const GuestHomePage: React.FC<Props> = () => {
     <div>
       <Slider />
       <Section />
-      <Page3 />
-      <Page2 />
+      <Section5 />
+      <Section4 />
       <Section1 />
       {/* <Section1 /> */}
       <Section2 />
@@ -112,7 +110,7 @@ const GuestHomePage: React.FC<Props> = () => {
         children={foodChildren}
         subTitle={"Need support food"}
       />
-      <Page1 />
+      <Section3 />
     </div>
   );
 };

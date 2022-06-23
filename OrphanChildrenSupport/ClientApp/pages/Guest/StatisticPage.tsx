@@ -1,123 +1,18 @@
 import { BarChartOutlined } from "@ant-design/icons";
 import DonutPieChart from "@Components/shared/DonutPieChart";
+import ChildrenSection from "@Components/shared/Section/ChildrenSection";
+import WidgetsDropdown from "@Components/shared/WidgetsDropdown";
 import { Card, Col, Divider, Row, Space, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import ChildrenSection from "./StatisticSection/ChildrenSection";
 
 type Props = RouteComponentProps<{}>;
 
 const StatisticPage: React.FC<Props> = () => {
   return (
     <div className="table-container">
-      <Row gutter={16} style={{ margin: "10px 0px 20px 0px" }}>
-        <Col
-          className="gutter-row"
-          xs={12}
-          span={6}
-          lg={6}
-          style={{ marginBottom: "10px" }}
-        >
-          <Card>
-            <h6 style={{ marginBottom: "0", fontSize: "12", color: "#505050" }}>
-              Total children
-            </h6>
-            <div style={{ fontSize: "25", fontWeight: "bold" }}>
-              <Row>
-                <Col span={8}>
-                  <BarChartOutlined
-                    style={{
-                      color: "#2eb85c",
-                      marginTop: "10px",
-                      fontSize: "23",
-                    }}
-                  />
-                </Col>
-                <Col span={16} style={{ textAlign: "right" }}>
-                  <Tag color={"green"} style={{ marginTop: "10px" }}>
-                    8
-                  </Tag>
-                </Col>
-              </Row>
-            </div>
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={12} span={6} lg={6}>
-          <Card>
-            <h6 style={{ marginBottom: "0", fontSize: "12", color: "#505050" }}>
-              Total children
-            </h6>
-            <div style={{ fontSize: "25", fontWeight: "bold" }}>
-              <Row>
-                <Col span={8}>
-                  <BarChartOutlined
-                    style={{
-                      color: "#f9b115",
-                      marginTop: "10px",
-                      fontSize: "23",
-                    }}
-                  />
-                </Col>
-                <Col span={16} style={{ textAlign: "right" }}>
-                  <Tag color={"gold"} style={{ marginTop: "10px" }}>
-                    8
-                  </Tag>
-                </Col>
-              </Row>
-            </div>
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={12} span={6} lg={6}>
-          <Card>
-            <h6 style={{ marginBottom: "0", fontSize: "12", color: "#505050" }}>
-              Total children
-            </h6>
-            <div style={{ fontSize: "25", fontWeight: "bold" }}>
-              <Row>
-                <Col span={8}>
-                  <BarChartOutlined
-                    style={{
-                      color: "#3399ff",
-                      marginTop: "10px",
-                      fontSize: "23",
-                    }}
-                  />
-                </Col>
-                <Col span={16} style={{ textAlign: "right" }}>
-                  <Tag color={"blue"} style={{ marginTop: "10px" }}>
-                    8
-                  </Tag>
-                </Col>
-              </Row>
-            </div>
-          </Card>
-        </Col>
-        <Col className="gutter-row" xs={12} span={6} lg={6}>
-          <Card>
-            <h6 style={{ marginBottom: "0", fontSize: "12", color: "#505050" }}>
-              Total children
-            </h6>
-            <div style={{ fontSize: "25", fontWeight: "bold" }}>
-              <Row>
-                <Col span={8}>
-                  <BarChartOutlined
-                    style={{
-                      color: "#e55353",
-                      marginTop: "10px",
-                      fontSize: "23",
-                    }}
-                  />
-                </Col>
-                <Col span={16} style={{ textAlign: "right" }}>
-                  <Tag color={"red"} style={{ marginTop: "10px" }}>
-                    8
-                  </Tag>
-                </Col>
-              </Row>
-            </div>
-          </Card>
-        </Col>
-      </Row>
+      <WidgetsDropdown />
+
       <Row>
         <Col
           span={16}

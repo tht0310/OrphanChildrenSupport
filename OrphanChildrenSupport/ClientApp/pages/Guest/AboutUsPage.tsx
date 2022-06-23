@@ -1,12 +1,8 @@
 import { Col, Image, Row } from "antd";
 import * as React from "react";
-import { Facebook, Mail, Phone } from "react-feather";
 import { RouteComponentProps } from "react-router";
-import GoogleMapReact from "google-map-react";
 import { Link } from "react-router-dom";
 import Children from "@Images/children5.jpg";
-import CIcon from "@coreui/icons-react";
-import { cilBaby } from "@coreui/icons";
 import Counter from "react-number-counter";
 type Props = RouteComponentProps<{}>;
 

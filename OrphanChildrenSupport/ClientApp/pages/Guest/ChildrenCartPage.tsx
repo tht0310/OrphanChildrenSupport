@@ -1,65 +1,46 @@
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import ChildrenProfileService, {
-  ChildrenParams,
-} from "@Services/ChildrenProfileService";
 import {
-  Avatar,
-  Button,
   Card,
   Col,
   List,
   Row,
-  Select,
-  Skeleton,
-  Spin,
-  Tag,
   Image,
-  Checkbox,
   Carousel,
   Form,
   Input,
-  Slider,
-  Pagination,
   Popconfirm,
   message,
 } from "antd";
-import Meta from "antd/lib/card/Meta";
 import * as React from "react";
 import { useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import { DatePicker, Space } from "antd";
-import Children1 from "@Images/children-banner.jpg";
+import { displayDate } from "@Services/FormatDateTimeService";
+import { DatePicker } from "antd";
 import FallBackImage from "@Images/children-default.png";
-import SupportCategoryService from "@Services/SupportCategoryService";
 import { FilterParams } from "@Models/IFilterType";
 import {
   DeleteOutlined,
-  EllipsisOutlined,
   EyeOutlined,
   HeartOutlined,
   SearchOutlined,
-  SettingOutlined,
 } from "@ant-design/icons";
 import FavoriteService from "@Services/FavoriteService";
 import { IFavoriteModel } from "@Models/IFavoriteModel";
 import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import AccountService from "@Services/AccountService";
+import ChildrenProfileService from "@Services/ChildrenProfileService";
 
 const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
 
 const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children/detail";
-const supportCategoriesService = new SupportCategoryService();
 const favouriteChildrenService = new FavoriteService();
 
 const userService = new AccountService();
 
 const ChildrenCartPage: React.FC<Props> = () => {
-  const [page, setPage] = React.useState<number>(1);
-  const [pageSize, setPageSize] = React.useState<number>(10);
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
@@ -67,7 +48,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [form] = Form.useForm();
   const [filterParams, setFilterParams] = React.useState<FilterParams>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
   const [favouriteChildren, setFavouriteChildren] = React.useState<
     IFavoriteModel[]
   >([]);

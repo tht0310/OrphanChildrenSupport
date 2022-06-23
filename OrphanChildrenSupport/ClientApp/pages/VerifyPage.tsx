@@ -13,7 +13,6 @@ const accService = new AccountService();
 const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
   const [token, setToken] = React.useState<IVerifyModel>();
   const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
-  const [form] = Form.useForm();
 
   React.useEffect(() => {
     setToken({ token: queryString.parse(location.search).token });

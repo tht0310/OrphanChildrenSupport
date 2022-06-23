@@ -16,6 +16,7 @@ type Params = {
   toAge?: number;
   supportCategoryId?:number,
   accountId?:number
+  childrenProfileId?:number
 };
 
 export type ChildrenParams = Params & IFilterType;
@@ -73,6 +74,42 @@ export default class DonationService extends ServiceBase {
     });
     return result;
   }
+  
+  public async getStatistic(): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donations/getStatistic`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async cancelDonation(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donations/cancel/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async approveDonation(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donations/approve/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async rejectDonation(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donations/reject/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+
+
+
 
  
 

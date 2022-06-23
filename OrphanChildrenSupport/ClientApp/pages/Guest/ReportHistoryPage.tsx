@@ -20,7 +20,7 @@ import {
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
 import { Link } from "react-router-dom";
-import ReportInformationModal from "@Components/modals/ReportInformationModel";
+
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import ReportService from "@Services/ReportService";
 import { IReportModel } from "@Models/IReportModel";
@@ -31,7 +31,8 @@ interface Props {}
 const childrenService = new ChildrenProfileService();
 const reportService = new ReportService();
 import AccountService from "@Services/AccountService";
-import { IDonationModel } from "@Models/IDonationModel";
+import ReportInformationModal from "@Components/modals/User/ReportInformationModel";
+import { getStatus } from "@Services/FormatStatusService";
 
 const ReportHistoryPage: React.FC<Props> = () => {
   const [isChildrenModal, setChildrenModal] = React.useState<boolean>(false);
@@ -40,10 +41,7 @@ const ReportHistoryPage: React.FC<Props> = () => {
   const [childrenProfiles, setchildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
-  const [form] = Form.useForm();
   const [report, setReport] = React.useState<IReportModel[]>([]);
-  const [active, setActive] = useState("1");
-  const [tempDonation, setTempDonation] = React.useState<IDonationModel[]>([]);
   const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
   const userService = new AccountService();
   const childrenProfileService = new ChildrenProfileService();
@@ -105,25 +103,6 @@ const ReportHistoryPage: React.FC<Props> = () => {
     if (!dataRes.hasErrors) {
       setchildrenProfiles(dataRes.value.items);
     }
-  }
-
-  function getStatus(id: number) {
-    let name = "";
-    switch (id) {
-      case 0:
-        name = "Waiting For Approval";
-        break;
-      case 1:
-        name = "Approved";
-        break;
-      case 2:
-        name = "Rejected";
-        break;
-      case 3:
-        name = "Canceled";
-        break;
-    }
-    return name;
   }
 
   async function fetchReport() {

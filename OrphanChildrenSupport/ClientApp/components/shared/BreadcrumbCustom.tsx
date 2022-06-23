@@ -5,54 +5,52 @@ import { useLocation } from "react-router-dom";
 
 const routesName = [
   {
-    path: "/admin/usermanagement/supportcategory",
-    breadcrumb: ["Home", "User Management", "Support Category"],
+    path: "/admin/activityManagement/supportCategory",
+    breadcrumb: ["Admin", "Activity Management", "Support Category"],
   },
   {
-    path: "/admin/usermanagement/children",
-    breadcrumb: ["Home", "User Management", "Children"],
+    path: "/admin/profileManagement/children",
+    breadcrumb: ["Admin", "Profile Management", "Children"],
   },
-  { path: "/admin/dashboard", breadcrumb: ["Home", "Dashboard"] },
-  { path: "/admin", breadcrumb: ["Home", "Dashboard"] },
+  { path: "/admin/dashboard", breadcrumb: ["Admin", "Dashboard"] },
+  { path: "/admin", breadcrumb: ["Admin", "Dashboard"] },
+
   {
-    path: "/admin/donation/detail",
-    breadcrumb: ["Home", "Donation", "Detail"],
-  },
-  {
-    path: "/admin/report/detail",
-    breadcrumb: ["Home", "Report", "Detail"],
+    path: "/admin/activityManagement/report",
+    breadcrumb: ["Admin", "Report", "Detail"],
   },
   {
-    path: "/admin/activitymanagement/donation",
-    breadcrumb: ["Home", "Activity Management", "Donation"],
+    path: "/admin/activityManagement/donation",
+    breadcrumb: ["Admin", "Activity Management", "Donation"],
   },
   {
-    path: "/admin/user",
-    breadcrumb: ["Home", "User Management", "User"],
+    path: "/admin/profileManagement/member",
+    breadcrumb: ["Admin", "Profile Management", "Member"],
   },
   {
-    path: `/admin/donation/detail/`,
-    breadcrumb: ["Home", "Donation", "Detail"],
+    path: `/admin/profileManagement/systemUser`,
+    breadcrumb: ["Admin", "Profile Management", "System User"],
+  },
+
+  {
+    path: `/admin/activityManagement/reportField`,
+    breadcrumb: ["Admin", "Activity Management", "Report Field"],
   },
   {
-    path: `/admin/activitymanagement/reportfield`,
-    breadcrumb: ["Home", "User Management", "Report Field"],
-  },
-  {
-    path: `/admin/activitymanagement/report`,
-    breadcrumb: ["Home", "User Management", "Report"],
-  },
-  {
-    path: `/admin/statistic`,
-    breadcrumb: ["Home", "Statistic"],
+    path: `/admin/activitymManagement/report`,
+    breadcrumb: ["Admin", "User Management", "Report"],
   },
   {
     path: `/admin/statistic`,
-    breadcrumb: ["Home", "Statistic"],
+    breadcrumb: ["Admin", "Statistic"],
   },
   {
     path: `/admin/myaccount`,
-    breadcrumb: ["Home", "My Account"],
+    breadcrumb: ["Admin", "My Account"],
+  },
+  {
+    path: `/admin/activityManagement/report`,
+    breadcrumb: ["Admin", "Activity Management", "Report"],
   },
 ];
 const { TextArea } = Input;

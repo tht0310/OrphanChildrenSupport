@@ -147,6 +147,33 @@ export default class AccountService extends ServiceBase {
     return result;
   }
 
+  public async updateRole(id:number, role:number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/accounts/${id}/update-role/?role=${role}`,
+      method: "PUT",
+      data: role,
+    });
+    return result;
+  }
+
+ 
+
+  public async deactiveUser(id:number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/accounts/deactivate-account/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async activeUser(id:number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/accounts/activate-account/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
   
 
 

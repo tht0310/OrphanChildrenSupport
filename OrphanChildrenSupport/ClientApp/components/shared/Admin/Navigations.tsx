@@ -30,24 +30,24 @@ const adminMenu = [
 
   {
     component: CNavTitle,
-    name: "User Management",
+    name: "Profile Management",
   },
   {
     component: CNavItem,
-    name: "Volunteer",
-    to: "/admin/volunteer",
+    name: "System User",
+    to: "/admin/profileManagement/systemUser",
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: "Registered User",
-    to: "/admin/user",
+    name: "Member",
+    to: "/admin/profileManagement/member",
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Children",
-    to: "/admin/usermanagement/children",
+    to: "/admin/profileManagement/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
   },
 
@@ -58,25 +58,25 @@ const adminMenu = [
   {
     component: CNavItem,
     name: "Donation",
-    to: "/admin/activitymanagement/donation",
+    to: "/admin/activityManagement/donation",
     icon: <CIcon icon={cilHeart} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Support Category",
-    to: "/admin/usermanagement/supportcategory",
+    to: "/admin/activityManagement/supportCategory",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Report",
-    to: "/admin/activitymanagement/report",
+    to: "/admin/activityManagement/report",
     icon: <CIcon icon={cilObjectUngroup} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Report Field Category",
-    to: "/admin/activitymanagement/reportfield",
+    to: "/admin/activityManagement/reportField",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
 
@@ -117,7 +117,7 @@ const volunteerMenu = [
   {
     component: CNavItem,
     name: "Children",
-    to: "/admin/usermanagement/children",
+    to: "/admin/profileManagement/children",
     icon: <CIcon icon={cilBaby} customClassName="nav-icon" />,
   },
 
@@ -128,13 +128,13 @@ const volunteerMenu = [
   {
     component: CNavItem,
     name: "Donation",
-    to: "/admin/activitymanagement/donation",
+    to: "/admin/activityManagement/donation",
     icon: <CIcon icon={cilHeart} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Support Category",
-    to: "/admin/usermanagement/supportcategory",
+    to: "/admin/activityManagement/supportCategory",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
   {
@@ -146,7 +146,7 @@ const volunteerMenu = [
   {
     component: CNavItem,
     name: "Report Field Category",
-    to: "/admin/activitymanagement/reportfield",
+    to: "/admin/activityManagement/reportField",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
 

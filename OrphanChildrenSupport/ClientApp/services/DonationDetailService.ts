@@ -111,4 +111,31 @@ export default class DonationDetailService extends ServiceBase {
     }
   }
 
+  public async cancelDonationDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donationDetails/cancel/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+
+
+  public async approveDonationDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donationDetails/finish/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+
+  public async rejectDonationDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/donationDetails/reject/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
 }

@@ -7,6 +7,7 @@ export interface IDonationDetailModel extends IEngineEntity {
     donationDetailStatus?: number;
     note?: string;
     imagePath?: string;
+    accountName?: string;
 }
 export interface IDonationModel extends IEngineEntity { 
     accountId: number;

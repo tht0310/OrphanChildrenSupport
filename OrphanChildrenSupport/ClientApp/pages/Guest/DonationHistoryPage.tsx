@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Space,
-  Tag,
   Image,
   List,
   Card,
@@ -12,31 +11,18 @@ import {
   Form,
   Select,
 } from "antd";
-import {
-  CalendarOutlined,
-  SearchOutlined,
-  ShopOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined, ShopOutlined } from "@ant-design/icons";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import DonationHistoryModal from "@Components/modals/DonationHistoryModal";
 import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
-import { Link } from "react-router-dom";
 import DonationService from "@Services/DonationService";
-import { IDonationDetailModel, IDonationModel } from "@Models/IDonationModel";
+import { IDonationModel } from "@Models/IDonationModel";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import { displayDate } from "@Services/FormatDateTimeService";
 import AccountService from "@Services/AccountService";
+import DonationHistoryModal from "@Components/modals/User/DonationHistoryModal";
+import { getStatus } from "@Services/FormatStatusService";
 
 interface Props {}
-
-const inlineCol2FormLayout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 14,
-  },
-};
 
 const donationService = new DonationService();
 const childrenService = new ChildrenProfileService();
@@ -52,10 +38,8 @@ const DonationHistoryPage: React.FC<Props> = () => {
   const [childrenProfiles, setchildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
-  const [tempDonation, setTempDonation] = React.useState<IDonationModel[]>([]);
-  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
 
-  const [active, setActive] = useState("1");
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
 
   React.useEffect(() => {
     getLocalUser();
@@ -98,25 +82,6 @@ const DonationHistoryPage: React.FC<Props> = () => {
   function toggleChildrenModal() {
     setChildrenModal(!isChildrenModal);
     setmodelForEdit(null);
-  }
-
-  function getStatus(id: number) {
-    let name = "";
-    switch (id) {
-      case 0:
-        name = "Waiting For Approval";
-        break;
-      case 1:
-        name = "Approved";
-        break;
-      case 2:
-        name = "Rejected";
-        break;
-      case 3:
-        name = "Canceled";
-        break;
-    }
-    return name;
   }
 
   async function fetchUser(id) {

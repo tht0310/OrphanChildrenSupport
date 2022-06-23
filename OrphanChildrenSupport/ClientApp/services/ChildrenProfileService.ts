@@ -51,12 +51,6 @@ export default class ChildrenProfileService extends ServiceBase {
     return result;
   }
 
-  
-  
-
-
-
- 
 
   public async update(model: IChildrenProfileModel): Promise<Result<{}>> {
     var result = await this.requestJson({
@@ -203,6 +197,16 @@ export default class ChildrenProfileService extends ServiceBase {
   public  getImageUrl(id: number): string  {
     return `/api/childrenProfileImages/viewImage/${id}`;
   }
+
+  public async getStatistic(year:number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/childrenProfiles/getStatistic/${year}`,
+      method: "PUT",
+      data:year,
+    });
+    return result;
+  }
+
 
 
   

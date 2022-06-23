@@ -60,4 +60,31 @@ export default class ReportDetailService extends ServiceBase {
     return result;
   }
 
+  public async cancelReportDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/reportDetails/cancel/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+
+
+  public async approveReportDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/reportDetails/finish/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+
+  public async rejectReportDetail(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/reportDetails/reject/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
 }

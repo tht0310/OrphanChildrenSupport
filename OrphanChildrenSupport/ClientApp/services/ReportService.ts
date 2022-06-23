@@ -73,4 +73,36 @@ export default class ReportService extends ServiceBase {
     return result;
   }
 
+  public async getReportStatistc(): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/deports/getStatistic`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async cancelReport(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/deports/cancel/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async approveReport(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/deports/approve/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
+  public async rejectReport(id): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/deports/reject/${id}`,
+      method: "PUT",
+    });
+    return result;
+  }
+
 }

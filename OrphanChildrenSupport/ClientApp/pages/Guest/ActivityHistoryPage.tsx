@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Tabs } from "antd";
-
 import { RouteComponentProps } from "react-router-dom";
-
 import DonationHistoryPage from "./DonationHistoryPage";
 import { HistoryOutlined, NotificationOutlined } from "@ant-design/icons";
 import NoficationPage from "./NoficationPage";

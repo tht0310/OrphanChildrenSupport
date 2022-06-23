@@ -19,6 +19,7 @@ export interface IRegisterModel {
   isDeleted?: boolean;
   role?:string;
   jwtToken?:string;
+  isActive?:boolean;
 }
 
 export interface IVerifyModel { 
