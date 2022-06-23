@@ -445,31 +445,10 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               <Col span={16}>
                 <span>
                   Report Number <span style={{ color: "red" }}>#12345</span>
+                  <span style={{ color: "#707070", margin: "0px 10px" }}>
+                    - {getStatus(report?.reportStatus)}
+                  </span>
                 </span>
-              </Col>
-
-              <Col span={8} style={{ paddingBottom: 0 }}>
-                <Form
-                  onFinish={handleOnSubmit}
-                  form={form}
-                  style={{ float: "right" }}
-                  layout="inline"
-                >
-                  <Form.Item name="status">
-                    <Select style={{ width: "150px" }}>
-                      <Select.Option value="0">
-                        Waiting for approval
-                      </Select.Option>
-                      <Select.Option value="1">Processing</Select.Option>
-                      <Select.Option value="2">Finish</Select.Option>
-                      <Select.Option value="3">Rejected</Select.Option>
-                      <Select.Option value="4">Canceled</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Button onClick={onSubmit} type="primary" ghost>
-                    Save
-                  </Button>
-                </Form>
               </Col>
             </Row>
           </h6>
