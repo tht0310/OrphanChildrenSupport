@@ -299,7 +299,6 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     }
                     disabled={selected.length > 0 ? false : true}
                   >
-                    {" "}
                     <GiftOutlined style={{ fontSize: "12px" }} />
                     Donate now
                   </Button>
