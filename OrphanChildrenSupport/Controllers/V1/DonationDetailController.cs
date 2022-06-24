@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
 using OrphanChildrenSupport.Services.Contracts;
@@ -73,7 +74,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("finish/{id}")]
         public async Task<IActionResult> Finish(long id)
         {
-            var apiResponse = await _donationDetailService.Finish(id);
+            var apiResponse = await _donationDetailService.FinishDonationDetail(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
@@ -81,8 +82,24 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("cancel/{id}")]
         public async Task<IActionResult> Cancel(long id)
         {
-            var apiResponse = await _donationDetailService.Cancel(id);
+            var apiResponse = await _donationDetailService.CancelDonationDetail(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpPost]
+        [Route("{id}/uploadImage")]
+        public async Task<IActionResult> UploadDonationDetailImage(long id, IFormFile files)
+        {
+            var apiResponse = await _donationDetailService.UploadDonationDetailImage(id, files);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpGet]
+        [Route("viewImage/{id}")]
+        public async Task<IActionResult> ViewDonationDetailImage(long id)
+        {
+            var apiResponse = await _donationDetailService.ViewDonationDetailImage(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : File(apiResponse.Data, "image/png");
         }
     }
 }

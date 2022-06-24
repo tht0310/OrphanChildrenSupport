@@ -13,7 +13,6 @@ const accService = new AccountService();
 const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
   const [token, setToken] = React.useState<IVerifyModel>();
   const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
-  const [form] = Form.useForm();
 
   React.useEffect(() => {
     setToken({ token: queryString.parse(location.search).token });
@@ -28,6 +27,7 @@ const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
   async function verify(token: any) {
     if (token) {
       const res = await accService.verify(token);
+
       if (!res.hasErrors) {
         setIsSuccess(true);
       }
@@ -36,9 +36,7 @@ const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
 
   return (
     <div className="container-fuild verify-message">
-      {isSuccess && (
-        <div>Your account is verified succesfully. Please login</div>
-      )}
+      {isSuccess && <div>Verification succesfully! You can login now</div>}
     </div>
   );
 };

@@ -87,6 +87,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And (!Exists('wwwroot\dist') OR Exists('wwwroot\dist\production_build')) ">
     
 	<!-- Ensure Node.js is installed -->

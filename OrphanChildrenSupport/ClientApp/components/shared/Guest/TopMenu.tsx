@@ -1,30 +1,14 @@
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Menu,
-  Button,
-  Popover,
-  Slider,
-  Input,
-  Avatar,
-  Dropdown,
-  Form,
-  message,
-} from "antd";
+import { Row, Col, Menu, Button, Input, Avatar, Form } from "antd";
 import { Dropdown as AntdDropdown } from "antd";
-import { enquireScreen } from "enquire-js";
 import Logo from "@Images/logo.png";
-import { Link, Redirect, RouteComponentProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   DownOutlined,
   DropboxOutlined,
   HeartFilled,
-  HeartTwoTone,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import Search from "antd/lib/input/Search";
 import { IRegisterModel } from "@Models/ILoginModel";
 
 interface Props {}
@@ -39,17 +23,17 @@ const TopMenu: React.FC<Props> = () => {
     <Menu>
       <Menu.Item>
         <Link to="/children" className="nav-links">
-          Our children
+          All
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/childrenSupported" className="nav-links">
-          Children supported
+        <Link to="/children/supported" className="nav-links">
+          Supported
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/childrenWaitingForSupport" className="nav-links">
-          Children waiting for support
+        <Link to="/children/waitingForSupport" className="nav-links">
+          Waiting For Support
         </Link>
       </Menu.Item>
     </Menu>
@@ -58,8 +42,8 @@ const TopMenu: React.FC<Props> = () => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to="/myaccount" className="nav-links">
-          My account
+        <Link to="/myAccount" className="nav-links">
+          My Account
         </Link>
       </Menu.Item>
       <Menu.Item>
@@ -73,15 +57,14 @@ const TopMenu: React.FC<Props> = () => {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link
-          to={"/"}
+        <a
           onClick={() => (
             localStorage.setItem("currentUser", null), window.location.reload()
           )}
           className="nav-links"
         >
           Logout
-        </Link>
+        </a>
       </Menu.Item>
     </Menu>
   );
@@ -97,6 +80,12 @@ const TopMenu: React.FC<Props> = () => {
     }
   }
 
+  function findName(value) {
+    if (value) {
+      const name = value.split(" ");
+      return name[name.length - 1][0];
+    }
+  }
   const onFinish = (values: any) => {
     setSearchText(values.searchText);
     document.getElementById("button-submit").click();
@@ -140,7 +129,7 @@ const TopMenu: React.FC<Props> = () => {
               {currentUser ? (
                 <>
                   <Link
-                    to={"/cart"}
+                    to={"/favourite"}
                     id="preview-button"
                     style={{ paddingRight: "30px" }}
                   >
@@ -148,7 +137,9 @@ const TopMenu: React.FC<Props> = () => {
                   </Link>
                   <Link to={"/myaccount"} id="preview-button">
                     <AntdDropdown overlay={menu}>
-                      <Avatar style={{ backgroundColor: "#f56a00" }}>N</Avatar>
+                      <Avatar style={{ backgroundColor: "#f56a00" }}>
+                        {findName(currentUser?.fullName)}
+                      </Avatar>
                     </AntdDropdown>
                   </Link>
                 </>
@@ -167,9 +158,6 @@ const TopMenu: React.FC<Props> = () => {
                 <Link className="ant-menu-item-custom" to={"/"}>
                   Home
                 </Link>
-                <Link className="ant-menu-item-custom" to={"/aboutUs"}>
-                  About us
-                </Link>
                 <div className="ant-menu-item-custom">
                   <AntdDropdown overlay={menu2}>
                     <a onClick={(e) => e.preventDefault()}>
@@ -178,8 +166,11 @@ const TopMenu: React.FC<Props> = () => {
                   </AntdDropdown>
                   {dropdown && <DropboxOutlined />}
                 </div>
+                <Link className="ant-menu-item-custom" to={"/aboutUs"}>
+                  About Us
+                </Link>
                 <Link className="ant-menu-item-custom" to={"/contactUs"}>
-                  Contact us
+                  Contact Us
                 </Link>
               </Menu>
             </div>

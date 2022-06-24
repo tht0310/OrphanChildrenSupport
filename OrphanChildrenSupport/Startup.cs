@@ -10,7 +10,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using OrphanChildrenSupport.Common.Attributes;
+using OrphanChildrenSupport.Common.Settings;
+using OrphanChildrenSupport.Extensions;
+using OrphanChildrenSupport.Infrastructure;
+using OrphanChildrenSupport.IoC.Configuration.DI;
+using OrphanChildrenSupport.Middleware;
+using OrphanChildrenSupport.Services;
+using OrphanChildrenSupport.Swagger;
 using Serilog;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -20,14 +29,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using OrphanChildrenSupport.Common.Attributes;
-using OrphanChildrenSupport.Common.Settings;
-using OrphanChildrenSupport.Extensions;
-using OrphanChildrenSupport.Infrastructure;
-using OrphanChildrenSupport.Services;
-using OrphanChildrenSupport.Swagger;
-using OrphanChildrenSupport.IoC.Configuration.DI;
-using OrphanChildrenSupport.Middleware;
 
 namespace OrphanChildrenSupport
 {
@@ -46,6 +47,7 @@ namespace OrphanChildrenSupport
         private AppSettingsSwagger _appSettings;
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
             Configuration.GetSection("AppSettings").Bind(AppSettings.Default);
@@ -71,10 +73,6 @@ namespace OrphanChildrenSupport
 #pragma warning disable CS0618 // Type or member is obsolete
                     services.AddSpaPrerenderer();
 #pragma warning restore CS0618 // Type or member is obsolete
-
-                    // Add your own services here.
-                    services.AddScoped<IAccountService, AccountService>();
-                    services.AddScoped<IEmailService, EmailService>();
 
                     services.AddMvcCore().AddApiExplorer();
                     services.AddCors();
@@ -123,6 +121,31 @@ namespace OrphanChildrenSupport
                         services.AddSwaggerGen(options =>
                         {
                             options.OperationFilter<SwaggerDefaultValues>();
+                            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                            {
+                                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                                Name = "Authorization",
+                                Type = SecuritySchemeType.ApiKey,
+                                In = ParameterLocation.Header,
+                                Scheme = "Bearer"
+                            });
+                            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                            {
+                                {
+                                    new OpenApiSecurityScheme
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.SecurityScheme,
+                                            Id = "Bearer"
+                                        },
+                                        Scheme = "oauth2",
+                                        Name = "Bearer",
+                                        In = ParameterLocation.Header
+                                    },
+                                    new List<string>()
+                                }
+                            });
 
                             //1-Get all the assemblies of the project to add the related XML Comments
                             Assembly currentAssembly = Assembly.GetExecutingAssembly();

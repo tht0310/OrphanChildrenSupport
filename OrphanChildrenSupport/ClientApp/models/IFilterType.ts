@@ -15,19 +15,7 @@ export type ColType = {
   id?: number;
   name: string;
   label: string;
-  type:
-    | "text"
-    | "input"
-    | "textarea"
-    | "editor"
-    | "checkbox"
-    | "radio"
-    | "select"
-    | "lookup"
-    | "dateTime"
-    | "number"
-    | "yesno"
-    | "currency";
+ 
   placeholder?: string;
   required?: boolean;
   minLength?: number;

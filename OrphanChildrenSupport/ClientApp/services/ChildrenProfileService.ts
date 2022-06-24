@@ -1,5 +1,6 @@
-import { IPersonalProfileModel } from '@Models/IPersonalProfileModel';
-import { IFilterType } from './../models/IFilterType';
+import { IChildrenImage } from "./../models/IChildrenProfileModel";
+import { IPersonalProfileModel } from "@Models/IPersonalProfileModel";
+import { IFilterType } from "./../models/IFilterType";
 import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
@@ -11,19 +12,23 @@ type Params = {
   fullNameOrEmail?: string;
   childrenProfileStatus?: number;
   isNeedToBeAdopted?: string;
-  gender?: boolean;
+  gender?: boolean | string | number;
   fromAge?: number;
   toAge?: number;
+  supportCategoryId?: number;
+  fullName?: string;
 };
 
 export type ChildrenParams = Params & IFilterType;
 
 export default class ChildrenProfileService extends ServiceBase {
-  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IChildrenProfileModel>>> {
+  public async getAll(
+    param?: ChildrenParams
+  ): Promise<Result<IQueryResult<IChildrenProfileModel>>> {
     const result = await this.requestJson<IQueryResult<IChildrenProfileModel>>({
       url: `/api/childrenProfiles`,
       method: "GET",
-      data: param
+      data: param,
     });
     return result;
   }
@@ -37,47 +42,16 @@ export default class ChildrenProfileService extends ServiceBase {
   }
 
   public async search(
-    value:IFilterType
+    value: IFilterType
   ): Promise<Result<IQueryResult<IChildrenProfileModel>>> {
     const result = await this.requestJson<IQueryResult<IChildrenProfileModel>>({
       url: `/api/childrenProfiles`,
       method: "GET",
-      data:value
+      data: value,
     });
 
     return result;
   }
-
-  
-  public async uploadImage(
-    id: number,
-    file: File
-  ): Promise<Result<IChildrenProfileModel>> {
-    const data = new FormData();
-    data.append("file", file);
-    const result = (await this.sendFormData({
-      url:  `/api/childrenProfiles/${id}/uploadImage`,
-      method: "POST",
-      data,
-    })) as Result<IChildrenProfileModel>;
-    return result;
-  }
-
-  public async getImage(id: number): Promise<Result<{}>>  {
-    var result = await this.requestJson({
-      url:  `/api/childrenProfiles/${id}/getImage`,
-      method: "GET",
-    });
-    if (!result.hasErrors) {
-      result.value=`/api/childrenProfiles/${id}/getImage`
-    }
-    return result;
-  }
-
-  public  getImageUrl(id: number): string  {
-    return `/api/childrenProfiles/${id}/getImage`;
-  }
-
 
   public async update(model: IChildrenProfileModel): Promise<Result<{}>> {
     var result = await this.requestJson({
@@ -87,10 +61,10 @@ export default class ChildrenProfileService extends ServiceBase {
     });
     return result;
   }
-  
+
   public async updateWithFile(
     model: IChildrenProfileModel,
-    file?: RcFile |null,
+    file?: RcFile | null
   ): Promise<Result<{}>> {
     try {
       let result = await this.update(model);
@@ -107,9 +81,23 @@ export default class ChildrenProfileService extends ServiceBase {
     }
   }
 
+  public async uploadImage(
+    id: number,
+    file: File
+  ): Promise<Result<IChildrenProfileModel>> {
+    const data = new FormData();
+    data.append("file", file);
+    const result = (await this.sendFormData({
+      url: `/api/childrenProfiles/${id}/uploadImage`,
+      method: "POST",
+      data,
+    })) as Result<IChildrenProfileModel>;
+    return result;
+  }
+
   public async addWithFile(
     model: IChildrenProfileModel,
-    file: RcFile | null,
+    file: RcFile | null
   ): Promise<Result<IChildrenProfileModel>> {
     const result = await this.add(model);
 
@@ -121,9 +109,37 @@ export default class ChildrenProfileService extends ServiceBase {
     }
     return result;
   }
+
+  public async addChildrenProfileImages(
+    childrenId: number,
+    file: File[]
+  ): Promise<Result<IChildrenProfileModel>> {
+    const data = new FormData();
+
+    for (var i = 0; i < file.length; i++) {
+      data.append("files", file[i]);
+    }
+
+    const result = (await this.sendFormData({
+      url: `/api/childrenProfileImages/uploadImagesByChildrenProfileId/${childrenId}`,
+      method: "POST",
+      data,
+    })) as Result<IChildrenProfileModel>;
+
+    return result;
+  }
+
   public async delete(id: number): Promise<Result<{}>> {
     var result = await this.requestJson({
       url: `/api/childrenProfiles/${id}`,
+      method: "DELETE",
+    });
+    return result;
+  }
+
+  public async deleteImage(id: number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/childrenProfileImages/${id}`,
       method: "DELETE",
     });
     return result;
@@ -136,6 +152,44 @@ export default class ChildrenProfileService extends ServiceBase {
       url: "/api/childrenProfiles",
       method: "POST",
       data: model,
+    });
+    return result;
+  }
+
+  public async getChildrenImage(
+    id: number
+  ): Promise<Result<IQueryResult<IChildrenImage>>> {
+    const res = await this.requestJson<IQueryResult<IChildrenImage>>({
+      url: `/api/childrenProfileImages/getImagesByChildrenProfileId/${id}`,
+      method: "GET",
+    });
+    return res;
+  }
+
+  public getChildrenImageUrl(id: number): string {
+    return `/api/childrenProfileImages/viewImage/${id}`;
+  }
+
+  public async getImage(id: number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/childrenProfileImages/viewImage/${id}`,
+      method: "GET",
+    });
+    if (!result.hasErrors) {
+      result.value = `/api/childrenProfileImages/viewImage/${id}`;
+    }
+    return result;
+  }
+
+  public getImageUrl(id: number): string {
+    return `/api/childrenProfileImages/viewImage/${id}`;
+  }
+
+  public async getStatistics(year: number): Promise<Result<{}>> {
+    var result = await this.requestJson({
+      url: `/api/childrenProfiles/getStatistics/${year}`,
+      method: "PUT",
+      data: year,
     });
     return result;
   }

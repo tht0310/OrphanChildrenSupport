@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using OrphanChildrenSupport.DataContracts;
+using OrphanChildrenSupport.Infrastructure.Data;
+using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
+using OrphanChildrenSupport.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using OrphanChildrenSupport.DataContracts;
-using OrphanChildrenSupport.Infrastructure.Data;
-using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
-using OrphanChildrenSupport.Services.Models;
 
 namespace OrphanChildrenSupport.Infrastructure.Repositories
 {
@@ -139,6 +139,12 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         public void UpdateRange(List<T> entities)
         {
             _context.Set<T>().UpdateRange(entities);
+        }
+
+        public async Task<List<T>> FindAllToList(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool disableTracking = true)
+        {
+            var query = FindAll(include, orderBy, disableTracking);
+            return await query.Where(predicate).ToListAsync();
         }
     }
 }

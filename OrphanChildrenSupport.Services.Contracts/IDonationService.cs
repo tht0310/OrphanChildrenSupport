@@ -1,9 +1,7 @@
 ﻿using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using System;
+using OrphanChildrenSupport.DataContracts.Responses;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
@@ -15,7 +13,9 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<DonationResource>> DeleteDonation(long id, bool removeFromDB = false);
         Task<ApiResponse<DonationResource>> GetDonation(long id);
         Task<ApiResponse<QueryResultResource<DonationResource>>> GetDonations(QueryResource queryObj);
-        Task<ApiResponse<DonationResource>> Approve(long id);
-        Task<ApiResponse<DonationResource>> Reject(long id);
+        Task<ApiResponse<DonationResource>> ApproveDonation(long id);
+        Task<ApiResponse<DonationResource>> RejectDonation(long id);
+        Task<ApiResponse<DonationResource>> CancelDonation(long id);
+        Task<ApiResponse<List<StatusStatistics>>> GetDonationStatusStatistics();
     }
 }

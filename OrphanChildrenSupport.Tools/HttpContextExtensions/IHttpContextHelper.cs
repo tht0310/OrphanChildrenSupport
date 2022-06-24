@@ -1,7 +1,12 @@
-﻿namespace OrphanChildrenSupport.Tools.HttpContextExtensions
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using OrphanChildrenSupport.Services.Models;
+
+namespace OrphanChildrenSupport.Tools.HttpContextExtensions
 {
     public interface IHttpContextHelper
     {
-        string GetCurrentUser();
+        string GetCurrentAccountEmail();
+
+        Account GetCurrentAccount();
     }
 }

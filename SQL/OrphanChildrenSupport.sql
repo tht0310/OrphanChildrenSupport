@@ -1,32 +1,86 @@
 USE OrphanChildrenSupport
 GO
 
-SET ANSI_NULLS ON
+CREATE PROCEDURE [dbo].[ChildrenProfileSuportCategories_Delete]  
+	-- Add the parameters for the stored procedure here
+	@ChildrenProfileId bigint
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE [OrphanChildrenSupport].[dbo].[ChildrenProfileSupportCategory] SET IsDeleted = 1 WHERE ChildrenProfileId = @ChildrenProfileId
+END
 GO
-SET QUOTED_IDENTIFIER ON
+USE [master]
 GO
-CREATE TABLE [dbo].[PersonalProfile](
-	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[AccountName] [nvarchar](max) NOT NULL,
-	[FullName] [nvarchar](max) NULL,
-	[Gender] [bit] NOT NULL,
-	[BirthDay] [datetime2](7) NULL,
-	[Address] [nvarchar](max) NULL,
-	[Mobile] [nvarchar](max) NULL,
-	[Email] [nvarchar](max) NULL,
-	[CreatedBy] [nvarchar](max) NULL,
-	[CreatedTime] [datetime2](7) NULL,
-	[LastModified] [datetime2](7) NULL,
-	[ModifiedBy] [nvarchar](max) NULL,
-	[IsDeleted] [bit] NOT NULL,
- CONSTRAINT [PK_PersonalProfile] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE 
 GO
 
-SET IDENTITY_INSERT [dbo].[PersonalProfile] ON 
-INSERT [dbo].[PersonalProfile] ([Id], [AccountName], [FullName], [Gender], [BirthDay], [Address], [Mobile], [Email], [CreatedBy], [CreatedTime], [LastModified], [ModifiedBy], [IsDeleted]) VALUES (1,  N'tht0310', N'Tran Hoang Tien', 1, NULL, N'', N'0373831808', N'thtien0310@gmail.com', N'', CAST(N'2021-07-13T02:12:06.4666667' AS DateTime2), NULL, NULL, 0)
-SET IDENTITY_INSERT [dbo].[PersonalProfile] OFF
+----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
+
+CREATE PROCEDURE [dbo].[ReportDetails_Delete]  
+	-- Add the parameters for the stored procedure here
+	@ReportId bigint
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE [OrphanChildrenSupport].[dbo].ReportDetail SET IsDeleted = 1 WHERE ReportId = @ReportId
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE 
+GO
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
+
+CREATE PROCEDURE [dbo].[DonationDetails_Delete]  
+	-- Add the parameters for the stored procedure here
+	@DonationId bigint
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE [OrphanChildrenSupport].[dbo].[DonationDetail] SET IsDeleted = 1 WHERE DonationId = @DonationId
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE 
+GO
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+USE OrphanChildrenSupport
+GO
+
+CREATE PROCEDURE [dbo].[Favorites_Delete]  
+	-- Add the parameters for the stored procedure here
+	@AccountId bigint
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	UPDATE [OrphanChildrenSupport].[dbo].Favorite SET IsDeleted = 1 WHERE AccountId = @AccountId
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [OrphanChildrenSupport] SET READ_WRITE 
 GO

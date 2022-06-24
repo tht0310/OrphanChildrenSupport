@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Models.DBSets
 {
@@ -16,7 +11,7 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("SupportCategory")]
         [Required]
         public long SupportCategoryId { get; set; }
-        public DonationDetailStatus DonationDetailStatus { get; set; }
+        public DonationDetailStatus Status { get; set; }
         public string Note { get; set; }
         public string ImagePath { get; set; }
         #region  Foreign

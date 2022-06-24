@@ -3,50 +3,39 @@ import ChildrenProfileService, {
   ChildrenParams,
 } from "@Services/ChildrenProfileService";
 import {
-  Avatar,
-  Button,
-  Card,
   Col,
   List,
   Row,
-  Select,
-  Skeleton,
-  Spin,
-  Tag,
   Image,
   Checkbox,
   Carousel,
   Form,
   Input,
   Slider,
-  Pagination,
+  Card,
+  Button,
+  Radio,
+  Space,
 } from "antd";
-import Meta from "antd/lib/card/Meta";
 import * as React from "react";
 import { useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { displayDate, displayDateTime } from "@Services/FormatDateTimeService";
-import { DatePicker, Space } from "antd";
+import { displayDate } from "@Services/FormatDateTimeService";
 import Children1 from "@Images/children-banner.jpg";
 import FallBackImage from "@Images/children-default.png";
-import Search from "antd/lib/input/Search";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
 import SupportCategoryService from "@Services/SupportCategoryService";
 import { FilterParams } from "@Models/IFilterType";
-import { DataServices } from "@Services/DataServices";
 import { SearchOutlined } from "@ant-design/icons";
 
-const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
 
 const childrenProfileService = new ChildrenProfileService();
-const childrenDetailUrl = "children/detail";
+const childrenDetailUrl = "/children";
 const supportCategoriesService = new SupportCategoryService();
 
 const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
-  const [page, setPage] = React.useState<number>(1);
-  const [pageSize, setPageSize] = React.useState<number>(10);
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
@@ -67,7 +56,9 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchChildrenProfile(filterParams);
+    if (filterParams !== null) {
+      fetchChildrenProfile(filterParams);
+    }
   }, [filterParams]);
 
   async function fetchData() {
@@ -82,26 +73,35 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   }
 
   async function fetchChildrenProfile(filterParams) {
+    if (!filterParams) {
+      filterParams = {
+        name: "childrenProfileStatus",
+        value: 0,
+      };
+    } else {
+      filterParams = { ...filterParams, childrenProfileStatus: 0 };
+    }
+
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
-      setChildrenProfiles(dataRes.value.items);
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
+      }
+      setChildrenProfiles(tempValue);
     }
   }
 
-  async function onSearchGender(value) {
-    fetchChildrenProfile({ gender: value, childrenProfileStatus: 0 });
-  }
+  async function getImage(id: number) {
+    const imageRes = await childrenProfileService.getChildrenImage(id);
+    const imageData = imageRes.value.items;
 
-  async function onSearchFullName(value) {
-    fetchChildrenProfile({ fullName: value, childrenProfileStatus: 0 });
-  }
-
-  async function onSearchAge(value) {
-    fetchChildrenProfile({
-      fromAge: value[0],
-      toAge: value[1],
-      childrenProfileStatus: 0,
-    });
+    if (imageData.length > 0) {
+      return imageData[0].id;
+    } else {
+      return -1;
+    }
   }
 
   function convertAddressToString(address: string) {
@@ -111,8 +111,47 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
     tempAddress.map((v) => {
       result += v + " ";
     });
-
     return result;
+  }
+  async function onResetField() {
+    const res = await childrenProfileService.getAll();
+    setChildrenProfiles(res.value.items);
+  }
+
+  async function onSearch(value) {
+    const searchValue: ChildrenParams = {};
+    searchValue.childrenProfileStatus = 0;
+
+    if (value.fullName !== undefined) {
+      searchValue.fullName = value.fullName;
+    }
+    if (value.gender !== undefined) {
+      searchValue.gender = value.gender;
+    }
+
+    if (value.age !== undefined) {
+      searchValue.fromAge = value.age[0];
+      searchValue.toAge = value.age[1];
+    }
+    const res = await childrenProfileService.search(searchValue);
+    let resData = res.value.items;
+    let temp = [];
+    if (value.supportCategories !== undefined) {
+      if (value.supportCategories.length > 0) {
+        resData.map((v) => {
+          const result = v.childrenProfileSupportCategories.filter((o) =>
+            value.supportCategories.some((m) => o.supportCategoryId == m)
+          );
+
+          if (result.length > 0) {
+            temp.push(v);
+          }
+        });
+        setChildrenProfiles(temp);
+        return;
+      }
+    }
+    setChildrenProfiles(temp.length > 0 ? temp : resData);
   }
 
   return (
@@ -136,104 +175,132 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
       </Carousel>
       <Form form={form} name="filter-form" autoComplete="off">
         <div className="content-wrapper-custom">
-          <Row>
+          <Row className="custom-row">
             <Col
-              span={12}
-              style={{
-                paddingLeft: "40px",
-                fontSize: "18px",
-              }}
+              span={24}
+              lg={24}
+              xs={24}
               className="title-page"
+              style={{
+                textAlign: "center",
+                padding: "15px 0px",
+                fontSize: "22px",
+                fontWeight: 600,
+                color: "#484848",
+              }}
             >
               Children waiting for support
-            </Col>
-            <Col span={12}>
-              <Input
-                placeholder="Seach by name"
-                style={{ width: "40%", float: "right", paddingRight: "10px" }}
-                prefix={<SearchOutlined className="site-form-item-icon" />}
-                onChange={(e) => {
-                  onSearchFullName(e.target.value);
-                }}
-              />
             </Col>
           </Row>
 
           <Row>
-            <Col span={6}>
-              <div className="wrap">
-                <div className="menu">
-                  <div className="mini-menu">
-                    <ul>
-                      <li className="sub">
-                        <div
-                          className="header-item"
-                          style={{ background: "#f0f0f0", fontSize: "14p" }}
-                          onClick={() => onSearchGender(null)}
-                        >
-                          All
-                        </div>
-                      </li>
-                      <li className="sub">
-                        <a
-                          href="javascript:void(0)"
-                          onClick={() => onSearchGender(true)}
-                        >
-                          Boys
-                        </a>
-                      </li>
-                      <li className="sub">
-                        <a
-                          href="javascript:void(0)"
-                          onClick={() => onSearchGender(false)}
-                        >
-                          Girls
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    className="menu-colors menu-item"
-                    style={{ marginTop: "25px" }}
-                  >
-                    <div className="header-item">Age</div>
-                    <Slider
-                      range
-                      defaultValue={[0, 100]}
-                      onChange={(e) => onSearchAge(e)}
+            <Col
+              span={6}
+              lg={6}
+              xs={0}
+              style={{ marginTop: "30px", paddingRight: "50px" }}
+              className="search-container"
+            >
+              <Form form={form} onFinish={onSearch}>
+                <div>
+                  <Form.Item name={"fullName"}>
+                    <Input
+                      placeholder="Seach by name"
+                      prefix={
+                        <SearchOutlined className="site-form-item-icon" />
+                      }
                     />
-                  </div>
-                  <div className="menu-size menu-item">
-                    <div className="header-item ">Filter By</div>
-                    <Checkbox.Group
-                      name="childrenCategory"
-                      style={{ width: "100%" }}
-                      className="checkbox-container"
-                    >
-                      {supportCategories.map((a) => (
-                        <Row>
-                          <Checkbox value={a.title}>{a.title}</Checkbox>
-                        </Row>
-                      ))}
-                    </Checkbox.Group>
-                  </div>
+                  </Form.Item>
                 </div>
-              </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: 0 }} bordered={false}>
+                    <Form.Item name={"gender"}>
+                      <Radio.Group style={{ width: "100%" }}>
+                        <Radio.Button
+                          style={{ width: "44%" }}
+                          value={undefined}
+                        >
+                          All gender
+                        </Radio.Button>
+                        <Radio.Button style={{ width: "28%" }} value={true}>
+                          Boys
+                        </Radio.Button>
+                        <Radio.Button style={{ width: "28%" }} value={false}>
+                          Girls
+                        </Radio.Button>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Card>
+                </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: "10px" }} title="Age">
+                    <Form.Item name={"age"}>
+                      <Slider min={1} max={20} range />
+                    </Form.Item>
+                  </Card>
+                </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: "10px" }} title="Filter by">
+                    <Form.Item name="supportCategories">
+                      <Checkbox.Group
+                        name="childrenCategory"
+                        style={{ width: "100%" }}
+                        className="checkbox-container"
+                      >
+                        {supportCategories.map((a) => (
+                          <Row>
+                            <Checkbox value={a.id}>{a.title}</Checkbox>
+                          </Row>
+                        ))}
+                      </Checkbox.Group>
+                    </Form.Item>
+                  </Card>
+                </div>
+                <Row className="card-container" gutter={16}>
+                  <Col span={12}>
+                    <Button
+                      type="primary"
+                      onClick={form.submit}
+                      style={{ width: "100%" }}
+                    >
+                      Search
+                    </Button>
+                  </Col>
+                  <Col span={12}>
+                    <Button
+                      onClick={() => {
+                        form.resetFields(), onResetField();
+                      }}
+                      ghost
+                      type="primary"
+                      style={{ width: "100%" }}
+                    >
+                      Reset
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
             </Col>
-            <Col span={18} className="items">
+            <Col span={18} lg={18} xs={24} className="items">
               <List
-                grid={{ gutter: 18, column: 4 }}
+                grid={{
+                  gutter: 16,
+                  xs: 2,
+                  sm: 2,
+                  md: 4,
+                  lg: 4,
+                  xl: 4,
+                  xxl: 4,
+                }}
                 dataSource={childrenProfiles}
                 pagination={{
+                  defaultPageSize: 12,
                   showSizeChanger: true,
-                  pageSizeOptions: ["5", "10", "20", "50"],
+                  pageSizeOptions: ["10", "15", "20", "25"],
                 }}
                 renderItem={(item) => (
                   <List.Item>
-                    <Link
-                      to={`${childrenDetailUrl}/${item.id}`}
-                      target="_blank"
-                    >
+                    <Link to={`${childrenDetailUrl}/${item.id}`}>
                       <div className="item">
                         <Image
                           preview={false}

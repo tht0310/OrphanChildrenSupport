@@ -12,8 +12,7 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         [ForeignKey("ChildrenProfile")]
         [Required]
         public long ChildrenProfileId { get; set; }
-        public long? ApproverId { get; set; }
-        public DonationStatus DonationStatus { get; set; }
+        public DonationStatus Status { get; set; }
         public ICollection<DonationDetail> DonationDetails { get; set; }
         public string Note { get; set; }
         #region  Foreign

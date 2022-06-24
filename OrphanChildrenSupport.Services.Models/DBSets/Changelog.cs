@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace OrphanChildrenSupport.Services.Models.DBSets
+﻿namespace OrphanChildrenSupport.Services.Models.DBSets
 {
     public class Changelog : EngineEntity
     {
+        public string API { get; set; }
+        public string Service { get; set; }
     }
 }

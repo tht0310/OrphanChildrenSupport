@@ -5,7 +5,6 @@ namespace OrphanChildrenSupport.Services.Models
 {
     public class EngineEntity
     {
-
         [Key] public long Id { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedTime { get; set; }

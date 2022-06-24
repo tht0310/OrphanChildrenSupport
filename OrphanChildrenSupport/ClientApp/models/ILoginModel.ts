@@ -1,7 +1,4 @@
-﻿export interface ILoginModel {
-  login: string;
-  password: string;
-}
+﻿
 
 export interface IRegisterModel {
   id?:number
@@ -11,10 +8,18 @@ export interface IRegisterModel {
   phoneNumber?: string;
   email?: string;
   password?: string;
-  detailAddress?: string;
-  publicAddress?: string;
+  address?: string;
   confirmPassword?: string;
+  refreshToken?:string;
   acceptTerms?: boolean;
+  createdBy?: string;
+  createdTime?: string | Date | null;
+  lastModified?: string | Date | null;
+  modifiedBy?: string;
+  isDeleted?: boolean;
+  role?:string;
+  jwtToken?:string;
+  isActive?:boolean;
 }
 
 export interface IVerifyModel { 
@@ -28,4 +33,12 @@ export interface IResetPasswordModel {
   confirmPassword:string ;
   token: string,
 
+}
+
+export interface ILoginModel { 
+  id?:number;
+  jwtToken?:string;
+  fullName?:string;
+  role?:string;
+  email?:string
 }

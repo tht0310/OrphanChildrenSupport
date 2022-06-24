@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using OrphanChildrenSupport.Helpers;
+using OrphanChildrenSupport.Tools;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -31,7 +31,7 @@ namespace OrphanChildrenSupport.Middleware
                 var response = context.Response;
                 response.ContentType = "application/json";
 
-                switch(error)
+                switch (error)
                 {
                     case AppException e:
                         // custom application error

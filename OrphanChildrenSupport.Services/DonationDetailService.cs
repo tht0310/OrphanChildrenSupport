@@ -9,7 +9,6 @@ using OrphanChildrenSupport.Infrastructure.Repositories;
 using OrphanChildrenSupport.Infrastructure.Repositories.Specifications;
 using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
-using OrphanChildrenSupport.Tools.Encryptions;
 using OrphanChildrenSupport.Tools.FileExtensions;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
@@ -22,45 +21,48 @@ namespace OrphanChildrenSupport.Services
     {
 
         private string _connectionString;
-        private string _folderid;
-        private string _type;
-        private ICryptoEncryptionHelper _cryptoEncryptionHelper;
         private IHttpContextHelper _httpContextHelper;
         private readonly IMapper _mapper;
         private readonly ILogger<DonationDetailService> _logger;
+        private readonly IChangelogService _changelogService;
+        private INotificationService _notificationService;
 
-        public DonationDetailService(IMapper mapper, ILogger<DonationDetailService> logger, IConfiguration config,
-            ICryptoEncryptionHelper cryptoEncryptionHelper, IHttpContextHelper httpContextHelper)
+        public DonationDetailService(IMapper mapper, ILogger<DonationDetailService> logger, IConfiguration config, IHttpContextHelper httpContextHelper, IChangelogService changeLogservice, INotificationService notificationService)
         {
             _mapper = mapper;
             _logger = logger;
             _connectionString = config.GetValue<string>("ConnectionStrings:OrphanChildrenSupportConnection") ?? "";
-            _folderid = config.GetValue<string>("LibraryApi:DonationDetailAvatarFolderId") ?? "";
-            _type = config.GetValue<string>("LibraryApi:Type") ?? "";
-            _cryptoEncryptionHelper = cryptoEncryptionHelper;
             _httpContextHelper = httpContextHelper;
+            _changelogService = changeLogservice;
+            _notificationService = notificationService;
         }
 
         public async Task<ApiResponse<DonationDetailResource>> CreateDonationDetail(DonationDetailResource donationDetailResource)
         {
             const string loggerHeader = "CreateDonationDetail";
-
             var apiResponse = new ApiResponse<DonationDetailResource>();
             DonationDetail donationDetail = _mapper.Map<DonationDetailResource, DonationDetail>(donationDetailResource);
-
-            _logger.LogDebug($"{loggerHeader} - Start to add DonationDetail: {JsonConvert.SerializeObject(donationDetail)}");
+            _logger.LogDebug($"{loggerHeader} - Start to CreateDonationDetail: {JsonConvert.SerializeObject(donationDetail)}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    donationDetail.CreatedBy = _httpContextHelper.GetCurrentUser();
+                    donationDetail.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     donationDetail.CreatedTime = DateTime.UtcNow;
                     donationDetail.ModifiedBy = null;
                     await unitOfWork.DonationDetailRepository.Add(donationDetail);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Add new DonationDetail successfully with Id: {donationDetail.Id}");
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
+                    _logger.LogDebug($"{loggerHeader} - CreateDonationDetail successfully with Id: {donationDetail.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - CreateDonationDetail successfully with Id: {donationDetail.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -74,7 +76,6 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
@@ -82,22 +83,28 @@ namespace OrphanChildrenSupport.Services
         {
             const string loggerHeader = "UpdateDonationDetail";
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
                     donationDetail = _mapper.Map<DonationDetailResource, DonationDetail>(donationDetailResource, donationDetail);
-                    _logger.LogDebug($"{loggerHeader} - Start to update DonationDetail: {JsonConvert.SerializeObject(donationDetail)}");
-                    donationDetail.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                    _logger.LogDebug($"{loggerHeader} - Start to UpdateDonationDetail: {JsonConvert.SerializeObject(donationDetail)}");
+                    donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                     donationDetail.LastModified = DateTime.UtcNow;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
-                    _logger.LogDebug($"{loggerHeader} - Update DonationDetail successfully with Id: {donationDetail.Id}");
-
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
+                    _logger.LogDebug($"{loggerHeader} - UpdateDonationDetail successfully with Id: {donationDetail.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - UpdateDonationDetail successfully with Id: {donationDetail.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -111,17 +118,14 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<DonationDetailResource>> DeleteDonationDetail(long id, bool removeFromDB = false)
         {
             const string loggerHeader = "DeleteDonationDetail";
-
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to delete DonationDetail with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to DeleteDonationDetail with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
@@ -133,15 +137,21 @@ namespace OrphanChildrenSupport.Services
                     }
                     else
                     {
-                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         donationDetail.IsDeleted = true;
                         donationDetail.LastModified = DateTime.UtcNow;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                     }
-
                     await unitOfWork.SaveChanges();
+                    _logger.LogDebug($"{loggerHeader} - DeleteDonationDetail successfully with Id: {donationDetail.Id}");
 
-                    _logger.LogDebug($"{loggerHeader} - Delete DonationDetail successfully with Id: {donationDetail.Id}");
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - DeleteDonationDetail successfully with Id: {donationDetail.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -155,25 +165,21 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<DonationDetailResource>> GetDonationDetail(long id)
         {
             const string loggerHeader = "GetDonationDetail";
-
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to get DonationDetail with Id: {id}");
-
+            _logger.LogDebug($"{loggerHeader} - Start to GetDonationDetail with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
-                    _logger.LogDebug($"{loggerHeader} - Get DonationDetail successfully with Id: {apiResponse.Data.Id}");
+                    _logger.LogDebug($"{loggerHeader} - GetDonationDetail successfully with Id: {apiResponse.Data.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -187,19 +193,15 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<QueryResultResource<DonationDetailResource>>> GetDonationDetails(QueryResource queryObj)
         {
             const string loggerHeader = "GetDonationDetails";
-
             var apiResponse = new ApiResponse<QueryResultResource<DonationDetailResource>>();
             var pagingSpecification = new PagingSpecification(queryObj);
-
-            _logger.LogDebug($"{loggerHeader} - Start to get DonationDetails with");
-
+            _logger.LogDebug($"{loggerHeader} - Start to GetDonationDetails");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
 
@@ -213,7 +215,7 @@ namespace OrphanChildrenSupport.Services
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<DonationDetail>, QueryResultResource<DonationDetailResource>>(query);
-                    _logger.LogDebug($"{loggerHeader} - Get DonationDetails successfully");
+                    _logger.LogDebug($"{loggerHeader} - GetDonationDetails successfully");
                 }
                 catch (Exception ex)
                 {
@@ -231,26 +233,38 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationDetailResource>> Finish(long id)
+        public async Task<ApiResponse<DonationDetailResource>> FinishDonationDetail(long id)
         {
-            const string loggerHeader = "ApproveDonationDetail";
-
+            const string loggerHeader = "FinishDonationDetail";
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to finish DonationDetail with Id: {id}");
-
+            _logger.LogDebug($"{loggerHeader} - Start to FinishDonationDetail with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    donationDetail.DonationDetailStatus = DonationDetailStatus.Finished;
-
+                    donationDetail.Status = DonationDetailStatus.Approved;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
-                    _logger.LogDebug($"{loggerHeader} - Get DonationDetail successfully with Id: {apiResponse.Data.Id}");
+                    _logger.LogDebug($"{loggerHeader} - FinishDonationDetail successfully with Id: {apiResponse.Data.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - FinishDonationDetail successfully with Id: {apiResponse.Data.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
+
+                    var notificationResource = new NotificationResource();
+                    notificationResource.AccountId = donationDetail.Donation.AccountId;
+                    notificationResource.Content = $"{loggerHeader} - FinishDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    notificationResource.CreatedTime = DateTime.UtcNow;
+                    notificationResource.IsDeleted = false;
+                    await _notificationService.CreateNotification(notificationResource);
                 }
                 catch (Exception ex)
                 {
@@ -264,30 +278,33 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
-        public async Task<ApiResponse<DonationDetailResource>> Cancel(long id)
+        public async Task<ApiResponse<DonationDetailResource>> CancelDonationDetail(long id)
         {
-            const string loggerHeader = "RejectDonationDetail";
-
+            const string loggerHeader = "CancelDonationDetail";
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
-            _logger.LogDebug($"{loggerHeader} - Start to cancel DonationDetail with Id: {id}");
-
+            _logger.LogDebug($"{loggerHeader} - Start to CancelDonationDetail with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    donationDetail.DonationDetailStatus = DonationDetailStatus.Cancelled;
-
+                    donationDetail.Status = DonationDetailStatus.Cancelled;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
                     donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
-                    _logger.LogDebug($"{loggerHeader} - Get DonationDetail successfully with Id: {apiResponse.Data.Id}");
+                    _logger.LogDebug($"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
                 }
                 catch (Exception ex)
                 {
@@ -301,16 +318,13 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.Dispose();
                 }
             }
-
             return apiResponse;
         }
 
         public async Task<ApiResponse<DonationDetailResource>> UploadDonationDetailImage(long id, IFormFile file)
         {
             const string loggerHeader = "UploadDonationDetailImage";
-
             var apiResponse = new ApiResponse<DonationDetailResource>();
-
             if (file == null || file.Length == 0)
             {
                 apiResponse.IsError = true;
@@ -331,7 +345,7 @@ namespace OrphanChildrenSupport.Services
             }
             else
             {
-                _logger.LogDebug($"{loggerHeader} - Start to Upload DonationDetailImage with");
+                _logger.LogDebug($"{loggerHeader} - Start to UploadDonationDetailImage with");
                 using (var unitOfWork = new UnitOfWork(_connectionString))
                 {
                     try
@@ -343,29 +357,34 @@ namespace OrphanChildrenSupport.Services
                         }
                         string fileName = id + "_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss") + ".png";
                         var newPath = Path.Combine(dir, fileName);
-                        _logger.LogDebug($"{loggerHeader} - Save file in new path: {newPath}");
+                        _logger.LogDebug($"{loggerHeader} - Save file by new path: {newPath}");
                         using (var stream = new FileStream(newPath, FileMode.Create))
                         {
                             await file.CopyToAsync(stream);
                         }
-
                         var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(d => d.Id == id);
                         var oldPath = donationDetail.ImagePath;
-                        _logger.LogDebug($"{loggerHeader} - Delete file in old path: {oldPath}");
+                        _logger.LogDebug($"{loggerHeader} - Delete file by old path: {oldPath}");
                         if (File.Exists(oldPath))
                         {
                             File.Delete(oldPath);
                         }
-
-                        _logger.LogDebug($"{loggerHeader} - Upload ImagePath for Id: {donationDetail.Id}");
+                        _logger.LogDebug($"{loggerHeader} - UploadDonationDetailImage with Id: {donationDetail.Id}");
                         donationDetail.ImagePath = newPath;
-                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentUser();
+                        donationDetail.ModifiedBy = _httpContextHelper.GetCurrentAccountEmail();
                         donationDetail.LastModified = DateTime.UtcNow;
                         unitOfWork.DonationDetailRepository.Update(donationDetail);
                         await unitOfWork.SaveChanges();
-                        _logger.LogDebug($"{loggerHeader} - Upload DonationDetailImage successfully with Id: {donationDetail.Id}");
-
                         apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
+                        _logger.LogDebug($"{loggerHeader} - UploadDonationDetailImage successfully with Id: {donationDetail.Id}");
+
+                        var changelogResource = new ChangelogResource();
+                        changelogResource.Service = "DonationDetail";
+                        changelogResource.API = $"{loggerHeader} - UploadDonationDetailImage successfully with Id: {apiResponse.Data.Id}";
+                        changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                        changelogResource.CreatedTime = DateTime.UtcNow;
+                        changelogResource.IsDeleted = false;
+                        await _changelogService.CreateChangelog(changelogResource);
                     }
                     catch (Exception ex)
                     {
@@ -383,11 +402,11 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<FileStream>> GetDonationDetailImage(long id)
+        public async Task<ApiResponse<FileStream>> ViewDonationDetailImage(long id)
         {
             const string loggerHeader = "GetDonationDetailImage";
             var apiResponse = new ApiResponse<FileStream>();
-            _logger.LogDebug($"{loggerHeader} - Start to get DonationDetailImage with Id: {id}");
+            _logger.LogDebug($"{loggerHeader} - Start to GetDonationDetailImage with Id: {id}");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
@@ -395,7 +414,7 @@ namespace OrphanChildrenSupport.Services
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(d => d.Id == id);
                     var image = File.OpenRead(donationDetail.ImagePath);
                     apiResponse.Data = image;
-                    _logger.LogDebug($"{loggerHeader} - Get DonationDetailImage successfully with Id: {donationDetail.Id}");
+                    _logger.LogDebug($"{loggerHeader} - GetDonationDetailImage successfully with Id: {donationDetail.Id}");
                 }
                 catch (Exception ex)
                 {

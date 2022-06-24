@@ -4,9 +4,7 @@ import TextEditor from "./TextEditor";
 import { FormEditorType } from "@Models/IFilterType";
 
 const FormEditor = ({ item, isNew = true }: FormEditorType) => {
-  return (
-   
-  );
+  return <div></div>;
 };
 
 export default FormEditor;

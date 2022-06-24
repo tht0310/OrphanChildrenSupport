@@ -74,8 +74,14 @@ z {
   text-align: center;
 }
 .antd-modal-custom {
+  .ant-modal-title {
+    padding-left: 25px;
+  }
   .ant-modal-body {
     padding-top: 5px;
+  }
+  svg {
+    margin-bottom: 5px;
   }
 }
 .custom-table__pagination {
@@ -138,7 +144,7 @@ z {
   border-radius: 3px;
 }
 .ant-modal-header {
-  padding: 20px 0px 20px 30px !important;
+  padding: 20px 0px 20px 10px !important;
   font-size: 16px;
 }
 .ant-btn-text:hover {
@@ -266,13 +272,52 @@ z {
   .breadcrumb {
     padding-left: 38px;
   }
+ 
   .ant-input {
     padding: 2px 8px !important;
   }
-  .wrap {
-    padding: 0px 2%;
-    margin: 0 auto;
+  .custom-input {
+    width: 40%;
   }
+  .title-page {
+    padding-left: 40px;
+    font-size: 18px;
+  }
+  @media screen and (max-width: 700px) {
+    .custom-col {
+      display: none;
+      input {
+        width:100%
+      }
+    }
+    .custom-input {
+      width: 80%;
+    }
+    .title-page {
+      padding-left: 5px;
+      font-size: 17px;
+    }
+   
+    .custom-row {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .item {
+      vertical-align: top;
+      margin: 8px;
+      h3 {
+        font-size: 10px !important;
+      }
+     
+    }
+
+    img {
+      height: 100px !important;
+
+    }
+    
+  }
+  
   .items {
     margin-top: 21px;
   }
@@ -298,10 +343,8 @@ z {
   }
   .item {
     vertical-align: top;
-    width: 175px;
-    height: 205px;
+    height: auto;
     margin: 8px;
-    background: #fefefe;
     display: inline-block;
     border-radius: 3px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
@@ -312,6 +355,7 @@ z {
       padding: 15px 0 5px 0;
       font-size: 13px !important;
     }
+    
   }
 
   h3 {
@@ -390,6 +434,7 @@ z {
     color: grey;
     font-family: sans-serif;
   }
+  
 
   .mini-menu {
     width: 220px;
@@ -461,9 +506,7 @@ z {
     }
   }
   @media screen and (max-width: 720px) {
-    .items {
-      width: 220px;
-    }
+  
     .wrap {
       width: 500px;
     }
@@ -905,5 +948,35 @@ section {
   
 
 }
+.red-row {
+  color: red !important;
+}
+.admin-login-page {
+    background:#508bfc;
+    .login-form-forgot {
+      float: right;
+      color: #0B52C5;
+    }
+    .login-form-button {
+      width: 100%;
+      background-color: #0B52C5 !important;
+      border: #0B52C5;
+      margin-bottom: 5px;
+      border-radius: 25px;
+  }
+}
+.info {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 10px;
+}
+.info-content {
+  font-size: 18px;
+}
+.main-info {
+  font-size: 18px !important;
+}
+
+
     
 

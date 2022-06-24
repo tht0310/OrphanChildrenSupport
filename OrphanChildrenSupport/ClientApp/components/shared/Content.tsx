@@ -1,6 +1,5 @@
 import { CContainer } from "@coreui/react";
 import React, { FC } from "react";
-import Dashboard from "../../pages/Dashboard";
 
 // routes config
 interface Props {

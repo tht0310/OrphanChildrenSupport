@@ -146,7 +146,6 @@ header {
 .nav-links {
   color: #242222;
   text-decoration: none;
-  padding: 0.5rem 1rem;
 }
 
 .nav-links:hover {
@@ -164,6 +163,14 @@ header {
 .menu-icon {
   display: none;
 }
+
+.antd-icon-custom {
+  svg {
+    margin-bottom: 6px;
+    
+  }
+}
+
 
 @media screen and (max-width: 960px) {
   .NavbarItems {
@@ -192,7 +199,6 @@ header {
 
   .nav-links {
     text-align: center;
-    padding: 2rem;
     width: 100%;
     display: table;
   }

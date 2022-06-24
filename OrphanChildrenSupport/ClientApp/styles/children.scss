@@ -34,7 +34,10 @@
     font-size: 18px;
     margin-bottom: 50px;
   }
- 
+  p {
+    padding: 10px 0px 30px 0px !important;
+  }
+
   h3 {
     font-family: "Playfair Display", serif !important;
     text-align: center;
@@ -100,6 +103,20 @@
   }
 }
 .aboutus-page {
+  .text-container {
+    vertical-align: middle;
+    margin-top: 80px;
+    padding-right: 100px;
+  }
+  @media screen and (max-width: 700px) {
+    .text-container {
+      margin-top: 0;
+      margin-bottom: 45px;
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+
   img {
     max-height: 400px !important;
   }
@@ -338,6 +355,12 @@
       background: #e57905;
       color: #fff;
     }
+    button:disabled,
+    button[disabled] {
+      border: 1px solid #e0dfdf;
+      background-color: #e0dfdf;
+      color: #666666;
+    }
   }
 
   .size {
@@ -536,7 +559,6 @@
       font-size: 18px;
       line-height: 35px;
       letter-spacing: -0.03em;
-      max-width: 500px;
     }
   }
 }
@@ -598,8 +620,6 @@
     min-height: 26px !important;
   }
 
-  
-
   .img-cart {
     display: block;
     max-width: 50px;
@@ -626,11 +646,10 @@
   .ant-table-cell {
     vertical-align: top;
   }
-  
+
   .ant-card {
     padding: 8px 14px;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.078)
-    
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.078);
   }
   .ant-card-head {
     font-size: 14px;
@@ -674,7 +693,7 @@
   }
   .ant-form {
     padding: 0px !important;
-    
+
     border: none;
   }
   .ant-card {
@@ -689,48 +708,38 @@
 }
 .cart {
   padding: 2% 2%;
-  .ant-tabs-left > .ant-tabs-nav, .ant-tabs-right > .ant-tabs-nav, .ant-tabs-left > div > .ant-tabs-nav, .ant-tabs-right > div > .ant-tabs-nav {
+  .ant-tabs-left > .ant-tabs-nav,
+  .ant-tabs-right > .ant-tabs-nav,
+  .ant-tabs-left > div > .ant-tabs-nav,
+  .ant-tabs-right > div > .ant-tabs-nav {
     flex-direction: column;
     min-width: 300px;
-    
-    
-}
-svg {
-  margin-bottom: 5px;
-  margin-right: 5px;
-}
+  }
+  svg {
+    margin-bottom: 5px;
+    margin-right: 5px;
+  }
 }
 .page3 {
-  min-height: 150px;
-  margin: 40px 0px;
+  margin-bottom: 50px;
 }
-.homepage {
-  .item {
-    width: 180px !important;
-    height: 210px;
-    margin-top: 0px !important;
-    margin-bottom: 30px;
-    
-  }
-  
-}
+
 .activity-history-page {
   .ant-tabs-nav {
     width: 20%;
     margin-top: 2px;
   }
- 
+
   .btn-change-tab {
-    border: none ;
-    background: white ;
-    color: #e57905 ;
+    border: none;
+    background: white;
+    color: #e57905;
     width: 100%;
     padding: 3px 0px;
   }
   .active {
     background: #e57905;
     color: white;
-   
   }
   .ant-tabs-tab {
     font-size: 16px;
@@ -739,7 +748,7 @@ svg {
     color: #e57905 !important;
   }
   .ant-tabs-ink-bar {
-    color: #e57905
+    color: #e57905;
   }
   .ant-tabs-tab-active {
     .ant-tabs-tab-btn {
@@ -752,14 +761,13 @@ svg {
     margin-bottom: 6px;
   }
 
-  
-  .ant-card {   
+  .ant-card {
     button {
-      padding : 2px !important;
-      font-size: 12px  !important;
+      padding: 2px !important;
+      font-size: 12px !important;
       margin-right: 2%;
     }
-    .ant-card-actions {  
+    .ant-card-actions {
       padding: 0 !important;
       li {
         margin: 0;
@@ -771,15 +779,156 @@ svg {
     a {
       font-weight: 600;
     }
-    
   }
   .ant-tabs-nav-list {
     padding-right: 30px;
   }
-  .notification-page {
-    th {
-      display: none;
+}
+.page5 {
+  .ant-row {
+    padding-left: 20px;
+  }
+  .custom-col {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .number {
+    color: #b42121;
+    font-size: 34px;
+    line-height: 42px;
+    font-weight: 700;
+    padding-left: 10px;
+    margin-top: "8px";
+    margin-bottom: 8px;
+  }
+  @media only screen and (max-width: 667px) {
+    .ant-row {
+      padding-left: 0px;
+    }
+    .custom-col {
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-bottom: 45px !important;
+    }
+    .number {
+      color: #b42121;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 700;
+      padding-left: 0px;
+      margin-top: 8px;
+      margin-bottom: 8px;
     }
   }
 }
 
+.home-case {
+  .ant-row {
+    align-items: center;
+  }
+  .ant-col {
+    margin-bottom: 30px;
+  }
+}
+.invisible {
+  display: none;
+}
+.not-access-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  $animationTime: 2s;
+
+  * {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Lato", sans-serif;
+  }
+
+  
+
+  h1 {
+    margin: 40px 0 20px;
+  }
+
+  .lock {
+    border-radius: 5px;
+    width: 55px;
+    height: 45px;
+    background-color: #333;
+    animation: dip 1s;
+    animation-delay: ($animationTime - 0.5);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      border-left: 5px solid #333;
+      height: 20px;
+      width: 15px;
+      left: calc(50% - 12.5px);
+    }
+
+    &::before {
+      top: -30px;
+      border: 5px solid #333;
+      border-bottom-color: transparent;
+      border-radius: 15px 15px 0 0;
+      height: 30px;
+      animation: lock $animationTime, spin $animationTime;
+    }
+
+    &::after {
+      top: -10px;
+      border-right: 5px solid transparent;
+      animation: spin $animationTime;
+    }
+  }
+
+  @keyframes lock {
+    0% {
+      top: -45px;
+    }
+    65% {
+      top: -45px;
+    }
+    100% {
+      top: -30px;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: scaleX(-1);
+      left: calc(50% - 30px);
+    }
+    65% {
+      transform: scaleX(1);
+      left: calc(50% - 12.5px);
+    }
+  }
+
+  @keyframes dip {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+}
+.donation-detail:hover {
+  border: none !important;
+}
+.ant-popover-disabled-compatible-wrapper {
+  width: 100%;
+}

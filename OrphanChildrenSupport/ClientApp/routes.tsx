@@ -1,105 +1,210 @@
 import DefaultLayout from "@Layouts/DefaultLayout";
 import GuestLayout from "@Layouts/GuestLayout";
-import ChildrenDetailPage from "@Pages/ChildrenDetailPage";
+import ChildrenDetailPage from "@Pages/Admin/ChildrenDetailPage";
 import AboutUsPage from "@Pages/Guest/AboutUsPage";
 import ChildrenSupportedPage from "@Pages/Guest/ChildrenSupportedPage";
 import ChildrenWaitingForSupportPage from "@Pages/Guest/ChildrenWaitingForSupportPage";
-import ContactUsPage from "@Pages/Guest/ContactUs";
 import GuestHomePage from "@Pages/Guest/GuestHomePage";
-
-import RegisterPage from "@Pages/RegisterPage";
-import GuestLoginPage from "@Pages/GuestLoginPage";
-import SupportCategoryPage from "@Pages/SupportCategoryPage";
+import RegisterPage from "@Pages/Login/RegisterPage";
+import GuestLoginPage from "@Pages/Guest/GuestLoginPage";
+import SupportCategoryPage from "@Pages/Admin/SupportCategoryPage";
 import * as React from "react";
-import AppRoute from "./components/shared/AppRoute";
+import AppRoute from "./components/shared/Routes/AppRoute";
 import AuthorizedLayout from "./layouts/AuthorizedLayout";
-import Dashboard from "./pages/Dashboard";
-import VerifyPage from "@Pages/VerifyPage";
-import ResetPasswordPage from "@Pages/ResetPasswordPage";
-import ForgotPasswordPage from "@Pages/ForgotPasswordPage";
 
-import AccountDetailPage from "@Pages/AccountDetailPage";
 import ChildrenCartPage from "@Pages/Guest/ChildrenCartPage";
 import { Switch } from "react-router-dom";
-import VolunteerPage from "@Pages/VolunteerPage";
-import RegisteredProfilePage from "@Pages/RegisteredUserProfilePage";
+import VolunteerPage from "@Pages/Admin/VolunteerPage";
+import RegisteredProfilePage from "@Pages/Admin/UserProfilePage";
 import ActivityHistoryPage from "@Pages/Guest/ActivityHistoryPage";
 import ChildrenPage from "@Pages/Guest/ChildrenPage";
 import ExamplePage from "@Pages/Guest/ExamplePage";
-import DonationManagementPage from "@Pages/DonationManagementPage";
-import DonationDetailPage from "@Pages/DonationDetailPage";
-import ReportDetailPage from "@Pages/ReportDetailPage";
+import DonationManagementPage from "@Pages/Admin/DonationManagementPage";
+import DonationDetailPage from "@Pages/Admin/DonationDetailPage";
+import ReportDetailPage from "@Pages/Admin/ReportDetailPage";
 import StatisticPage from "@Pages/Guest/StatisticPage";
-import ChildrenProfilePage from "@Pages/ChildrenProfilePage";
+import ChildrenProfilePage from "@Pages/Admin/ChildrenProfilePage";
+import ReportFieldCategoryPage from "@Pages/Admin/ReportFieldCategoryPage";
+import ReportManagementPage from "@Pages/Admin/ReportManagementPage";
+import AdminLoginPage from "@Components/shared/Admin/AdminLoginPage";
+import AdminRoute from "@Components/shared/Routes/AdminRoute";
+import ProtectedRoute from "@Components/shared/Routes/ProtectedRoute";
+import NotAccessPage from "@Pages/NotAccessPage";
+import BanAccountPage from "@Pages/BanAccountPage";
+import RegisteredUserRoute from "@Components/shared/Routes/RegisteredUserRoute";
+import NormalUserRoute from "@Components/shared/Routes/NormalUserRoute";
+import NotFoundPage from "@Pages/NotFoundPage";
+import ContactUsPage from "@Pages/Guest/ContactUsPage";
+import Dashboard from "@Pages/Admin/Dashboard";
+import AccountDetailPage from "@Pages/Guest/AccountDetailPage";
+import ForgotPasswordPage from "@Pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "@Pages/Login/ResetPasswordPage";
+import VerifyPage from "@Pages/VerifyPage";
 
 export const routes = (
   <Switch>
-    <AppRoute
+    {/* Protected Routes*/}
+
+    <ProtectedRoute
       layout={AuthorizedLayout}
-      exact
-      path="/admin"
-      component={Dashboard}
+      path="/admin/profileManagement/systemUsers"
+      component={VolunteerPage}
     />
-    <AppRoute
+
+    {/* Admin Routes*/}
+    <AdminRoute
       layout={AuthorizedLayout}
       exact
       path="/admin/dashboard"
       component={Dashboard}
     />
-    <AppRoute layout={GuestLayout} exact path="/" component={GuestHomePage} />
-    <AppRoute
+    <AdminRoute
       layout={AuthorizedLayout}
       exact
-      path="/admin/usermanagement/children"
+      path="/admin/myaccount"
+      component={AccountDetailPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      exact
+      path="/admin/dashboard"
+      component={Dashboard}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      exact
+      path="/admin/profileManagement/children"
       component={ChildrenProfilePage}
     />
-    <AppRoute
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/supportCategories"
+      component={SupportCategoryPage}
+    />
+
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/profileManagement/members"
+      component={RegisteredProfilePage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/donations/:id"
+      component={DonationDetailPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/donations/"
+      component={DonationManagementPage}
+    />
+
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/reports/:id"
+      component={ReportDetailPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/statistic/"
+      component={StatisticPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/reportFields"
+      component={ReportFieldCategoryPage}
+    />
+    <AdminRoute
+      layout={AuthorizedLayout}
+      path="/admin/activityManagement/reports"
+      component={ReportManagementPage}
+    />
+
+    {/* Registered Routes*/}
+
+    <RegisteredUserRoute
+      layout={GuestLayout}
+      path="/favourite"
+      component={ChildrenCartPage}
+    />
+
+    <RegisteredUserRoute
+      layout={GuestLayout}
+      path="/myaccount"
+      component={AccountDetailPage}
+    />
+
+    <RegisteredUserRoute
+      layout={GuestLayout}
+      path="/activityHistory/:key"
+      component={ActivityHistoryPage}
+    />
+    <RegisteredUserRoute
+      layout={GuestLayout}
+      path="/activityHistory/"
+      component={ActivityHistoryPage}
+    />
+
+    {/* Normal User Routes*/}
+
+    <NormalUserRoute
+      layout={GuestLayout}
+      exact
+      path="/"
+      component={GuestHomePage}
+    />
+
+    <NormalUserRoute
       layout={GuestLayout}
       exact
       path="/home"
       component={GuestHomePage}
     />
-    <AppRoute
+    <NormalUserRoute
       layout={GuestLayout}
       exact
       path="/aboutUs"
       component={AboutUsPage}
     />
-    <AppRoute
+    <NormalUserRoute
       layout={GuestLayout}
       exact
       path="/contactUs"
       component={ContactUsPage}
     />
+
+    <NormalUserRoute
+      layout={GuestLayout}
+      exact
+      path="/children/supported"
+      component={ChildrenSupportedPage}
+    />
+    <NormalUserRoute
+      layout={GuestLayout}
+      exact
+      path="/children/waitingForSupport"
+      component={ChildrenWaitingForSupportPage}
+    />
+    <NormalUserRoute
+      layout={GuestLayout}
+      path="/children/:id"
+      component={ChildrenDetailPage}
+    />
+    <NormalUserRoute
+      layout={GuestLayout}
+      path="/children"
+      component={ChildrenPage}
+    />
+
+    {/* Default Routes*/}
+
+    <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
+
     <AppRoute
       layout={GuestLayout}
       exact
       path="/login"
       component={GuestLoginPage}
     />
-    <AppRoute
-      layout={GuestLayout}
-      exact
-      path="/childrenSupported"
-      component={ChildrenSupportedPage}
-    />
-    <AppRoute
-      layout={GuestLayout}
-      exact
-      path="/childrenWaitingForSupport"
-      component={ChildrenWaitingForSupportPage}
-    />
-    <AppRoute
-      layout={GuestLayout}
-      path="/children/detail/:id"
-      component={ChildrenDetailPage}
-    />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/usermanagement/supportcategory"
-      component={SupportCategoryPage}
-    />
-    <AppRoute layout={GuestLayout} path="/register" component={RegisterPage} />
 
     <AppRoute
       layout={GuestLayout}
@@ -116,56 +221,28 @@ export const routes = (
       path="/accounts/reset-password"
       component={ResetPasswordPage}
     />
-    <AppRoute
-      layout={GuestLayout}
-      path="/myaccount"
-      component={AccountDetailPage}
-    />
 
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/volunteer"
-      component={VolunteerPage}
-    />
-    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/user"
-      component={RegisteredProfilePage}
-    />
-    <AppRoute layout={GuestLayout} path="/cart" component={ChildrenCartPage} />
-    <AppRoute
-      layout={GuestLayout}
-      path="/activityHistory/:key"
-      component={ActivityHistoryPage}
-    />
-    <AppRoute
-      layout={GuestLayout}
-      path="/activityHistory/"
-      component={ActivityHistoryPage}
-    />
-    <AppRoute layout={GuestLayout} path="/children" component={ChildrenPage} />
     <AppRoute layout={DefaultLayout} path="/example" component={ExamplePage} />
 
     <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/activitymanagement/donation/"
-      component={DonationManagementPage}
+      layout={DefaultLayout}
+      exact
+      path="/admin/login"
+      component={AdminLoginPage}
+    />
+
+    <AppRoute
+      layout={DefaultLayout}
+      exact
+      path="/accessError"
+      component={NotAccessPage}
     />
     <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/donation/detail/"
-      component={DonationDetailPage}
+      layout={DefaultLayout}
+      exact
+      path="/accountError"
+      component={BanAccountPage}
     />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/report/detail/"
-      component={ReportDetailPage}
-    />
-    <AppRoute
-      layout={AuthorizedLayout}
-      path="/admin/statistic/"
-      component={StatisticPage}
-    />
+    <AppRoute layout={DefaultLayout} exact path="/*" component={NotFoundPage} />
   </Switch>
 );

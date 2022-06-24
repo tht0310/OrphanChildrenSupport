@@ -1,21 +1,16 @@
 ﻿using OrphanChildrenSupport.DataContracts;
 using OrphanChildrenSupport.DataContracts.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
 {
     public interface INotificationService
     {
-        Task<ApiResponse<DonationResource>> CreateDonation(DonationResource donationResource);
-        Task<ApiResponse<DonationResource>> UpdateDonation(long id, DonationResource donationResource);
-        Task<ApiResponse<DonationResource>> DeleteDonation(long id, bool removeFromDB = false);
-        Task<ApiResponse<DonationResource>> GetDonation(long id);
-        Task<ApiResponse<QueryResultResource<DonationResource>>> GetDonations(QueryResource queryObj);
-        Task<ApiResponse<DonationResource>> Approve(long id);
-        Task<ApiResponse<DonationResource>> Reject(long id);
+        Task<ApiResponse<NotificationResource>> CreateNotification(NotificationResource notificationResource);
+        Task<ApiResponse<NotificationResource>> UpdateNotification(long id, NotificationResource notificationResource);
+        Task<ApiResponse<NotificationResource>> DeleteNotification(long id, bool removeFromDB = false);
+        Task<ApiResponse<NotificationResource>> GetNotification(long id);
+        Task<ApiResponse<QueryResultResource<NotificationResource>>> GetNotifications(QueryResource queryObj);
+        Task<ApiResponse<NotificationResource>> SeenNotification(long id);
     }
 }

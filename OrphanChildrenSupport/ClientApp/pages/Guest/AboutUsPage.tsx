@@ -1,12 +1,8 @@
-import { Image } from "antd";
+import { Col, Image, Row } from "antd";
 import * as React from "react";
-import { Facebook, Mail, Phone } from "react-feather";
 import { RouteComponentProps } from "react-router";
-import GoogleMapReact from "google-map-react";
 import { Link } from "react-router-dom";
 import Children from "@Images/children5.jpg";
-import CIcon from "@coreui/icons-react";
-import { cilBaby } from "@coreui/icons";
 import Counter from "react-number-counter";
 type Props = RouteComponentProps<{}>;
 
@@ -16,8 +12,8 @@ const AboutUsPage: React.FC<Props> = () => {
       <main>
         <section className="hero">
           <div className="container">
-            <div className="hero-inner">
-              <div className="hero-copy">
+            <Row>
+              <Col span={12} lg={12} xs={24} className="text-container">
                 <h1>We believe every child deserves a future</h1>
                 <p className="hero-paragraph">
                   Our vision to mobilize the sponsors to create life-changing
@@ -30,23 +26,18 @@ const AboutUsPage: React.FC<Props> = () => {
                   </Link>
                   <Link to="/contactUs">Get in touch</Link>
                 </div>
-              </div>
-              <div>
-                <Image
-                  preview={false}
-                  className="img-item"
-                  width={600}
-                  src={Children}
-                />
-              </div>
-            </div>
+              </Col>
+              <Col lg={12} xs={24} span={12}>
+                <Image preview={false} className="img-item" src={Children} />
+              </Col>
+            </Row>
           </div>
         </section>
         <section className="section-padding pt-0">
           <h3>OUR RESPONSE</h3>
           <div className="container">
-            <div className="row">
-              <div className="col-lg-3 col-md-6">
+            <Row>
+              <div className="col-lg-3 col-md-6 col-sm-6">
                 <div
                   className="text-center border p-4 rounded mb-4"
                   style={{ height: "160px" }}
@@ -57,7 +48,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   <h5 className="text-uppercase mt-2">Our Children</h5>
                 </div>
               </div>
-              <div className="col-lg-3 col-md-6">
+              <div className="col-lg-3 col-md-6 col-sm-6">
                 <div
                   className="text-center border p-4 rounded mb-4"
                   style={{ height: "160px" }}
@@ -70,7 +61,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   </h5>
                 </div>
               </div>
-              <div className="col-lg-3 col-md-6">
+              <div className="col-lg-3 col-md-6 col-sm-6">
                 <div
                   className="text-center border p-4 rounded mb-4"
                   style={{ height: "160px" }}
@@ -84,7 +75,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   </h5>
                 </div>
               </div>
-              <div className="col-lg-3 col-md-6">
+              <div className="col-lg-3 col-md-6 col-xs-6">
                 <div
                   className="text-center border p-4 rounded "
                   style={{ height: "160px" }}
@@ -97,7 +88,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   </h5>
                 </div>
               </div>
-            </div>
+            </Row>
           </div>
         </section>
       </main>

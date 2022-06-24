@@ -1,11 +1,13 @@
 import React, { FC } from "react";
-import { NavLink, RouteComponentProps, withRouter } from "react-router-dom";
-import { useSelector, useDispatch, RootStateOrAny } from "react-redux";
+import {
+  Link,
+  NavLink,
+  RouteComponentProps,
+  withRouter,
+} from "react-router-dom";
 import {
   CContainer,
   CHeader,
-  CHeaderBrand,
-  CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,
   CNavLink,
@@ -13,15 +15,55 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
-import { Avatar, Badge } from "antd";
-import { BellOutlined, MailOutlined } from "@ant-design/icons";
-
+import { Avatar, Badge, Menu } from "antd";
+import { IRegisterModel } from "@Models/ILoginModel";
+import { Dropdown as AntdDropdown } from "antd";
 interface Props extends RouteComponentProps {
   isCollapsed: boolean;
   toggle: () => void;
 }
 
 const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
+  const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
+  React.useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  function findName(value) {
+    if (value) {
+      const name = value.split(" ");
+      return name[name.length - 1][0];
+    }
+  }
+
+  function getCurrentUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setCurrentUser(JSON.parse(retrievedObject));
+    }
+  }
+
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Link to="/admin/myAccount" className="nav-links">
+          My Account
+        </Link>
+      </Menu.Item>
+
+      <Menu.Item>
+        <a
+          onClick={() => (
+            localStorage.setItem("currentUser", null), window.location.reload()
+          )}
+          className="nav-links"
+        >
+          Logout
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -35,42 +77,17 @@ const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
+            <CNavLink href="/">Home</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>
           <CNavItem>
-            <CNavLink href="#" className="nav-item-2">
-              <Badge count={1}>
-                <BellOutlined
-                  style={{
-                    fontSize: "130%",
-                    color: "rgba(44, 56, 74, 0.681)",
-                    marginRight: "2px",
-                  }}
-                />
-              </Badge>
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#" className="nav-item-2">
-              <Badge count={4}>
-                <MailOutlined
-                  style={{
-                    fontSize: "130%",
-                    color: "rgba(44, 56, 74, 0.681)",
-                    marginRight: "2px",
-                  }}
-                />
-              </Badge>
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
             <CNavLink href="#" className="avartar">
-              <Avatar style={{ backgroundColor: "#f56a00" }}>N</Avatar>
+              <AntdDropdown overlay={menu}>
+                <Avatar style={{ backgroundColor: "#f56a00" }}>
+                  {findName(currentUser?.fullName)}
+                </Avatar>
+              </AntdDropdown>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

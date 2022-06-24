@@ -5,22 +5,47 @@ import { useLocation } from "react-router-dom";
 
 const routesName = [
   {
-    path: "/admin/usermanagement/supportcategory",
-    breadcrumb: ["Home", "User Management", "Support Category"],
+    path: "/admin/activityManagement/supportCategories",
+    breadcrumb: ["Admin", "Activity Management", "Support Categories"],
   },
   {
-    path: "/admin/usermanagement/children",
-    breadcrumb: ["Home", "User Management", "Children"],
+    path: "/admin/profileManagement/children",
+    breadcrumb: ["Admin", "Profile Management", "Children"],
   },
-  { path: "/admin/dashboard", breadcrumb: ["Home", "Dashboard"] },
-  { path: "/admin", breadcrumb: ["Home", "Dashboard"] },
+  { path: "/admin/dashboard", breadcrumb: ["Admin", "Dashboard"] },
+
   {
-    path: "/admin/donation/detail",
-    breadcrumb: ["Home", "Donation", "Detail"],
+    path: "/admin/activityManagement/reports",
+    breadcrumb: ["Admin", "Report", "Detail"],
   },
   {
-    path: "/admin/report/detail",
-    breadcrumb: ["Home", "Report", "Detail"],
+    path: "/admin/activityManagement/donations",
+    breadcrumb: ["Admin", "Activity Management", "Donations"],
+  },
+  {
+    path: "/admin/profileManagement/members",
+    breadcrumb: ["Admin", "Profile Management", "Members"],
+  },
+  {
+    path: `/admin/profileManagement/systemUsers`,
+    breadcrumb: ["Admin", "Profile Management", "System Users"],
+  },
+
+  {
+    path: `/admin/activityManagement/reportFields`,
+    breadcrumb: ["Admin", "Activity Management", "Report Fields"],
+  },
+  {
+    path: `/admin/statistic`,
+    breadcrumb: ["Admin", "Statistic"],
+  },
+  {
+    path: `/admin/myAccount`,
+    breadcrumb: ["Admin", "My Account"],
+  },
+  {
+    path: `/admin/activityManagement/reports`,
+    breadcrumb: ["Admin", "Activity Management", "Reports"],
   },
 ];
 const { TextArea } = Input;

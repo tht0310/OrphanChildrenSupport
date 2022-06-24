@@ -1,12 +1,13 @@
 ﻿using OrphanChildrenSupport.Services.Models;
-using OrphanChildrenSupport.Services.Models.DBSets;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace OrphanChildrenSupport.DataContracts
 {
     public class NotificationResource : EngineEntity
     {
+        public long AccountId { get; set; }
+        public string Content { get; set; }
+        public bool IsSeen { get; set; }
+        public DateTime SeenTime { get; set; }
     }
 }

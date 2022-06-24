@@ -14,7 +14,7 @@ import FallBackImage from "@Images/children-default.png";
 interface Props {}
 
 const childrenProfileService = new ChildrenProfileService();
-const childrenDetailUrl = "children/detail";
+const childrenDetailUrl = "children";
 const ChildrenBlock: FC<Props> = ({}: Props) => {
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
@@ -39,7 +39,6 @@ const ChildrenBlock: FC<Props> = ({}: Props) => {
     const dataRes = await childrenProfileService.search({ pageSize: 4 });
     if (!dataRes.hasErrors) {
       setChildrenProfiles(dataRes.value.items);
-      console.log(dataRes.value.items);
     }
   }
 

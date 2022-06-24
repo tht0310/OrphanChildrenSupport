@@ -1,46 +1,136 @@
-import { Card, Col, Row, Tabs } from "antd";
+import { BarChartOutlined } from "@ant-design/icons";
+import DonutPieChart from "@Components/shared/DonutPieChart";
+import ChildrenSection from "@Components/shared/Section/ChildrenSection";
+import WidgetsDropdown from "@Components/shared/WidgetsDropdown";
+import { Card, Col, Divider, Row, Space, Tabs, Tag } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import ChildrenSection from "./StatisticSection/ChildrenSection";
 
 type Props = RouteComponentProps<{}>;
 
 const StatisticPage: React.FC<Props> = () => {
   return (
     <div className="table-container">
-      <Row gutter={16} style={{ margin: "10px 0px 40px 0px" }}>
-        <Col className="gutter-row" span={6}>
-          <div>
-            <Card style={{ textAlign: "center" }}>
-              <h6 style={{ marginBottom: "0" }}>Total</h6>
-              <div style={{ fontSize: "32", fontWeight: "bold" }}>8</div>
-            </Card>
-          </div>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <Card style={{ textAlign: "center" }}>
-            <h6 style={{ marginBottom: "0" }}>Total children</h6>
-            <div style={{ fontSize: "32", fontWeight: "bold" }}>8</div>
+      <WidgetsDropdown />
+
+      <Row>
+        <Col
+          span={16}
+          xs={24}
+          lg={16}
+          style={{ marginBottom: "15px", padding: "0px 5px" }}
+        >
+          <Card>
+            <ChildrenSection
+              history={undefined}
+              location={undefined}
+              match={undefined}
+            />
           </Card>
         </Col>
-        <Col className="gutter-row" span={6}>
-          <Card style={{ textAlign: "center" }}>
-            <h6 style={{ marginBottom: "0" }}>Total children</h6>
-            <div style={{ fontSize: "32", fontWeight: "bold" }}>8</div>
-          </Card>
-        </Col>
-        <Col className="gutter-row" span={6}>
-          <Card style={{ textAlign: "center" }}>
-            <h6 style={{ marginBottom: "0" }}>Total children</h6>
-            <div style={{ fontSize: "32", fontWeight: "bold" }}>8</div>
+        <Col xs={24} lg={8} span={8} style={{ padding: "0px 5px" }}>
+          <Card>
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#606060",
+                fontSize: "13px",
+                marginBottom: "20px",
+              }}
+            >
+              Top Donation
+            </div>
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
+            <Divider style={{ margin: "10px 0" }} />
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
+            <Divider style={{ margin: "10px 0" }} />
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
+            <Divider style={{ margin: "10px 0" }} />
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
+            <Divider style={{ margin: "10px 0" }} />
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
+            <Divider style={{ margin: "10px 0" }} />
+            <Row>
+              <Col span={24}>Nguyen Van A</Col>
+              <Col
+                span={24}
+                style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
+              >
+                anguyen@gmail.com - Donation times: 8
+              </Col>
+            </Row>
           </Card>
         </Col>
       </Row>
-      <ChildrenSection
-        history={undefined}
-        location={undefined}
-        match={undefined}
-      />
+      <Row>
+        <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
+          <Card>
+            <div style={{ textAlign: "center", marginBottom: "10px" }}>
+              Donation
+            </div>
+
+            <DonutPieChart
+              history={undefined}
+              location={undefined}
+              match={undefined}
+            />
+          </Card>
+        </Col>
+        <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
+          <Card>
+            <div style={{ textAlign: "center", marginBottom: "10px" }}>
+              Report
+            </div>
+
+            <DonutPieChart
+              history={undefined}
+              location={undefined}
+              match={undefined}
+            />
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
