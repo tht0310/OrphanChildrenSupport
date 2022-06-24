@@ -10,9 +10,9 @@ import { IReportStatisticModel } from "@Models/IStatisticModel";
 
 export default class StatisticService extends ServiceBase {
   public async getStatisticDonation(): Promise<
-    Result<IQueryResult<IReportStatisticModel>>
+    Result<IReportStatisticModel[]>
   > {
-    const result = await this.requestJson<IQueryResult<IReportStatisticModel>>({
+    const result = await this.requestJson<IReportStatisticModel[]>({
       url: `/api/donations/getStatistics`,
       method: "GET",
     });
@@ -20,9 +20,9 @@ export default class StatisticService extends ServiceBase {
   }
 
   public async getStatisticReport(): Promise<
-    Result<IQueryResult<IReportStatisticModel>>
+    Result<IReportStatisticModel[]>
   > {
-    const result = await this.requestJson<IQueryResult<IReportStatisticModel>>({
+    const result = await this.requestJson<IReportStatisticModel[]>({
       url: `/api/reports/getStatistics`,
       method: "GET",
     });
@@ -31,8 +31,8 @@ export default class StatisticService extends ServiceBase {
 
   public async getTopDonations(
     limit: number
-  ): Promise<Result<IQueryResult<ITopDonationUserModel>>> {
-    const result = await this.requestJson<IQueryResult<ITopDonationUserModel>>({
+  ): Promise<Result<ITopDonationUserModel[]>> {
+    const result = await this.requestJson<ITopDonationUserModel[]>({
       url: `/api/accounts/getTopDonationUsers/${limit}`,
       method: "GET",
     });

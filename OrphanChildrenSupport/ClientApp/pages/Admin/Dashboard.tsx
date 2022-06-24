@@ -2,7 +2,7 @@ import React from "react";
 
 import WidgetsDropdown from "@Components/shared/WidgetsDropdown";
 import DonutPieChart from "@Components/shared/DonutPieChart";
-import { Card, Col, Divider, Row } from "antd";
+import { Card, Col, Divider, Row, Space } from "antd";
 import ChildrenSection from "@Components/shared/Section/ChildrenSection";
 import StatisticService from "@Services/StatisticService";
 import {
@@ -33,21 +33,22 @@ const Dashboard = () => {
   async function fetchDonation() {
     const res = await statisticService.getStatisticDonation();
     if (!res.hasErrors) {
-      setDonations(res.value.items);
+      setDonations(res.value);
     }
   }
 
   async function fetchReport() {
     const res = await statisticService.getStatisticReport();
+
     if (!res.hasErrors) {
-      setReports(res.value.items);
+      setReports(res.value);
     }
   }
 
   async function fetchTopUser() {
     const res = await statisticService.getTopDonations(6);
     if (!res.hasErrors) {
-      setTopUsers(res.value.items);
+      setTopUsers(res.value);
     }
   }
 
@@ -59,7 +60,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="table-container">
+    <div className="table-container dashbaord-page">
       <WidgetsDropdown />
       <Row>
         <Col
@@ -68,36 +69,55 @@ const Dashboard = () => {
           lg={16}
           style={{ marginBottom: "15px", padding: "0px 5px" }}
         >
-          <Card>
-            <ChildrenSection data={donationTime} />
-          </Card>
-        </Col>
-        <Col xs={24} lg={8} span={8} style={{ padding: "0px 5px 15px 5px" }}>
-          <Card>
+          <Card className="chart">
             <div
               style={{
                 textAlign: "center",
                 fontWeight: "bold",
                 color: "#606060",
-                fontSize: "13px",
+                fontSize: "16px",
+                marginBottom: "15px",
+              }}
+            >
+              Supported Children
+            </div>
+
+            <ChildrenSection data={donationTime} />
+          </Card>
+        </Col>
+        <Col xs={24} lg={8} span={8} style={{ padding: "0px 5px 15px 5px" }}>
+          <Card style={{ height: "100%" }}>
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#606060",
+                fontSize: "16px",
+                margin: "0px 0px 15px 0px",
               }}
             >
               Top Donation
             </div>
 
-            {topUser?.map((v) => {
-              <>
-                <Row>
-                  <Col span={24}>{v.fullName}</Col>
-                  <Col
-                    span={24}
-                    style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}
-                  >
-                    {v.email} - Donation times: {v.value}
-                  </Col>
-                </Row>
-                <Divider style={{ margin: "10px 0" }} />
-              </>;
+            {topUser?.map((v, index) => {
+              return (
+                <>
+                  <div>
+                    <div>{v.fullName}</div>
+                    <div style={{ color: "rgba(0,0,0,.45)", fontSize: "12px" }}>
+                      <Row>
+                        <Col span={18}>{v.email}</Col>
+                        <Col span={6} style={{ textAlign: "right" }}>
+                          Times: {v.value}
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                  {index !== topUser.length - 1 && (
+                    <Divider style={{ margin: "10px 0" }} />
+                  )}
+                </>
+              );
             })}
           </Card>
         </Col>
@@ -109,7 +129,7 @@ const Dashboard = () => {
               Donation
             </div>
 
-            {/* <DonutPieChart data={donations} /> */}
+            <DonutPieChart data={donations} />
           </Card>
         </Col>
         <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
@@ -118,7 +138,7 @@ const Dashboard = () => {
               Report
             </div>
 
-            {/* <DonutPieChart data={reports} /> */}
+            <DonutPieChart data={reports} />
           </Card>
         </Col>
       </Row>

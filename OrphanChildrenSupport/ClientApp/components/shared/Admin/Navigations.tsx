@@ -79,17 +79,6 @@ const adminMenu = [
     to: "/admin/activityManagement/reportFields",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
-
-  {
-    component: CNavTitle,
-    name: "Other",
-  },
-  {
-    component: CNavItem,
-    name: "Statistic",
-    to: "/admin/statistic",
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-  },
 ];
 
 const volunteerMenu = [
@@ -148,17 +137,6 @@ const volunteerMenu = [
     name: "Report Fields",
     to: "/admin/activityManagement/reportFields",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
-  },
-
-  {
-    component: CNavTitle,
-    name: "Other",
-  },
-  {
-    component: CNavItem,
-    name: "Statistic",
-    to: "/admin/statistic",
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
   },
 ];
 
