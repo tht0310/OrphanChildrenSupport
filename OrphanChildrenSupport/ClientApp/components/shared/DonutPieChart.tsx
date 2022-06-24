@@ -10,15 +10,15 @@ const DonutPieChart: React.FC<IProps> = ({ data }: IProps) => {
   const config = {
     appendPadding: 10,
     data,
-    angleField: "value",
-    colorField: "type",
+    angleField: "percentage",
+    colorField: "status",
     radius: 0.9,
     label: {
       type: "inner",
       offset: "-30%",
       content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
       style: {
-        fontSize: 14,
+        fontSize: 11,
         textAlign: "center",
       },
     },

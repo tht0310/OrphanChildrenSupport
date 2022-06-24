@@ -138,7 +138,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                   </div>
                 </div>
               </div>
-              <Card style={{ width: "100%" }}>
+              <Card style={{ width: "100%" }} className="chart">
                 <div>
                   <Row>
                     <Col span={12}>
