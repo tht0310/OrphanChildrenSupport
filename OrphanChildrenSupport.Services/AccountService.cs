@@ -788,7 +788,7 @@ namespace OrphanChildrenSupport.Services
             string message;
             if (!string.IsNullOrEmpty(origin))
             {
-                var verifyUrl = $"{origin}/account/verify-email?token={account.VerificationToken}";
+                var verifyUrl = $"{origin}/accounts/verify-email?token={account.VerificationToken}";
                 message = $@"<p>Please click the below link to verify your email address:</p>
                              <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
             }

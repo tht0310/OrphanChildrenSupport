@@ -35,7 +35,7 @@ const { RangePicker } = DatePicker;
 type Props = RouteComponentProps<{}>;
 
 const childrenProfileService = new ChildrenProfileService();
-const childrenDetailUrl = "children/detail";
+const childrenDetailUrl = "children";
 const favouriteChildrenService = new FavoriteService();
 
 const userService = new AccountService();

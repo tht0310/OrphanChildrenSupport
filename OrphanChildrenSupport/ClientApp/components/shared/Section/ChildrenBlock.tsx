@@ -14,7 +14,7 @@ export interface IProps {
 }
 
 const childrenProfileService = new ChildrenProfileService();
-const childrenDetailUrl = "children/detail";
+const childrenDetailUrl = "children";
 const ChildrenBlock: React.FC<IProps> = ({
   children,
   title,

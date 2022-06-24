@@ -64,7 +64,7 @@ const RegisterPage: React.FC<Props> = () => {
 
   async function register(values: IRegisterModel | any) {
     values.address =
-      values.city + "-" + values.province + "-" + values.houseNumber;
+      values.province + "-" + values.city + "-" + values.houseNumber;
     const res = await accService.register(values);
 
     if (!res.hasErrors) {
@@ -80,7 +80,7 @@ const RegisterPage: React.FC<Props> = () => {
       <h3>Register</h3>
       {isSuccess && (
         <div className="message-custom">
-          User Registration Sucessfull. Please check your email for verify.
+          Registration sucessfully! Please check your email for verification
         </div>
       )}
       <Form
@@ -133,7 +133,7 @@ const RegisterPage: React.FC<Props> = () => {
         <Form.Item
           {...inlineFormLayout}
           name="phoneNumber"
-          label="Phone"
+          label="Phone Number"
           rules={[
             { required: true, message: "Please enter phone number" },
             { min: 10, message: "Phone must be at least 10 digits" },
@@ -153,13 +153,6 @@ const RegisterPage: React.FC<Props> = () => {
           required
         >
           <Form.Item
-            name="city"
-            style={{ display: "inline-block", width: "25%" }}
-            rules={[{ required: true, message: "Please enter city" }]}
-          >
-            <Input placeholder="Enter city" />
-          </Form.Item>
-          <Form.Item
             name="province"
             rules={[{ required: true, message: "Please enter province ." }]}
             style={{
@@ -168,6 +161,13 @@ const RegisterPage: React.FC<Props> = () => {
             }}
           >
             <Input placeholder="Enter province" />
+          </Form.Item>
+          <Form.Item
+            name="city"
+            style={{ display: "inline-block", width: "25%" }}
+            rules={[{ required: true, message: "Please enter city" }]}
+          >
+            <Input placeholder="Enter city" />
           </Form.Item>
           <Form.Item
             name="houseNumber"
@@ -221,7 +221,7 @@ const RegisterPage: React.FC<Props> = () => {
         <Form.Item
           name="confirmPassword"
           {...inlineFormLayout}
-          label="Confirm "
+          label="Confirm Password"
           dependencies={["password"]}
           hasFeedback
           rules={[

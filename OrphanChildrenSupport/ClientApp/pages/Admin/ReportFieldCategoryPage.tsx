@@ -88,7 +88,7 @@ const ReportFieldCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created time",
+      title: "Created Time",
       dataIndex: "createdTime",
       render: (text: Date, row, index) => (
         <>{text ? displayDateTime(text) : displayDateTime(row.lastModified)}</>
@@ -118,7 +118,7 @@ const ReportFieldCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created time",
+      title: "Created Time",
       dataIndex: "createdTime",
       key: "createdTime",
       ellipsis: true,

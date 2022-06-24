@@ -237,10 +237,16 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     _logger.LogDebug($"{loggerHeader} - Start to ViewChildrenProfileImage with Id: {id}");
-                    var childrenProfile = await unitOfWork.ChildrenProfileImageRepository.FindFirst(d => d.Id == id && d.IsDeleted == false);
-                    var image = File.OpenRead(childrenProfile.ImagePath);
-                    apiResponse.Data = image;
-                    _logger.LogDebug($"{loggerHeader} - ViewChildrenProfileImage successfully with Id: {id}");
+                    var childrenProfileImage = await unitOfWork.ChildrenProfileImageRepository.FindFirst(d => d.Id == id && d.IsDeleted == false);
+                    if (childrenProfileImage != null)
+                    {
+                        var image = File.OpenRead(childrenProfileImage.ImagePath);
+                        apiResponse.Data = image;
+                        _logger.LogDebug($"{loggerHeader} - ViewChildrenProfileImage successfully with Id: {id}");
+                    } else
+                    {
+                        apiResponse.Data = File.OpenRead("wwwroot\\dist\\d637647145ebc0a2037f6eea9ca6c989.png");
+                    }
                 }
                 catch (Exception ex)
                 {

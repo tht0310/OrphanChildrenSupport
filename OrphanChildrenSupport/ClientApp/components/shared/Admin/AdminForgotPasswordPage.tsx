@@ -21,7 +21,7 @@ const AdminForgotPasswordPage: React.FC<Props> = () => {
   async function login(values: ILoginModel) {
     const res = await userService.login(values);
     if (!res.hasErrors) {
-      window.location.replace("/admin");
+      window.location.replace("/admin/dashboard");
     } else {
       message.error("Wrong username or password");
     }

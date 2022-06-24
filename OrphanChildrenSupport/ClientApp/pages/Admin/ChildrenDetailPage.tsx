@@ -292,7 +292,11 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 <Col span={21}>
                   <Button
                     style={{ height: "105%" }}
-                    onClick={() => toggleChildrenModal()}
+                    onClick={() =>
+                      currentUser !== null
+                        ? toggleChildrenModal()
+                        : (window.location.href = "/login")
+                    }
                     disabled={selected.length > 0 ? false : true}
                   >
                     {" "}
@@ -310,7 +314,11 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       color: "#E57905",
                       border: "1px solid #FFF7E6",
                     }}
-                    onClick={favoriteChildren}
+                    onClick={() =>
+                      currentUser !== null
+                        ? favoriteChildren()
+                        : (window.location.href = "/login")
+                    }
                   >
                     <HeartOutlined style={{ fontSize: "12px" }} />
                     Favorite this child
@@ -318,7 +326,11 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 </Col>
                 <Col span={10}>
                   <Button
-                    onClick={toggleChildrenDrawer}
+                    onClick={() =>
+                      currentUser !== null
+                        ? toggleChildrenDrawer()
+                        : (window.location.href = "/login")
+                    }
                     style={{
                       height: "105%",
                       background: "#FFF7E6",
@@ -328,7 +340,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   >
                     {" "}
                     <WarningOutlined style={{ fontSize: "12px" }} />
-                    Report information
+                    Reports
                   </Button>
                 </Col>
               </Row>

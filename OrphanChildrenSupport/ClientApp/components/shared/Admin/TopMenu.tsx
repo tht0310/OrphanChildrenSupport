@@ -5,7 +5,6 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { useSelector, useDispatch, RootStateOrAny } from "react-redux";
 import {
   CContainer,
   CHeader,
@@ -47,8 +46,8 @@ const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to="/admin/myaccount" className="nav-links">
-          My account
+        <Link to="/admin/myAccount" className="nav-links">
+          My Account
         </Link>
       </Menu.Item>
 
@@ -78,7 +77,7 @@ const TopMenu: FC<Props> = ({ isCollapsed = false, toggle }: Props) => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="/">Home Page</CNavLink>
+            <CNavLink href="/">Home</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav>

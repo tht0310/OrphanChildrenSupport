@@ -72,7 +72,7 @@ const ReportManagementPage: React.FC<Props> = () => {
       width: "16%",
       align: "center",
       render: (text, row, index) => (
-        <Link to={`/admin/activityManagement/report/${row.id}`}>
+        <Link to={`/admin/activityManagement/reports/${row.id}`}>
           RC{10000 + row.id}
         </Link>
       ),
@@ -104,8 +104,8 @@ const ReportManagementPage: React.FC<Props> = () => {
     },
     {
       title: "Status",
-      dataIndex: "reportStatus",
-      key: "reportStatus",
+      dataIndex: "status",
+      key: "status",
       align: "center",
       width: "18%",
       render: (text, row, index) => (
@@ -121,7 +121,7 @@ const ReportManagementPage: React.FC<Props> = () => {
       key: "address",
       render: (text, record, index) => (
         <Space className="actions">
-          <Link to={`/admin/activityManagement/report/${record.id}`}>
+          <Link to={`/admin/activityManagement/reports/${record.id}`}>
             <Button
               onClick={toggleModal}
               className="btn-custom-2 blue-action-btn"
@@ -202,7 +202,7 @@ const ReportManagementPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row>
           <Col span={14} className="table-title">
-            Report Information
+            Reports
           </Col>
           <Col span={8}>
             <div className="option-pannel">

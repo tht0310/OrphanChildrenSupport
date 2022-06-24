@@ -47,7 +47,7 @@ export const routes = (
 
     <ProtectedRoute
       layout={AuthorizedLayout}
-      path="/admin/profileManagement/systemUser"
+      path="/admin/profileManagement/systemUsers"
       component={VolunteerPage}
     />
 
@@ -55,7 +55,7 @@ export const routes = (
     <AdminRoute
       layout={AuthorizedLayout}
       exact
-      path="/admin"
+      path="/admin/dashboard"
       component={Dashboard}
     />
     <AdminRoute
@@ -78,29 +78,29 @@ export const routes = (
     />
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/supportCategory"
+      path="/admin/activityManagement/supportCategories"
       component={SupportCategoryPage}
     />
 
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/profileManagement/member"
+      path="/admin/profileManagement/members"
       component={RegisteredProfilePage}
     />
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/donation/:id"
+      path="/admin/activityManagement/donations/:id"
       component={DonationDetailPage}
     />
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/donation/"
+      path="/admin/activityManagement/donations/"
       component={DonationManagementPage}
     />
 
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/report/:id"
+      path="/admin/activityManagement/reports/:id"
       component={ReportDetailPage}
     />
     <AdminRoute
@@ -110,12 +110,12 @@ export const routes = (
     />
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/reportField"
+      path="/admin/activityManagement/reportFields"
       component={ReportFieldCategoryPage}
     />
     <AdminRoute
       layout={AuthorizedLayout}
-      path="/admin/activityManagement/report"
+      path="/admin/activityManagement/reports"
       component={ReportManagementPage}
     />
 
@@ -175,18 +175,18 @@ export const routes = (
     <NormalUserRoute
       layout={GuestLayout}
       exact
-      path="/childrenSupported"
+      path="/children/supported"
       component={ChildrenSupportedPage}
     />
     <NormalUserRoute
       layout={GuestLayout}
       exact
-      path="/childrenWaitingForSupport"
+      path="/children/waitingForSupport"
       component={ChildrenWaitingForSupportPage}
     />
     <NormalUserRoute
       layout={GuestLayout}
-      path="/children/detail/:id"
+      path="/children/:id"
       component={ChildrenDetailPage}
     />
     <NormalUserRoute

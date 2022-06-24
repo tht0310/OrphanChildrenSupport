@@ -1,4 +1,3 @@
-
 import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
 import { IFilterType } from "@Models/IFilterType";
@@ -6,7 +5,9 @@ import { IQueryResult } from "@Models/IQueryResult";
 import { IReportDetailModel } from "./../models/IReportModel";
 
 export default class ReportDetailService extends ServiceBase {
-  public async add(model: IReportDetailModel): Promise<Result<IReportDetailModel>> {
+  public async add(
+    model: IReportDetailModel
+  ): Promise<Result<IReportDetailModel>> {
     var result = await this.requestJson<IReportDetailModel>({
       url: "/api/reportDetails",
       method: "POST",
@@ -23,14 +24,13 @@ export default class ReportDetailService extends ServiceBase {
     return result;
   }
 
-  
   public async search(
-    value:IFilterType
+    value: IFilterType
   ): Promise<Result<IQueryResult<IReportDetailModel>>> {
     const result = await this.requestJson<IQueryResult<IReportDetailModel>>({
       url: `/api/reportDetails`,
       method: "GET",
-      data:value
+      data: value,
     });
     return result;
   }
@@ -68,16 +68,13 @@ export default class ReportDetailService extends ServiceBase {
     return result;
   }
 
-
-
   public async approveReportDetail(id): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/reportDetails/finish/${id}`,
+      url: `/api/reportDetails/approve/${id}`,
       method: "PUT",
     });
     return result;
   }
-
 
   public async rejectReportDetail(id): Promise<Result<{}>> {
     var result = await this.requestJson({
@@ -86,5 +83,4 @@ export default class ReportDetailService extends ServiceBase {
     });
     return result;
   }
-
 }

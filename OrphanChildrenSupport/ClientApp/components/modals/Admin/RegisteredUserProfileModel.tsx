@@ -84,7 +84,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
 
   async function onFinish(values: IRegisterModel | any) {
     values.address =
-      values.city + "-" + values.province + "-" + values.houseNumber;
+      values.province + "-" + values.city + "-" + values.houseNumber;
     if (data) {
       const res = await accountService.update(values);
       if (!res.hasErrors) {
@@ -256,13 +256,6 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
               required
             >
               <Form.Item
-                name="city"
-                style={{ display: "inline-block", width: "25%" }}
-                rules={[{ required: true, message: "Please enter city" }]}
-              >
-                <Input placeholder="Enter city" />
-              </Form.Item>
-              <Form.Item
                 name="province"
                 rules={[{ required: true, message: "Please enter province ." }]}
                 style={{
@@ -271,6 +264,13 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                 }}
               >
                 <Input placeholder="Enter province" />
+              </Form.Item>
+              <Form.Item
+                name="city"
+                style={{ display: "inline-block", width: "25%" }}
+                rules={[{ required: true, message: "Please enter city" }]}
+              >
+                <Input placeholder="Enter city" />
               </Form.Item>
               <Form.Item
                 name="houseNumber"
@@ -328,14 +328,11 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   rules={[{ required: true, message: "Please enter role." }]}
                 >
                   <Select>
-                    <Select.Option value="User" key="1">
-                      Normal User
+                    <Select.Option value="2" key="1">
+                      Member
                     </Select.Option>
-                    <Select.Option value="SystemUser" key="0">
+                    <Select.Option value="1" key="0">
                       System User
-                    </Select.Option>
-                    <Select.Option value="Admin" key="2">
-                      Admin
                     </Select.Option>
                   </Select>
                 </Form.Item>
@@ -424,7 +421,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
 
                   <Col xs={24} lg={12}>
                     <Form.Item
-                      label="Created time"
+                      label="Created Time"
                       name="createdTime"
                       {...inlineCol2FormLayout}
                     >

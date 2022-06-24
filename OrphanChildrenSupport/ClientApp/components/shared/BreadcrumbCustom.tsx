@@ -5,52 +5,47 @@ import { useLocation } from "react-router-dom";
 
 const routesName = [
   {
-    path: "/admin/activityManagement/supportCategory",
-    breadcrumb: ["Admin", "Activity Management", "Support Category"],
+    path: "/admin/activityManagement/supportCategories",
+    breadcrumb: ["Admin", "Activity Management", "Support Categories"],
   },
   {
     path: "/admin/profileManagement/children",
     breadcrumb: ["Admin", "Profile Management", "Children"],
   },
   { path: "/admin/dashboard", breadcrumb: ["Admin", "Dashboard"] },
-  { path: "/admin", breadcrumb: ["Admin", "Dashboard"] },
 
   {
-    path: "/admin/activityManagement/report",
+    path: "/admin/activityManagement/reports",
     breadcrumb: ["Admin", "Report", "Detail"],
   },
   {
-    path: "/admin/activityManagement/donation",
-    breadcrumb: ["Admin", "Activity Management", "Donation"],
+    path: "/admin/activityManagement/donations",
+    breadcrumb: ["Admin", "Activity Management", "Donations"],
   },
   {
-    path: "/admin/profileManagement/member",
-    breadcrumb: ["Admin", "Profile Management", "Member"],
+    path: "/admin/profileManagement/members",
+    breadcrumb: ["Admin", "Profile Management", "Members"],
   },
   {
-    path: `/admin/profileManagement/systemUser`,
-    breadcrumb: ["Admin", "Profile Management", "System User"],
+    path: `/admin/profileManagement/systemUsers`,
+    breadcrumb: ["Admin", "Profile Management", "System Users"],
   },
 
   {
-    path: `/admin/activityManagement/reportField`,
-    breadcrumb: ["Admin", "Activity Management", "Report Field"],
-  },
-  {
-    path: `/admin/activitymManagement/report`,
-    breadcrumb: ["Admin", "User Management", "Report"],
+    path: `/admin/activityManagement/reportFields`,
+    breadcrumb: ["Admin", "Activity Management", "Report Fields"],
   },
   {
     path: `/admin/statistic`,
     breadcrumb: ["Admin", "Statistic"],
   },
   {
-    path: `/admin/myaccount`,
+    path: `/admin/myAccount`,
     breadcrumb: ["Admin", "My Account"],
   },
   {
-    path: `/admin/activityManagement/report`,
-    breadcrumb: ["Admin", "Activity Management", "Report"],
+    path: `/admin/activityManagement/reports`,
+    breadcrumb: ["Admin", "Activity Management", "Reports"],
   },
 ];
 const { TextArea } = Input;

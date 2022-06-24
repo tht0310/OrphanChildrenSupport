@@ -130,7 +130,7 @@ const SupportCategoryModal: React.FC<IProps> = ({
 
               <Col xs={24} lg={12}>
                 <Form.Item
-                  label="Created time"
+                  label="Created Time"
                   name="createdTime"
                   {...inlineCol2FormLayout}
                 >

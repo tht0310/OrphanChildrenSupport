@@ -224,7 +224,7 @@ const ReportDetailModal: React.FC<IProps> = ({
     item[name] = value[name];
     const res = await childrenService.update(item);
     if (!res.hasErrors) {
-      data.reportDetailStatus = 1;
+      data.status = 1;
       await reportDetailService.update(data);
       message.success("Change data sucessfull");
       onCancel();

@@ -146,8 +146,8 @@ const VolunteerProfileModal: React.FC<IProps> = ({
   async function onFinish(values: IChildrenProfileModel | any) {
     //Prepare value
     values.detailAddress =
-      values.city + "-" + values.province + "-" + values.houseNumber;
-    values.publicAddress = values.city + "-" + values.province;
+      values.province + "-" + values.city + "-" + values.houseNumber;
+    values.publicAddress = values.province + "-" + values.city;
     if (data) {
       const tempList = [];
       if (values.childrenCategoryGroup) {
@@ -369,11 +369,11 @@ const VolunteerProfileModal: React.FC<IProps> = ({
                   rules={[{ required: true, message: "Please enter status." }]}
                 >
                   <Select defaultValue={"1"}>
-                    <Select.Option value="0" key="1">
-                      Normal User
+                    <Select.Option value="2" key="1">
+                      Member
                     </Select.Option>
                     <Select.Option value="1" key="0">
-                      Volunteer
+                      System User
                     </Select.Option>
                   </Select>
                 </Form.Item>
@@ -412,7 +412,7 @@ const VolunteerProfileModal: React.FC<IProps> = ({
 
                   <Col xs={24} lg={12}>
                     <Form.Item
-                      label="Created time"
+                      label="Created Time"
                       name="createdTime"
                       {...inlineCol2FormLayout}
                     >

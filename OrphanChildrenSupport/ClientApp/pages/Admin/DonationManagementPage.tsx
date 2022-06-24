@@ -72,7 +72,7 @@ const DonationManagementPage: React.FC<Props> = () => {
       width: "16%",
       align: "center",
       render: (text, row, index) => (
-        <Link to={`/admin/activityManagement/donation/${row.id}`}>
+        <Link to={`/admin/activityManagement/donations/${row.id}`}>
           DC{10000 + row.id}
         </Link>
       ),
@@ -119,7 +119,7 @@ const DonationManagementPage: React.FC<Props> = () => {
       key: "address",
       render: (text, record, index) => (
         <Space className="actions">
-          <Link to={`/admin/activityManagement/donation/${record.id}`}>
+          <Link to={`/admin/activityManagement/donations/${record.id}`}>
             <Button
               className="btn-custom-2 blue-action-btn"
               icon={<Edit2 size={14} style={{ color: "#40A9FF" }} />}
@@ -199,7 +199,7 @@ const DonationManagementPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row>
           <Col span={14} className="table-title">
-            Donation Information
+            Donations
           </Col>
           <Col span={8}>
             <div className="option-pannel">

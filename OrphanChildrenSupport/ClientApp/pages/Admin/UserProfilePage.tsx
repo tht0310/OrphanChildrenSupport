@@ -210,7 +210,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Phone",
+      title: "Phone Number",
       dataIndex: "phoneNumber",
       width: "14%",
       align: "center",
@@ -338,7 +338,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={14} className="table-title">
-            Member Information
+            Members
           </Col>
           <Col span={7}>
             <div className="option-pannel">

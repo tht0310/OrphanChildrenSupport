@@ -21,7 +21,7 @@ const AdminLoginPage: React.FC<Props> = () => {
   async function login(values: ILoginModel) {
     const res = await userService.login(values);
     if (!res.hasErrors) {
-      window.location.replace("/admin");
+      window.location.replace("/admin/dashboard");
     } else {
       message.error("Wrong username or password");
     }
@@ -88,11 +88,11 @@ const AdminLoginPage: React.FC<Props> = () => {
 
           <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox>Remember Me</Checkbox>
             </Form.Item>
 
             <Link className="login-form-forgot" to={"/forgotPassword"}>
-              Forgot password ?
+              Forgot Password?
             </Link>
           </Form.Item>
 
@@ -102,7 +102,7 @@ const AdminLoginPage: React.FC<Props> = () => {
               onClick={form.submit}
               className="login-form-button"
             >
-              Submit
+              Login
             </Button>
           </Form.Item>
         </Form>

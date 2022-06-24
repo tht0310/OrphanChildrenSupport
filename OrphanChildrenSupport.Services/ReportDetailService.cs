@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -238,37 +239,33 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
+                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id,
+                                        include: source => source.Include(d => d.Report).ThenInclude(a => a.Account).Include(d => d.ReportFieldCategory));
                     reportDetail.Status = ReportDetailStatus.Approved;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
 
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == reportDetail.Report.ChildrenProfileId);
                     switch (reportDetail.ReportFieldCategory.Title)
                     {
-                        case "FullName":
+                        case "fullName":
                             childrenProfile.FullName = reportDetail.ReportInformation;
                             break;
                         case "Gender":
-                            if (reportDetail.ReportInformation == "Nam")
-                            {
-                                childrenProfile.Gender = true;
-                            } else
+                            if (reportDetail.ReportInformation == "0")
                             {
                                 childrenProfile.Gender = false;
+                            }
+                            else
+                            {
+                                childrenProfile.Gender = true;
                             }
                             break;
                         case "DOB":
                             childrenProfile.DOB = DateTime.Parse(reportDetail.ReportInformation);
                             childrenProfile.Age = GetAge(childrenProfile.DOB);
                             break;
-                        case "GuardianPhoneNumber":
-                            childrenProfile.GuardianPhoneNumber = reportDetail.ReportInformation;
-                            break;
                         case "GuardianName":
                             childrenProfile.GuardianName = reportDetail.ReportInformation;
-                            break;
-                        case "DetailAddress":
-                            childrenProfile.DetailAddress = reportDetail.ReportInformation;
                             break;
                         case "PublicAddress":
                             childrenProfile.PublicAddress = reportDetail.ReportInformation;
@@ -279,7 +276,8 @@ namespace OrphanChildrenSupport.Services
                     }
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
-                    reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == reportDetail.Id);
+                    reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id,
+                                        include: source => source.Include(d => d.Report).ThenInclude(a => a.Account).Include(d => d.ReportFieldCategory));
                     apiResponse.Data = _mapper.Map<ReportDetail, ReportDetailResource>(reportDetail);
                     _logger.LogDebug($"{loggerHeader} - ApproveReportDetail successfully with Id: {apiResponse.Data.Id}");
 

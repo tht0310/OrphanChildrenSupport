@@ -7,9 +7,7 @@ import {
   DownOutlined,
   DropboxOutlined,
   HeartFilled,
-  HeartTwoTone,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { IRegisterModel } from "@Models/ILoginModel";
 
@@ -25,17 +23,17 @@ const TopMenu: React.FC<Props> = () => {
     <Menu>
       <Menu.Item>
         <Link to="/children" className="nav-links">
-          Our children
+          All
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/childrenSupported" className="nav-links">
-          Children supported
+        <Link to="/children/supported" className="nav-links">
+          Supported
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/childrenWaitingForSupport" className="nav-links">
-          Children waiting for support
+        <Link to="/children/waitingForSupport" className="nav-links">
+          Waiting For Support
         </Link>
       </Menu.Item>
     </Menu>
@@ -44,8 +42,8 @@ const TopMenu: React.FC<Props> = () => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to="/myaccount" className="nav-links">
-          My account
+        <Link to="/myAccount" className="nav-links">
+          My Account
         </Link>
       </Menu.Item>
       <Menu.Item>
@@ -160,9 +158,6 @@ const TopMenu: React.FC<Props> = () => {
                 <Link className="ant-menu-item-custom" to={"/"}>
                   Home
                 </Link>
-                <Link className="ant-menu-item-custom" to={"/aboutUs"}>
-                  About us
-                </Link>
                 <div className="ant-menu-item-custom">
                   <AntdDropdown overlay={menu2}>
                     <a onClick={(e) => e.preventDefault()}>
@@ -171,8 +166,11 @@ const TopMenu: React.FC<Props> = () => {
                   </AntdDropdown>
                   {dropdown && <DropboxOutlined />}
                 </div>
+                <Link className="ant-menu-item-custom" to={"/aboutUs"}>
+                  About Us
+                </Link>
                 <Link className="ant-menu-item-custom" to={"/contactUs"}>
-                  Contact us
+                  Contact Us
                 </Link>
               </Menu>
             </div>

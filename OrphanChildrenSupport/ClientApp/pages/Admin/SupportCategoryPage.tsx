@@ -68,7 +68,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created time",
+      title: "Created Time",
       dataIndex: "createdTime",
       render: (text: Date, row, index) => (
         <>{text ? displayDateTime(text) : displayDateTime(row.lastModified)}</>
@@ -98,7 +98,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       ),
     },
     {
-      title: "Created time",
+      title: "Created Time",
       dataIndex: "createdTime",
       key: "createdTime",
       ellipsis: true,
@@ -179,7 +179,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={14} className="table-title">
-            Support Category
+            Support Categories
           </Col>
           <Col span={7}>
             <div className="option-pannel">

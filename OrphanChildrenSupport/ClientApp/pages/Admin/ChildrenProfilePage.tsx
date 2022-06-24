@@ -368,7 +368,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row>
           <Col span={14} className="table-title">
-            Children Information
+            Children
           </Col>
 
           <Col span={7}>

@@ -1,13 +1,12 @@
 import {
   EnvironmentOutlined,
   FacebookOutlined,
-  HomeOutlined,
   InstagramOutlined,
   MailOutlined,
   WhatsAppOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Input, Row, Space } from "antd";
+import { Col, Row, Space } from "antd";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -21,17 +20,17 @@ const Footer: FC<Props> = () => {
         <Row>
           <Col span={10} lg={10} xs={0}>
             <div className="title">Stay connected</div>
-            <div className="content">
+            {/* <div className="content">
               Join us to receive weekly information about children.
-            </div>
-            <Row>
+            </div> */}
+            {/* <Row>
               <Col span={14}>
                 <Input placeholder="Enter email" />
               </Col>
               <Col span={10}>
                 <Button style={{ zIndex: 0 }}>Submit</Button>
               </Col>
-            </Row>
+            </Row> */}
             <div className="icons">
               <Space size={15}>
                 <FacebookOutlined style={{ fontSize: "30px" }} />
@@ -48,7 +47,7 @@ const Footer: FC<Props> = () => {
             <div className="title">INFORMATION</div>
             <div className="content">
               <Link to="/aboutUs" style={{ color: "white" }}>
-                About For the Children
+                About Us
               </Link>
             </div>
             <div className="content">
@@ -56,34 +55,23 @@ const Footer: FC<Props> = () => {
                 Contact Us
               </Link>
             </div>
-            <div className="content">
-              <Link to="/contactUs" style={{ color: "white" }}>
-                Our team
-              </Link>
-            </div>
-            <div className="content">Report information</div>
+            <div className="content">Terms And Conditions</div>
           </Col>
           <Col className="last-col" span={4} lg={4} xs={24}>
             <div className="title">GET HELP </div>
-            <div className="content">Help center</div>
+            <div className="content">FAQ</div>
+            <div className="content">Help Center</div>
             <div className="content">Privacy Policy</div>
           </Col>
         </Row>
         <hr />
         <div className="detail">
-          For the Children - <EnvironmentOutlined /> Nam Ky Khoi Nghia, Đinh
-          Hoa, Thu Dau Mot, Binh Duong - <WhatsAppOutlined /> 0123456789
+          For The Children - <EnvironmentOutlined /> Nam Ky Khoi Nghia - Hoa Phu
+          - Thu Dau Mot - Binh Duong - <WhatsAppOutlined /> 0123456789
         </div>
-        <hr />
-        <Row className="policy">
+        <Row className="content">
           <Col span={12} lg={12} xs={14}>
-            © 2020 For the Children
-          </Col>
-          <Col span={6} lg={6} xs={5}>
-            Term
-          </Col>
-          <Col span={6} lg={6} xs={5}>
-            Policy
+            Copyright © 2022 For The Children
           </Col>
         </Row>
       </div>

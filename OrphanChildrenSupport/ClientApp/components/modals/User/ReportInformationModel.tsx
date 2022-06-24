@@ -207,7 +207,7 @@ const ReportInformationModal: React.FC<IProps> = ({
       width: "30%",
       render: (text: string, row: IReportDetailModel) => (
         <>
-          {row.reportDetailStatus !== 1 && (
+          {row.status !== 1 && (
             <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
           )}
         </>
@@ -215,18 +215,18 @@ const ReportInformationModal: React.FC<IProps> = ({
     },
     {
       title: "Status",
-      dataIndex: "reportDetailStatus",
+      dataIndex: "status",
       align: "center",
-      key: "reportDetailStatus",
+      key: "status",
       width: "20%",
       render: (text, row: IReportDetailModel, index) => (
-        <Tag color={getTagColor(row.reportDetailStatus)}>{getStatus(text)}</Tag>
+        <Tag color={getTagColor(row.status)}>{getStatus(text)}</Tag>
       ),
     },
   ];
 
   async function onCancelReport() {
-    data.reportStatus = 3;
+    data.status = 3;
     const res = await reportService.update(data);
     if (!res.hasErrors) {
       message.success("Cancel report successfully");
@@ -278,7 +278,7 @@ const ReportInformationModal: React.FC<IProps> = ({
                   <Space>
                     Processing -
                     <span style={{ color: "#686868", paddingRight: "5px" }}>
-                      {getStatus(data?.reportStatus).toLocaleLowerCase()}
+                      {getStatus(data?.status).toLocaleLowerCase()}
                     </span>
                   </Space>
                 }
@@ -287,11 +287,11 @@ const ReportInformationModal: React.FC<IProps> = ({
                 <Steps
                   style={{ marginTop: "12px" }}
                   status={
-                    data?.reportStatus === 2 || data?.reportStatus === 3
+                    data?.status === 2 || data?.status === 3
                       ? "error"
                       : "process"
                   }
-                  current={data?.reportStatus === 1 ? 2 : 1}
+                  current={data?.status === 1 ? 2 : 1}
                   progressDot={customDot}
                 >
                   <Step title="Send" />
@@ -401,7 +401,7 @@ const ReportInformationModal: React.FC<IProps> = ({
 
             <Button
               onClick={onCancelReport}
-              disabled={data?.reportStatus === 0 ? false : true}
+              disabled={data?.status === 0 ? false : true}
               style={{
                 marginTop: "15px",
                 width: "100%",

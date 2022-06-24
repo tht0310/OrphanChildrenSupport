@@ -145,8 +145,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
 
   async function onFinish(values: IChildrenProfileModel | any) {
     values.detailAddress =
-      values.city + "-" + values.province + "-" + values.houseNumber;
-    values.publicAddress = values.city + "-" + values.province;
+      values.province + "-" + values.city + "-" + values.houseNumber;
+    values.publicAddress = values.province + "-" + values.city;
     if (data) {
       const tempList = [];
       if (values.childrenCategoryGroup) {
@@ -278,6 +278,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
       guardianPhoneNumber: data.guardianPhoneNumber,
       guardianName: data.guardianName,
     });
+
     if (data.childrenProfileSupportCategories) {
       const tempList = [];
       data.childrenProfileSupportCategories.map((v) => {
@@ -508,7 +509,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
 
                   <Col xs={24} lg={12}>
                     <Form.Item
-                      label="Created time"
+                      label="Created Time"
                       name="createdTime"
                       {...inlineCol2FormLayout}
                     >

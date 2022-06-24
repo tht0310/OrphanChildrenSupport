@@ -86,7 +86,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   React.useEffect(() => {
     if (report) {
-      form.setFieldsValue({ status: report?.reportStatus.toString() });
+      form.setFieldsValue({ status: report?.status.toString() });
       fetchData();
     }
   }, [report]);
@@ -340,7 +340,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       width: "30%",
       render: (text: string, row: IReportDetailModel) => (
         <>
-          {row.reportDetailStatus !== 1 && (
+          {row.status !== 1 && (
             <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
           )}
         </>
@@ -348,12 +348,12 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     },
     {
       title: "Status",
-      dataIndex: "reportDetailStatus",
+      dataIndex: "status",
       align: "center",
-      key: "reportDetailStatus",
+      key: "status",
       width: "20%",
       render: (text, row: IReportDetailModel, index) => (
-        <Tag color={getTagColor(row.reportDetailStatus)}>{getStatus(text)}</Tag>
+        <Tag color={getTagColor(row.status)}>{getStatus(text)}</Tag>
       ),
     },
     {
@@ -363,7 +363,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       width: "10%",
       render: (text, row) => (
         <>
-          {report?.reportStatus !== 0 && report?.reportStatus !== 2 && (
+          {report?.status !== 0 && report?.status !== 2 && (
             <Space className="actions">
               <Popconfirm
                 title="Are you sure？"
@@ -426,7 +426,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   async function onUpdateStatus(value) {
     const tempValue = report;
-    tempValue.reportStatus = value;
+    tempValue.status = value;
     const res = await reportService.update(tempValue);
     if (!res.hasErrors) {
       message.success("Update donation status successfully");
@@ -446,7 +446,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 <span>
                   Report Number <span style={{ color: "red" }}>#12345</span>
                   <span style={{ color: "#707070", margin: "0px 10px" }}>
-                    - {getStatus(report?.reportStatus)}
+                    - {getStatus(report?.status)}
                   </span>
                 </span>
               </Col>
@@ -457,13 +457,9 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Steps
           style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
           status={
-            report?.reportStatus === 3 || report?.reportStatus === 4
-              ? "error"
-              : "process"
+            report?.status === 3 || report?.status === 4 ? "error" : "process"
           }
-          current={
-            report?.reportStatus === 2 ? 3 : report?.reportStatus === 0 ? 1 : 2
-          }
+          current={report?.status === 2 ? 3 : report?.status === 0 ? 1 : 2}
           progressDot={customDot}
         >
           <Steps.Step title="Send" />
@@ -559,7 +555,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 };
               }}
               rowClassName={(record: IReportDetailModel, index) =>
-                renderClassName(record?.reportDetailStatus)
+                renderClassName(record?.status)
               }
               columns={requestColumns}
               dataSource={report?.reportDetails}
@@ -571,7 +567,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <Col span={24}>
             {" "}
             <Space style={{ marginTop: "8px", float: "right" }}>
-              {report?.reportStatus !== 1 && report?.reportStatus !== 2 && (
+              {report?.status !== 1 && report?.status !== 2 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -596,7 +592,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 </>
               )}
 
-              {report?.reportStatus !== 2 && (
+              {report?.status !== 2 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -655,7 +651,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       <UpdateStatusModal
         isDonation={false}
         visible={isUpdateStatus}
-        dataNumber={modelForEdit?.reportDetailStatus}
+        dataNumber={modelForEdit?.status}
         onCancel={toggleStatusModel}
         data={modelForEdit}
         fetchData={fetchReport}

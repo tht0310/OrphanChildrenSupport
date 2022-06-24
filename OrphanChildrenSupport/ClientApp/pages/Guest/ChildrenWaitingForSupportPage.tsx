@@ -26,7 +26,7 @@ import { SearchOutlined } from "@ant-design/icons";
 type Props = RouteComponentProps<{}>;
 
 const childrenProfileService = new ChildrenProfileService();
-const childrenDetailUrl = "children/detail";
+const childrenDetailUrl = "/children";
 const supportCategoriesService = new SupportCategoryService();
 
 const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
@@ -237,10 +237,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                 }}
                 renderItem={(item) => (
                   <List.Item>
-                    <Link
-                      to={`${childrenDetailUrl}/${item.id}`}
-                      target="_blank"
-                    >
+                    <Link to={`${childrenDetailUrl}/${item.id}`}>
                       <div className="item">
                         <Image
                           preview={false}

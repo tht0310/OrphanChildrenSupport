@@ -71,21 +71,21 @@ const GuestLoginPage: React.FC<Props> = (props: Props) => {
 
         <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
+            <Checkbox>Remember Me</Checkbox>
           </Form.Item>
 
           <Link className="login-form-forgot" to={"/forgotPassword"}>
-            Forgot password ?
+            Forgot Password?
           </Link>
         </Form.Item>
 
         <Form.Item>
           <Button type="primary" className="login-form-button">
-            Submit
+            Login
           </Button>
-          Or{" "}
+          Not a member yet?{" "}
           <Link to="/register" style={{ color: "#88181b" }}>
-            register now!
+            Register Now
           </Link>
         </Form.Item>
       </Form>

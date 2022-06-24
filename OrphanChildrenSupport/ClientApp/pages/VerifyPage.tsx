@@ -36,9 +36,7 @@ const VerifyPage: React.FC<Props> = ({ match, history, location }: Props) => {
 
   return (
     <div className="container-fuild verify-message">
-      {isSuccess && (
-        <div>Your account is verified succesfully. Please login</div>
-      )}
+      {isSuccess && <div>Verification succesfully! You can login now</div>}
     </div>
   );
 };

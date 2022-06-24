@@ -39,7 +39,7 @@ const StatisticPage: React.FC<Props> = () => {
                 marginBottom: "20px",
               }}
             >
-              Top 6 most users donated
+              Top Donation
             </div>
             <Row>
               <Col span={24}>Nguyen Van A</Col>

@@ -86,7 +86,7 @@ const AccountDetailPage: React.FC<Props> = () => {
   async function handleFinish(values) {
     const temp = values;
     temp.address =
-      values.city + "-" + values.province + "-" + values.houseNumber;
+      values.province + "-" + values.city + "-" + values.houseNumber;
     const res = await userService.update(temp);
     if (!res.hasErrors) {
       message.success("Change information sucessfully");
@@ -176,7 +176,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                   bordered={false}
                   title={
                     <>
-                      <span>Personal information</span>
+                      <span>Account Information</span>
                       <span
                         style={{
                           float: "right",
@@ -200,7 +200,7 @@ const AccountDetailPage: React.FC<Props> = () => {
 
                   <Form.Item
                     name="fullName"
-                    label="Full name"
+                    label="Full Name"
                     className="label-custom"
                     {...inlineFormLayout}
                     rules={[
@@ -235,10 +235,10 @@ const AccountDetailPage: React.FC<Props> = () => {
                   >
                     <Select>
                       <Select.Option value="false" key="1">
-                        Girl
+                        Female
                       </Select.Option>
                       <Select.Option value="true" key="0">
-                        Boy
+                        Male
                       </Select.Option>
                     </Select>
                   </Form.Item>
@@ -249,13 +249,6 @@ const AccountDetailPage: React.FC<Props> = () => {
                     style={{ marginBottom: "8px" }}
                     required
                   >
-                    <Form.Item
-                      name="city"
-                      style={{ display: "inline-block", width: "25%" }}
-                      rules={[{ required: true, message: "Please enter city" }]}
-                    >
-                      <Input placeholder="Enter city" />
-                    </Form.Item>
                     <Form.Item
                       name="province"
                       rules={[
@@ -270,6 +263,13 @@ const AccountDetailPage: React.FC<Props> = () => {
                       }}
                     >
                       <Input placeholder="Enter province" />
+                    </Form.Item>
+                    <Form.Item
+                      name="city"
+                      style={{ display: "inline-block", width: "25%" }}
+                      rules={[{ required: true, message: "Please enter city" }]}
+                    >
+                      <Input placeholder="Enter city" />
                     </Form.Item>
                     <Form.Item
                       name="houseNumber"
@@ -290,7 +290,7 @@ const AccountDetailPage: React.FC<Props> = () => {
 
                   <Form.Item
                     name="phoneNumber"
-                    label="Phone"
+                    label="Phone Number"
                     className="label-custom"
                     {...inlineFormLayout}
                     required
@@ -323,7 +323,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                     bordered={false}
                     title={
                       <>
-                        <span>Change password</span>
+                        <span>Change Password</span>
                         <span
                           style={{
                             float: "right",
@@ -361,7 +361,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                     <Form.Item
                       name="confirmPassword"
                       {...inlineFormLayout}
-                      label="Confirm "
+                      label="Confirm Password"
                       dependencies={["password"]}
                       hasFeedback
                       rules={[

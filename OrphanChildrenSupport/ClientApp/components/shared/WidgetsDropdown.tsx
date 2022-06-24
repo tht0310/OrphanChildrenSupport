@@ -65,7 +65,7 @@ const WidgetsDropdown = () => {
         <CWidgetStatsA
           className="mb-4"
           color="secondary"
-          value={<>Volunteer</>}
+          value={<>System Users</>}
           title={
             <Space>
               <span>Total: </span>
@@ -78,7 +78,7 @@ const WidgetsDropdown = () => {
         <CWidgetStatsA
           className="mb-4"
           color="warning"
-          value={<>User</>}
+          value={<>Members</>}
           title={
             <Space>
               <span>Total: </span>
@@ -91,7 +91,7 @@ const WidgetsDropdown = () => {
         <CWidgetStatsA
           className="mb-4"
           color="dark"
-          value={<>Donation</>}
+          value={<>Donations</>}
           title={
             <Space>
               <span>Total: </span>

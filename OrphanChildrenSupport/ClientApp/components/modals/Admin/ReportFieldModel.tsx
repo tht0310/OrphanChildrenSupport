@@ -10,11 +10,10 @@ const { TextArea } = Input;
 let options = [
   { name: "Full Name", value: "fullName", valueNumber: "" },
   { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
+  { name: "Address", value: "PublicAddress" },
   { name: "Gender", value: "gender" },
   { name: "Circumstance", value: "circumstance" },
   { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
 ];
 
 const reportFieldService = new ReportFieldService();

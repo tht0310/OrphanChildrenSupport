@@ -34,14 +34,14 @@ const adminMenu = [
   },
   {
     component: CNavItem,
-    name: "System User",
-    to: "/admin/profileManagement/systemUser",
+    name: "System Users",
+    to: "/admin/profileManagement/systemUsers",
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: "Member",
-    to: "/admin/profileManagement/member",
+    name: "Members",
+    to: "/admin/profileManagement/members",
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
@@ -57,26 +57,26 @@ const adminMenu = [
   },
   {
     component: CNavItem,
-    name: "Donation",
-    to: "/admin/activityManagement/donation",
+    name: "Donations",
+    to: "/admin/activityManagement/donations",
     icon: <CIcon icon={cilHeart} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: "Support Category",
-    to: "/admin/activityManagement/supportCategory",
+    name: "Support Categories",
+    to: "/admin/activityManagement/supportCategories",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: "Report",
-    to: "/admin/activityManagement/report",
+    name: "Reports",
+    to: "/admin/activityManagement/reports",
     icon: <CIcon icon={cilObjectUngroup} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: "Report Field Category",
-    to: "/admin/activityManagement/reportField",
+    name: "Report Fields",
+    to: "/admin/activityManagement/reportFields",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
 
@@ -128,13 +128,13 @@ const volunteerMenu = [
   {
     component: CNavItem,
     name: "Donation",
-    to: "/admin/activityManagement/donation",
+    to: "/admin/activityManagement/donations",
     icon: <CIcon icon={cilHeart} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Support Category",
-    to: "/admin/activityManagement/supportCategory",
+    to: "/admin/activityManagement/supportCategories",
     icon: <CIcon icon={cilGrid} customClassName="nav-icon" />,
   },
   {
@@ -145,8 +145,8 @@ const volunteerMenu = [
   },
   {
     component: CNavItem,
-    name: "Report Field Category",
-    to: "/admin/activityManagement/reportField",
+    name: "Report Fields",
+    to: "/admin/activityManagement/reportFields",
     icon: <CIcon icon={cilPlaylistAdd} customClassName="nav-icon" />,
   },
 

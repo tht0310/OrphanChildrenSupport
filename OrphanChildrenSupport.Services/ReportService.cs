@@ -264,7 +264,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
-                    report.Status = ReportStatus.Approved;
+                    report.Status = ReportStatus.Processing;
                     var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.ReportId == id && d.IsDeleted == false).ToListAsync();
                     foreach (var reportDetail in reportDetails)
                     {

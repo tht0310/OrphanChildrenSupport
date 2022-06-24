@@ -189,7 +189,7 @@ const ReportHistoryPage: React.FC<Props> = () => {
                   <>
                     <span style={{ color: "#808089", fontSize: "13px" }}>
                       <ShopOutlined style={{ color: "#808089" }} />
-                      {getStatus(item?.reportStatus)}
+                      {getStatus(item?.status)}
                     </span>
                     <span style={{ float: "right" }}>
                       <button

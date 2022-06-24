@@ -208,7 +208,7 @@ const VolunteerPage: React.FC<Props> = () => {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Phone",
+      title: "Phone Number",
       dataIndex: "phoneNumber",
       width: "14%",
       align: "center",
@@ -301,7 +301,7 @@ const VolunteerPage: React.FC<Props> = () => {
   }
 
   async function fetchUserProfile() {
-    const res = await userService.getAll({ role: "SystemUser" });
+    const res = await userService.getAll({ role: "1" });
     if (!res.hasErrors) {
       setUserProfiles(res.value.items);
     }
@@ -324,7 +324,7 @@ const VolunteerPage: React.FC<Props> = () => {
   }
 
   async function onSearch() {
-    const searchValue = { [filterBy]: filterValue, role: "User" };
+    const searchValue = { [filterBy]: filterValue, role: "1" };
     const res = await userService.getAll(searchValue);
     if (!res.hasErrors) {
       setUserProfiles(res.value.items);
@@ -336,7 +336,7 @@ const VolunteerPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={14} className="table-title">
-            System User Information
+            System Users
           </Col>
           <Col span={7}>
             <div className="option-pannel">
