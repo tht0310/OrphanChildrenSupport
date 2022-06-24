@@ -70,7 +70,7 @@ const Footer: FC<Props> = () => {
           - Thu Dau Mot - Binh Duong - <WhatsAppOutlined /> 0123456789
         </div>
         <Row className="content">
-          <Col span={12} lg={12} xs={14}>
+          <Col span={24} lg={24} xs={24} style={{ textAlign: "center" }}>
             Copyright © 2022 For The Children
           </Col>
         </Row>

@@ -31,6 +31,7 @@ const AdminRoute: React.FC<IProps> = ({
   if (user === null) {
     return <Redirect to="/admin/login" />;
   }
+
   if (user !== null && isLoginPath) {
     return <Redirect to="/admin/dashboard" />;
   }

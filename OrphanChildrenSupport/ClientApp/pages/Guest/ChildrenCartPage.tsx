@@ -161,30 +161,14 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   return (
-    <>
-      <Carousel autoplay className="carousel">
+    <div className="favourite-page">
+      <div className="vertical-center">
         <div>
-          <h3
-            style={{
-              marginTop: "2px",
-              height: "30%",
-              fontSize: "22px",
-              color: "#fff",
-              lineHeight: "40px",
-              textAlign: "center",
-              background: "#88181b",
-              backgroundPosition: "center",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <div>
-              <HeartOutlined style={{ marginTop: "75px", fontSize: "25px" }} />
-            </div>
-            My favourite children
-          </h3>
+          <HeartOutlined style={{ fontSize: "25px" }} />
+          <p>My favourite children</p>
         </div>
-      </Carousel>
+      </div>
+
       <Form form={form} name="filter-form" autoComplete="off">
         <div className="content-wrapper-custom " style={{ marginTop: "10px" }}>
           <Row>
@@ -284,7 +268,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
           )}
         />
       </div>
-    </>
+    </div>
   );
 };
 

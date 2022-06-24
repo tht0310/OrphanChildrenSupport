@@ -1,5 +1,7 @@
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
-import ChildrenProfileService from "@Services/ChildrenProfileService";
+import ChildrenProfileService, {
+  ChildrenParams,
+} from "@Services/ChildrenProfileService";
 import {
   Col,
   List,
@@ -10,6 +12,9 @@ import {
   Form,
   Input,
   Slider,
+  Card,
+  Radio,
+  Button,
 } from "antd";
 
 import * as React from "react";
@@ -124,6 +129,49 @@ const ChildrenPage: React.FC<Props> = (props) => {
     return result;
   }
 
+  async function onResetField() {
+    const searchValue: ChildrenParams = {};
+    searchValue.childrenProfileStatus = 0;
+
+    const res = await childrenProfileService.search(searchValue);
+    setChildrenProfiles(res.value.items);
+  }
+
+  async function onSearch(value) {
+    const searchValue: ChildrenParams = {};
+
+    if (value.fullName !== undefined) {
+      searchValue.fullName = value.fullName;
+    }
+    if (value.gender !== undefined) {
+      searchValue.gender = value.gender;
+    }
+
+    if (value.age !== undefined) {
+      searchValue.fromAge = value.age[0];
+      searchValue.toAge = value.age[1];
+    }
+    const res = await childrenProfileService.search(searchValue);
+    let resData = res.value.items;
+    let temp = [];
+    if (value.supportCategories !== undefined) {
+      if (value.supportCategories.length > 0) {
+        resData.map((v) => {
+          const result = v.childrenProfileSupportCategories.filter((o) =>
+            value.supportCategories.some((m) => o.supportCategoryId == m)
+          );
+
+          if (result.length > 0) {
+            temp.push(v);
+          }
+        });
+        setChildrenProfiles(temp);
+        return;
+      }
+    }
+    setChildrenProfiles(temp.length > 0 ? temp : resData);
+  }
+
   return (
     <>
       <Carousel autoplay className="carousel banner-custom">
@@ -146,85 +194,110 @@ const ChildrenPage: React.FC<Props> = (props) => {
       <Form form={form} name="filter-form" autoComplete="off">
         <div className="content-wrapper-custom">
           <Row className="custom-row">
-            <Col span={12} lg={12} xs={10} className="title-page">
-              <div id={"title"}>All children</div>
-            </Col>
-            <Col span={12} lg={12} xs={14}>
-              <Input
-                className="custom-input"
-                placeholder="Seach by name"
-                style={{ float: "right", paddingRight: "10px" }}
-                prefix={<SearchOutlined className="site-form-item-icon" />}
-                onChange={(e) => {
-                  onSearchFullName(e.target.value);
-                }}
-              />
+            <Col
+              span={24}
+              lg={24}
+              xs={24}
+              className="title-page"
+              style={{
+                textAlign: "center",
+                padding: "15px 0px",
+                fontSize: "22px",
+                fontWeight: 600,
+                color: "#484848",
+              }}
+            >
+              All children
             </Col>
           </Row>
 
           <Row>
-            <Col span={6} className="custom-col">
-              <div className="wrap">
-                <div className="menu">
-                  <div className="mini-menu">
-                    <ul>
-                      <li className="sub">
-                        <div
-                          className="header-item"
-                          style={{ background: "#f0f0f0", fontSize: "14p" }}
-                          onClick={() => onSearchGender(null)}
-                        >
-                          All
-                        </div>
-                      </li>
-                      <li className="sub">
-                        <a
-                          href="javascript:void(0)"
-                          onClick={() => onSearchGender(true)}
-                        >
-                          Boys
-                        </a>
-                      </li>
-                      <li className="sub">
-                        <a
-                          href="javascript:void(0)"
-                          onClick={() => onSearchGender(false)}
-                        >
-                          Girls
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    className="menu-colors menu-item"
-                    style={{ marginTop: "25px" }}
-                  >
-                    <div className="header-item">Age</div>
-                    <Slider
-                      range
-                      defaultValue={[0, 100]}
-                      onChange={(e) => onSearchAge(e)}
+            <Col
+              span={6}
+              lg={6}
+              xs={0}
+              style={{ marginTop: "30px", paddingRight: "50px" }}
+              className="search-container"
+            >
+              <Form form={form} onFinish={onSearch}>
+                <div>
+                  <Form.Item name={"fullName"}>
+                    <Input
+                      placeholder="Seach by name"
+                      prefix={
+                        <SearchOutlined className="site-form-item-icon" />
+                      }
                     />
-                  </div>
-                  <div
-                    className="menu-size menu-item"
-                    style={{ marginTop: "25px" }}
-                  >
-                    <div className="header-item ">Filter By</div>
-                    <Checkbox.Group
-                      name="childrenCategory"
-                      style={{ width: "100%" }}
-                      className="checkbox-container"
-                    >
-                      {supportCategories.map((a) => (
-                        <Row>
-                          <Checkbox value={a.title}>{a.title}</Checkbox>
-                        </Row>
-                      ))}
-                    </Checkbox.Group>
-                  </div>
+                  </Form.Item>
                 </div>
-              </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: 0 }} bordered={false}>
+                    <Form.Item name={"gender"}>
+                      <Radio.Group style={{ width: "100%" }}>
+                        <Radio.Button
+                          style={{ width: "44%" }}
+                          value={undefined}
+                        >
+                          All gender
+                        </Radio.Button>
+                        <Radio.Button style={{ width: "28%" }} value={true}>
+                          Boys
+                        </Radio.Button>
+                        <Radio.Button style={{ width: "28%" }} value={false}>
+                          Girls
+                        </Radio.Button>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Card>
+                </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: "10px" }} title="Age">
+                    <Form.Item name={"age"}>
+                      <Slider min={1} max={20} range />
+                    </Form.Item>
+                  </Card>
+                </div>
+                <div className="card-container">
+                  <Card bodyStyle={{ padding: "10px" }} title="Filter by">
+                    <Form.Item name="supportCategories">
+                      <Checkbox.Group
+                        name="childrenCategory"
+                        style={{ width: "100%" }}
+                        className="checkbox-container"
+                      >
+                        {supportCategories.map((a) => (
+                          <Row>
+                            <Checkbox value={a.id}>{a.title}</Checkbox>
+                          </Row>
+                        ))}
+                      </Checkbox.Group>
+                    </Form.Item>
+                  </Card>
+                </div>
+                <Row className="card-container" gutter={16}>
+                  <Col span={12}>
+                    <Button
+                      type="primary"
+                      onClick={form.submit}
+                      style={{ width: "100%" }}
+                    >
+                      Search
+                    </Button>
+                  </Col>
+                  <Col span={12}>
+                    <Button
+                      onClick={() => {
+                        form.resetFields(), onResetField();
+                      }}
+                      ghost
+                      type="primary"
+                      style={{ width: "100%" }}
+                    >
+                      Reset
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
             </Col>
             <Col span={18} lg={18} xs={24} className="items">
               <List
@@ -239,8 +312,9 @@ const ChildrenPage: React.FC<Props> = (props) => {
                 }}
                 dataSource={childrenProfiles}
                 pagination={{
+                  defaultPageSize: 16,
                   showSizeChanger: true,
-                  pageSizeOptions: ["5", "10", "20", "50"],
+                  pageSizeOptions: ["10", "15", "20", "25"],
                 }}
                 renderItem={(item) => {
                   return (

@@ -70,7 +70,6 @@ const RegisteredProfilePage: React.FC<Props> = () => {
     confirm: (param?: FilterConfirmProps) => void,
     dataIndex: DataIndex
   ) => {
-    console.log(selectedKeys, dataIndex);
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);

@@ -1,29 +1,12 @@
-import { Col, Row, Tabs } from "antd";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import { Pie } from "@ant-design/plots";
+import { IReportStatisticModel } from "@Models/IStatisticModel";
 
-type Props = RouteComponentProps<{}>;
+export interface IProps {
+  data: IReportStatisticModel | any;
+}
 
-const DonutPieChart: React.FC<Props> = () => {
-  const data = [
-    {
-      type: "Sucessful",
-      value: 27,
-    },
-    {
-      type: "Rejected",
-      value: 25,
-    },
-    {
-      type: "Canceled",
-      value: 18,
-    },
-    {
-      type: "Waiting",
-      value: 15,
-    },
-  ];
+const DonutPieChart: React.FC<IProps> = ({ data }: IProps) => {
   const config = {
     appendPadding: 10,
     data,

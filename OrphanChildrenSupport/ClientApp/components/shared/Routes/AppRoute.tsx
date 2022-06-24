@@ -20,6 +20,7 @@ const AppRoute: React.FC<IProps> = ({
   let currentUser = null;
   let user: IRegisterModel = null;
   var isLoginPath = Path === "/login" || Path === "/register" ? true : false;
+  var isAdminLoginPath = Path === "/admin/login" ? true : false;
 
   try {
     currentUser = localStorage.getItem("currentUser");
@@ -28,6 +29,10 @@ const AppRoute: React.FC<IProps> = ({
 
   if (currentUser !== "null" && currentUser !== null && isLoginPath) {
     return <Redirect to="/" />;
+  }
+
+  if (currentUser !== "null" && currentUser !== null && isAdminLoginPath) {
+    return <Redirect to="/admin/dashboard" />;
   }
 
   return (

@@ -33,7 +33,7 @@ const Section5: React.FC<Props> = () => {
               Who we are ?
             </h2>
 
-            <p key="p" style={{ maxWidth: 550 }}>
+            <p key="p" style={{ maxWidth: 550, paddingBottom: "20px" }}>
               We are volunteers to connect sponsors to orphan children. Its our
               desire for every child to experience unconditional love, hope and
               safety.

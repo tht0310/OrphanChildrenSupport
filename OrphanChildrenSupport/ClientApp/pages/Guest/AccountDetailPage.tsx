@@ -141,7 +141,7 @@ const AccountDetailPage: React.FC<Props> = () => {
               <Card style={{ width: "100%" }}>
                 <div>
                   <Row>
-                    <Col span={13}>
+                    <Col span={12}>
                       <Space>
                         <GoogleOutlined
                           style={{
@@ -155,7 +155,7 @@ const AccountDetailPage: React.FC<Props> = () => {
                         </span>
                       </Space>
                     </Col>
-                    <Col span={11}>
+                    <Col span={12}>
                       <div>{currentUser?.email}</div>
                     </Col>
                   </Row>

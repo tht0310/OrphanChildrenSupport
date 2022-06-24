@@ -62,6 +62,8 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
     if (item) {
       setData(item);
       innitialValue();
+    } else {
+      initilizeRole();
     }
   }, [item]);
 
@@ -73,6 +75,14 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
 
   function onSubmit() {
     form.submit();
+  }
+
+  function initilizeRole() {
+    if (location?.pathname.includes("systemUsers")) {
+      form.setFieldsValue({ role: "1" });
+    } else {
+      form.setFieldsValue({ role: "2" });
+    }
   }
 
   function findName(value) {
@@ -137,7 +147,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
       houseNumber: item.address?.split("-")[2],
       phoneNumber: item?.phoneNumber,
       email: item?.email,
-      role: item?.role,
+      role: item?.role === "SystemUser" ? "1" : "2",
       isActive: item?.isActive,
     });
   }
@@ -327,7 +337,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   {...inlineCol2FormLayout}
                   rules={[{ required: true, message: "Please enter role." }]}
                 >
-                  <Select>
+                  <Select disabled={data ? false : true}>
                     <Select.Option value="2" key="1">
                       Member
                     </Select.Option>

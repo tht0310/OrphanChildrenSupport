@@ -1,6 +1,7 @@
 import {
   CheckCircleOutlined,
   CloseSquareOutlined,
+  DashboardOutlined,
   FormOutlined,
   StopOutlined,
 } from "@ant-design/icons";
@@ -325,10 +326,6 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     },
   ];
 
-  async function handleOnSubmit(value) {
-    onUpdateStatus(value.status);
-  }
-
   return (
     <div
       className="table-container donation-detail"
@@ -345,9 +342,12 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   <span style={{ color: "red", margin: "0px 10px" }}>
                     #DN{10000 + donation?.id}
                   </span>
-                  <span style={{ color: "#707070", margin: "0px 10px" }}>
-                    - {getStatus(donation?.status)}
-                  </span>
+                </span>
+              </Col>
+              <Col span={8} style={{ textAlign: "right" }}>
+                <span style={{ color: "#707070", margin: "0px 10px" }}>
+                  <DashboardOutlined className="antd-ic-custom" />
+                  {getStatus(donation?.status)}
                 </span>
               </Col>
             </Row>
@@ -406,7 +406,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    Số 1a, đường Bến Than, xã Hòa Phú, huyện Củ Chi, TP.HCM
+                    {user?.address}
                   </div>
                 </Card>
               </Col>

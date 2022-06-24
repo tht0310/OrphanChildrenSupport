@@ -31,8 +31,9 @@ import * as React from "react";
 import { useEffect } from "react";
 import { Edit2, Trash2 } from "react-feather";
 import Highlighter from "react-highlight-words";
+import { RouteComponentProps } from "react-router-dom";
 
-type Props = {};
+type Props = RouteComponentProps<{}>;
 
 const userService = new AccountService();
 

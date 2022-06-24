@@ -12,11 +12,11 @@ type Params = {
   fullNameOrEmail?: string;
   childrenProfileStatus?: number;
   isNeedToBeAdopted?: string;
-  gender?: boolean;
+  gender?: boolean | string | number;
   fromAge?: number;
   toAge?: number;
   supportCategoryId?:number
-  
+  fullName?:string
 };
 
 export type ChildrenParams = Params & IFilterType;
