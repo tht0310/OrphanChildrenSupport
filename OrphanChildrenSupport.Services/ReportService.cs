@@ -422,40 +422,50 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<List<ReportStatusStatisticsResponse>>> GetReportStatusStatistics()
+        public async Task<ApiResponse<List<StatusStatistics>>> GetReportStatusStatistics()
         {
             const string loggerHeader = "GetReportStatusStatistics";
-            var apiResponse = new ApiResponse<List<ReportStatusStatisticsResponse>>();
-            var reportStatusStatisticResponse = new ReportStatusStatisticsResponse();
+            var apiResponse = new ApiResponse<List<StatusStatistics>>();
+            var statistics = new List<StatusStatistics>();
             _logger.LogDebug($"{loggerHeader} - Start to GetReportStatusStatistics");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var reports = await unitOfWork.ReportRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
+                    var reports = await unitOfWork.ReportRepository.FindAllToList(d => d.IsDeleted == false);
                     if (reports != null && reports.Count > 0)
                     {
-                        var approvedReports = reports.Where(d => d.Status == ReportStatus.Approved);
-                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Approved;
-                        reportStatusStatisticResponse.Percentage = (approvedReports != null && approvedReports.Count() > 0) ? Math.Round((double)approvedReports.Count() / reports.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(reportStatusStatisticResponse);
+                        var waiting = new StatusStatistics();
+                        var waitingReports = reports.Where(d => d.Status == ReportStatus.WaitingForApproval).ToList();
+                        waiting.Status = ReportStatus.WaitingForApproval.ToString();
+                        waiting.Percentage = (waitingReports != null && waitingReports.Count() > 0) ? Math.Round((double)waitingReports.Count() / reports.Count, 2) * 100 : 0;
+                        statistics.Add(waiting);
 
-                        var waitingReports = reports.Where(d => d.Status == ReportStatus.WaitingForApproval);
-                        reportStatusStatisticResponse.ReportStatus = ReportStatus.WaitingForApproval;
-                        reportStatusStatisticResponse.Percentage = (waitingReports != null && waitingReports.Count() > 0) ? Math.Round((double)waitingReports.Count() / reports.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(reportStatusStatisticResponse);
+                        var processing = new StatusStatistics();
+                        var processingReports = reports.Where(d => d.Status == ReportStatus.Processing).ToList();
+                        processing.Status = ReportStatus.Processing.ToString();
+                        processing.Percentage = (processingReports != null && processingReports.Count() > 0) ? Math.Round((double)processingReports.Count() / reports.Count, 2) * 100 : 0;
+                        statistics.Add(processing);
 
-                        var rejectedReports = reports.Where(d => d.Status == ReportStatus.Rejected);
-                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Rejected;
-                        reportStatusStatisticResponse.Percentage = (rejectedReports != null && rejectedReports.Count() > 0) ? Math.Round((double)rejectedReports.Count() / reports.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(reportStatusStatisticResponse);
+                        var cancelled = new StatusStatistics();
+                        var cancelledReports = reports.Where(d => d.Status == ReportStatus.Cancelled).ToList();
+                        cancelled.Status = ReportStatus.Cancelled.ToString();
+                        cancelled.Percentage = (cancelledReports != null && cancelledReports.Count() > 0) ? Math.Round((double)cancelledReports.Count() / reports.Count, 2) * 100 : 0;
+                        statistics.Add(cancelled);
 
-                        var cancelledReports = reports.Where(d => d.Status == ReportStatus.Cancelled);
-                        reportStatusStatisticResponse.ReportStatus = ReportStatus.Cancelled;
-                        reportStatusStatisticResponse.Percentage = (cancelledReports != null && cancelledReports.Count() > 0) ? Math.Round((double)cancelledReports.Count() / reports.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(reportStatusStatisticResponse);
+                        var approved = new StatusStatistics();
+                        var approvedReports = reports.Where(d => d.Status == ReportStatus.Approved).ToList();
+                        approved.Status = ReportStatus.Approved.ToString();
+                        approved.Percentage = (approvedReports != null && approvedReports.Count() > 0) ? Math.Round((double)approvedReports.Count() / reports.Count, 2) * 100 : 0;
+                        statistics.Add(approved);
+
+                        var rejected = new StatusStatistics();
+                        var rejectedReports = reports.Where(d => d.Status == ReportStatus.Rejected).ToList();
+                        rejected.Status = ReportStatus.Rejected.ToString();
+                        rejected.Percentage = (rejectedReports != null && rejectedReports.Count() > 0) ? Math.Round((double)rejectedReports.Count() / reports.Count, 2) * 100 : 0;
+                        statistics.Add(rejected);
                     }
-
+                    apiResponse.Data = statistics;
                     _logger.LogDebug($"{loggerHeader} - GetReportStatusStatistics successfully");
                 }
                 catch (Exception ex)

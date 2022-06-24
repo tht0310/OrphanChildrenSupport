@@ -1,17 +1,16 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Area } from "@ant-design/plots";
+import { IDonationTimesModel } from "@Models/IStatisticModel";
 
 export interface IProps {
-  data: any;
+  data: IDonationTimesModel[];
 }
 
 const ChildrenSection: React.FC<IProps> = ({ data }: IProps) => {
-  React.useEffect(() => {}, []);
-
   const config = {
     data,
-    xField: "year",
+    xField: "month",
     yField: "value",
 
     xAxis: {

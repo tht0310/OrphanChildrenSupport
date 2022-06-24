@@ -94,7 +94,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         }
 
         [HttpGet]
-        [Route("getStatistic")]
+        [Route("getStatistics")]
         public async Task<IActionResult> Statistic()
         {
             var apiResponse = await _donationService.GetDonationStatusStatistics();

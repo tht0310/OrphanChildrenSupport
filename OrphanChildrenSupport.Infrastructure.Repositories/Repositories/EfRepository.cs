@@ -140,5 +140,11 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
         {
             _context.Set<T>().UpdateRange(entities);
         }
+
+        public async Task<List<T>> FindAllToList(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool disableTracking = true)
+        {
+            var query = FindAll(include, orderBy, disableTracking);
+            return await query.Where(predicate).ToListAsync();
+        }
     }
 }

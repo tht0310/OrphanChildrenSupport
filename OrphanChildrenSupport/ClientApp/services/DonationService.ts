@@ -1,11 +1,10 @@
-import { IDonationDetailModel } from './../models/IDonationModel';
+import { IDonationDetailModel } from "./../models/IDonationModel";
 import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
 import { IDonationModel } from "@Models/IDonationModel";
 import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
-import { RcFile } from 'antd/lib/upload';
-
+import { RcFile } from "antd/lib/upload";
 
 type Params = {
   fullNameOrEmail?: string;
@@ -14,9 +13,9 @@ type Params = {
   gender?: boolean;
   fromAge?: number;
   toAge?: number;
-  supportCategoryId?:number,
-  accountId?:number
-  childrenProfileId?:number
+  supportCategoryId?: number;
+  accountId?: number;
+  childrenProfileId?: number;
 };
 
 export type ChildrenParams = Params & IFilterType;
@@ -30,22 +29,24 @@ export default class DonationService extends ServiceBase {
     return result;
   }
 
-  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IDonationModel>>> {
+  public async getAll(
+    param?: ChildrenParams
+  ): Promise<Result<IQueryResult<IDonationModel>>> {
     const result = await this.requestJson<IQueryResult<IDonationModel>>({
       url: `/api/donations`,
       method: "GET",
-      data: param
+      data: param,
     });
     return result;
   }
 
   public async search(
-    value:IFilterType
+    value: IFilterType
   ): Promise<Result<IQueryResult<IDonationModel>>> {
     const result = await this.requestJson<IQueryResult<IDonationModel>>({
       url: `/api/donations`,
       method: "GET",
-      data:value
+      data: value,
     });
     return result;
   }
@@ -74,10 +75,10 @@ export default class DonationService extends ServiceBase {
     });
     return result;
   }
-  
-  public async getStatistic(): Promise<Result<{}>> {
+
+  public async getStatistics(): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/donations/getStatistic`,
+      url: `/api/donations/getStatistics`,
       method: "PUT",
     });
     return result;
@@ -106,15 +107,4 @@ export default class DonationService extends ServiceBase {
     });
     return result;
   }
-
-
-
-
-
- 
-
-  
-
-
-
 }

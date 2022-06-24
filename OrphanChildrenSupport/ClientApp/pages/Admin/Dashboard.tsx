@@ -54,7 +54,7 @@ const Dashboard = () => {
   async function fetchDonationTimes() {
     const res = await statisticService.getDonationsTime(2022);
     if (!res.hasErrors) {
-      setDonationTimes(res.value.items);
+      setDonationTimes(res.value);
     }
   }
 
@@ -109,7 +109,7 @@ const Dashboard = () => {
               Donation
             </div>
 
-            <DonutPieChart data={donations} />
+            {/* <DonutPieChart data={donations} /> */}
           </Card>
         </Col>
         <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
@@ -118,7 +118,7 @@ const Dashboard = () => {
               Report
             </div>
 
-            <DonutPieChart data={reports} />
+            {/* <DonutPieChart data={reports} /> */}
           </Card>
         </Col>
       </Row>

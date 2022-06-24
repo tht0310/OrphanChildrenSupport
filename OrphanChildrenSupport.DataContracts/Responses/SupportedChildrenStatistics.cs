@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace OrphanChildrenSupport.DataContracts.Responses
 {
-    public class ReportStatusStatisticsResponse
+    public class SupportedChildrenStatistics
     {
-        public ReportStatus ReportStatus { get; set; }
-        public double Percentage { get; set; }
+        public string Month { get; set; }
+        public long Value { get; set; }
     }
 }

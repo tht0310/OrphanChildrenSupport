@@ -177,6 +177,13 @@ namespace OrphanChildrenSupport.Controllers.V1
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
+        [HttpGet("getTopDonationUsers/{limit}")]
+        public async Task<IActionResult> GetTopDonationUsers(int limit)
+        {
+            var apiResponse = await _accountService.GetTopDonationUsers(limit);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
         // helper methods
 
         private void setTokenCookie(string token)

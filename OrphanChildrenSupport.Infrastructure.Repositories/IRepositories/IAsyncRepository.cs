@@ -22,7 +22,8 @@ namespace OrphanChildrenSupport.Infrastructure.Repositories
 
         Task<QueryResult<T>> FindAll(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             bool disableTracking = true, PagingSpecification pagingSpecification = null);
-
+        Task<List<T>> FindAllToList(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            bool disableTracking = true);
         Task Add(T entity);
 
         Task AddRange(List<T> entities);

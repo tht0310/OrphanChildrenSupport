@@ -7,35 +7,35 @@ using System.Threading.Tasks;
 namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
-    [Route("api/deports")]//required for default versioning
-    [Route("api/v{version:apiVersion}/deports")]
+    [Route("api/reports")]//required for default versioning
+    [Route("api/v{version:apiVersion}/reports")]
     [ApiController]
     public class ReportController : Controller
     {
-        private IReportService _deportService;
+        private IReportService _reportService;
 
-        public ReportController(IReportService deportService)
+        public ReportController(IReportService reportService)
         {
-            this._deportService = deportService;
+            this._reportService = reportService;
         }
 
-        // GET: api/deports
+        // GET: api/reports
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] QueryResource queryResource)
         {
-            var apiResponse = await _deportService.GetReports(queryResource);
+            var apiResponse = await _reportService.GetReports(queryResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // GET api/deports/5
+        // GET api/reports/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
-            var apiResponse = await _deportService.GetReport(id);
+            var apiResponse = await _reportService.GetReport(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // POST api/deports
+        // POST api/reports
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ReportResource ReportResource)
         {
@@ -44,11 +44,11 @@ namespace OrphanChildrenSupport.Controllers.V1
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _deportService.CreateReport(ReportResource);
+            var apiResponse = await _reportService.CreateReport(ReportResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // PUT api/deports/5
+        // PUT api/reports/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, [FromBody] ReportResource ReportResource)
         {
@@ -57,15 +57,15 @@ namespace OrphanChildrenSupport.Controllers.V1
                 return BadRequest("Lỗi dữ liệu, vui lòng kiểm tra và thử lại.");
             }
 
-            var apiResponse = await _deportService.UpdateReport(id, ReportResource);
+            var apiResponse = await _reportService.UpdateReport(id, ReportResource);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
-        // DELETE api/deports/5
+        // DELETE api/reports/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            var apiResponse = await _deportService.DeleteReport(id);
+            var apiResponse = await _reportService.DeleteReport(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
@@ -73,7 +73,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("approve/{id}")]
         public async Task<IActionResult> Approve(long id)
         {
-            var apiResponse = await _deportService.ApproveReport(id);
+            var apiResponse = await _reportService.ApproveReport(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
@@ -81,7 +81,7 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("reject/{id}")]
         public async Task<IActionResult> Reject(long id)
         {
-            var apiResponse = await _deportService.RejectReport(id);
+            var apiResponse = await _reportService.RejectReport(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
@@ -89,15 +89,15 @@ namespace OrphanChildrenSupport.Controllers.V1
         [Route("cancel/{id}")]
         public async Task<IActionResult> Cancel(long id)
         {
-            var apiResponse = await _deportService.CancelReport(id);
+            var apiResponse = await _reportService.CancelReport(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 
         [HttpGet]
-        [Route("getStatistic")]
+        [Route("getStatistics")]
         public async Task<IActionResult> Statistic()
         {
-            var apiResponse = await _deportService.GetReportStatusStatistics();
+            var apiResponse = await _reportService.GetReportStatusStatistics();
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

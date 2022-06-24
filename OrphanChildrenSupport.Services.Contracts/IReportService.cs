@@ -16,6 +16,6 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ReportResource>> ApproveReport(long id);
         Task<ApiResponse<ReportResource>> RejectReport(long id);
         Task<ApiResponse<ReportResource>> CancelReport(long id);
-        Task<ApiResponse<List<ReportStatusStatisticsResponse>>> GetReportStatusStatistics();
+        Task<ApiResponse<List<StatusStatistics>>> GetReportStatusStatistics();
     }
 }

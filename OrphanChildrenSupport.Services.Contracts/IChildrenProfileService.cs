@@ -13,6 +13,6 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ChildrenProfileResource>> DeleteChildrenProfile(long id, bool removeFromDB = false);
         Task<ApiResponse<ChildrenProfileResponse>> GetChildrenProfile(long id);
         Task<ApiResponse<QueryResultResource<ChildrenProfileResponse>>> GetChildrenProfiles(QueryResource queryObj);
-        Task<ApiResponse<List<ChildrenProfileStatisticsResponse>>> GetChildrenProfileStatistics(int year);
+        Task<ApiResponse<List<SupportedChildrenStatistics>>> GetSupportedChildrenStatistics(int year);
     }
 }

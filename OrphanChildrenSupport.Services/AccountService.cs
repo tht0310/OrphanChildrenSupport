@@ -15,6 +15,7 @@ using OrphanChildrenSupport.Services.Models;
 using OrphanChildrenSupport.Tools;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -846,6 +847,62 @@ namespace OrphanChildrenSupport.Services
                 html: $@"<h4>Reset Password Email</h4>
                          {message}"
             );
+        }
+
+        public async Task<ApiResponse<List<TopDonationUser>>> GetTopDonationUsers(int limit)
+        {
+            const string loggerHeader = "GetTopDonationUsers";
+            var apiResponse = new ApiResponse<List<TopDonationUser>>();
+            var topDonationUsers = new List<TopDonationUser>();
+            DateTime now = DateTime.Now;
+            var startDate = new DateTime(now.Year, now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            _logger.LogDebug($"{loggerHeader} - Start to GetTopDonationUsers");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    var accounts = await unitOfWork.AccountRepository.FindAllToList(predicate: d => d.IsDeleted == false && d.IsActive == true && d.Role == Role.User,
+                                                                       include: source => source.Include(i => i.Donations.Where(c => !c.IsDeleted)));
+                    if (accounts != null && accounts.Count > 0)
+                    {
+                        foreach (var account in accounts)
+                        {
+                            int count = 0;
+                            var topDonationUser = new TopDonationUser();
+                            topDonationUser.FullName = account.FullName;
+                            topDonationUser.Email = account.Email;
+                            var donations = account.Donations.ToList();
+                            if (donations != null && donations.Count > 0)
+                            {
+                                foreach (var donation in donations)
+                                {
+                                    if (donation.CreatedTime <= endDate && donation.CreatedTime >= startDate)
+                                    {
+                                        count++;
+                                    }
+                                }
+                                topDonationUser.Value = count;
+                                topDonationUsers.Add(topDonationUser);
+                            }
+                        }
+                    }
+                    apiResponse.Data = topDonationUsers.OrderByDescending(d => d.Value).Take(limit).ToList();
+                    _logger.LogDebug($"{loggerHeader} - GetTopDonationUsers successfully");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
         }
     }
 }

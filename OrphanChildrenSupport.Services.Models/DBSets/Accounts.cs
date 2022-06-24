@@ -29,6 +29,8 @@ namespace OrphanChildrenSupport.Services.Models
         public ICollection<Favorite> Favorites { get; set; }
 
         public ICollection<Notification> Notifications { get; set; }
+
+        public ICollection<Donation> Donations { get; set; }
     }
 
 }

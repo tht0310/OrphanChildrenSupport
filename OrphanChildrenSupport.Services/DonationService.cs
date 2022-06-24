@@ -422,45 +422,51 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<List<DonationStatusStatisticsResponse>>> GetDonationStatusStatistics()
+        public async Task<ApiResponse<List<StatusStatistics>>> GetDonationStatusStatistics()
         {
             const string loggerHeader = "GetDonationStatusStatistics";
-            var apiResponse = new ApiResponse<List<DonationStatusStatisticsResponse>>();
-            var donationStatusStatisticResponse = new DonationStatusStatisticsResponse();
+            var apiResponse = new ApiResponse<List<StatusStatistics>>();
+            var statistics = new List<StatusStatistics>();
             _logger.LogDebug($"{loggerHeader} - Start to GetDonationStatusStatistics");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    var donations = await unitOfWork.DonationRepository.FindAll().Where(d => d.IsDeleted == false).ToListAsync();
+                    var donations = await unitOfWork.DonationRepository.FindAllToList(d => !d.IsDeleted);
                     if (donations != null && donations.Count > 0)
                     {
-                        var waitingDonations = donations.Where(d => d.Status == DonationStatus.WaitingForApproval);
-                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (waitingDonations != null && waitingDonations.Count() > 0) ? Math.Round((double)waitingDonations.Count() / donations.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(donationStatusStatisticResponse);
 
-                        var processingDonations = donations.Where(d => d.Status == DonationStatus.Processing);
-                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (processingDonations != null && processingDonations.Count() > 0) ? Math.Round((double)processingDonations.Count() / donations.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(donationStatusStatisticResponse);
+                        var waiting = new StatusStatistics();
+                        var waitingDonations = donations.Where(d => d.Status == DonationStatus.WaitingForApproval).ToList();
+                        waiting.Status = DonationStatus.WaitingForApproval.ToString();
+                        waiting.Percentage = (waitingDonations != null && waitingDonations.Count() > 0) ? Math.Round((double)waitingDonations.Count() / donations.Count, 2) * 100 : 0;
+                        statistics.Add(waiting);
 
-                        var cancelledDonations = donations.Where(d => d.Status == DonationStatus.Cancelled);
-                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (cancelledDonations != null && cancelledDonations.Count() > 0) ? Math.Round((double)cancelledDonations.Count() / donations.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(donationStatusStatisticResponse);
+                        var processing = new StatusStatistics();
+                        var processingDonations = donations.Where(d => d.Status == DonationStatus.Processing).ToList(); ;
+                        processing.Status = DonationStatus.Processing.ToString();
+                        processing.Percentage = (processingDonations != null && processingDonations.Count() > 0) ? Math.Round((double)processingDonations.Count() / donations.Count, 2) * 100 : 0;
+                        statistics.Add(processing);
 
-                        var approvedDonations = donations.Where(d => d.Status == DonationStatus.Approved);
-                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (approvedDonations != null && approvedDonations.Count() > 0) ? Math.Round((double)approvedDonations.Count() / donations.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(donationStatusStatisticResponse);
+                        var cancelled = new StatusStatistics();
+                        var cancelledDonations = donations.Where(d => d.Status == DonationStatus.Cancelled).ToList(); ;
+                        cancelled.Status = DonationStatus.Cancelled.ToString();
+                        cancelled.Percentage = (cancelledDonations != null && cancelledDonations.Count() > 0) ? Math.Round((double)cancelledDonations.Count() / donations.Count, 2) * 100 : 0;
+                        statistics.Add(cancelled);
 
-                        var rejectedDonations = donations.Where(d => d.Status == DonationStatus.Rejected);
-                        donationStatusStatisticResponse.DonationStatus = DonationStatus.WaitingForApproval;
-                        donationStatusStatisticResponse.Percentage = (rejectedDonations != null && rejectedDonations.Count() > 0) ? Math.Round((double)rejectedDonations.Count() / donations.Count, 2) * 100 : 0;
-                        apiResponse.Data.Add(donationStatusStatisticResponse);
+                        var approved = new StatusStatistics();
+                        var approvedDonations = donations.Where(d => d.Status == DonationStatus.Approved).ToList(); ;
+                        approved.Status = DonationStatus.Approved.ToString();
+                        approved.Percentage = (approvedDonations != null && approvedDonations.Count() > 0) ? Math.Round((double)approvedDonations.Count() / donations.Count, 2) * 100 : 0;
+                        statistics.Add(approved);
+
+                        var rejected = new StatusStatistics();
+                        var rejectedDonations = donations.Where(d => d.Status == DonationStatus.Rejected).ToList(); ;
+                        rejected.Status = DonationStatus.Rejected.ToString();
+                        rejected.Percentage = (rejectedDonations != null && rejectedDonations.Count() > 0) ? Math.Round((double)rejectedDonations.Count() / donations.Count, 2) * 100 : 0;
+                        statistics.Add(rejected);
                     }
-
+                    apiResponse.Data = statistics;
                     _logger.LogDebug($"{loggerHeader} - GetDonationStatusStatistics successfully");
                 }
                 catch (Exception ex)

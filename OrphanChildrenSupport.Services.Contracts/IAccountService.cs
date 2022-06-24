@@ -3,6 +3,7 @@ using OrphanChildrenSupport.DataContracts.Resources;
 using OrphanChildrenSupport.DataContracts.Responses;
 using OrphanChildrenSupport.Models.Accounts;
 using OrphanChildrenSupport.Services.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services.Contracts
@@ -25,5 +26,6 @@ namespace OrphanChildrenSupport.Services.Contracts
         Task<ApiResponse<ForgotPasswordRequest>> ForgotPassword(ForgotPasswordRequest forgotPasswordRequest, string origin);
         Task<ApiResponse<ValidateResetTokenRequest>> ValidateResetToken(ValidateResetTokenRequest validateResetTokenRequest);
         Task<ApiResponse<ResetPasswordRequest>> ResetPassword(ResetPasswordRequest resetPasswordRequest);
+        Task<ApiResponse<List<TopDonationUser>>> GetTopDonationUsers(int limit);
     }
 }

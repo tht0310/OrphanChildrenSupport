@@ -248,25 +248,42 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
-        public async Task<ApiResponse<List<ChildrenProfileStatisticsResponse>>> GetChildrenProfileStatistics(int year)
+        public async Task<ApiResponse<List<SupportedChildrenStatistics>>> GetSupportedChildrenStatistics(int year)
         {
-            const string loggerHeader = "GetChildrenProfileStatistics";
-            var apiResponse = new ApiResponse<List<ChildrenProfileStatisticsResponse>>();
-            var childrenProfileStatisticsResponse = new ChildrenProfileStatisticsResponse();
-            _logger.LogDebug($"{loggerHeader} - Start to GetChildrenProfileStatistics");
+            const string loggerHeader = "GetSupportedChildrenStatistics";
+            var apiResponse = new ApiResponse<List<SupportedChildrenStatistics>>();
+            var statistics = new List<SupportedChildrenStatistics>();
+            string[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            _logger.LogDebug($"{loggerHeader} - Start to GetSupportedChildrenStatistics");
             using (var unitOfWork = new UnitOfWork(_connectionString))
             {
                 try
                 {
-                    //var childrenProfiles = await unitOfWork.ChildrenProfileRepository.FindAll().Where(d => d.IsDeleted == false && d.Status == ChildrenProfileStatus.Supported).ToListAsync();
-                    //for (int i = 1; i <= 12; i++)
-                    //{
-                    //    var monthlyChildrenProfiles = childrenProfiles.Where(d => d.Donations.Any(x => (x.CreatedTime > DateTime.Parse("01" + i + year)) && (x.CreatedTime < DateTime.Parse("01" + (i + 1) + year))));
-                    //    childrenProfileStatisticsResponse.Month = i;
-                    //    childrenProfileStatisticsResponse.Value = monthlyChildrenProfiles.Count();
-                    //    apiResponse.Data.Add(childrenProfileStatisticsResponse);
-                    //}
-                    _logger.LogDebug($"{loggerHeader} - GetChildrenProfileStatistics successfully");
+                    var childrenProfiles = await unitOfWork.ChildrenProfileRepository.FindAllToList(predicate: d => d.IsDeleted == false,
+                                                                                          include: source => source.Include(i => i.Donations.Where(c => !c.IsDeleted)));
+
+                    if (childrenProfiles != null && childrenProfiles.Count > 0)
+                    {
+                        for (int i = 0; i <= 11; i++)
+                        {
+                            int count = 0;
+                            var monthlySupportedChildrenStatistics = new SupportedChildrenStatistics();
+                            monthlySupportedChildrenStatistics.Month = monthNames[i];
+                            var startDate = new DateTime(year, i + 1, 1);
+                            var endDate = startDate.AddMonths(1).AddDays(-1);
+                            foreach (var children in childrenProfiles)
+                            {
+                                if (children.Donations.Any(d => d.CreatedTime <= endDate && d.CreatedTime >= startDate && d.IsDeleted == false))
+                                {
+                                    count++;
+                                }
+                            }
+                            monthlySupportedChildrenStatistics.Value = count;
+                            statistics.Add(monthlySupportedChildrenStatistics);
+                        }
+                    }
+                    apiResponse.Data = statistics;
+                    _logger.LogDebug($"{loggerHeader} - GetSupportedChildrenStatistics successfully");
                 }
                 catch (Exception ex)
                 {

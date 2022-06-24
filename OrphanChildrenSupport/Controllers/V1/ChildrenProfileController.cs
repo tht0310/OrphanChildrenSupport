@@ -70,10 +70,10 @@ namespace OrphanChildrenSupport.Controllers.V1
         }
 
         [HttpGet]
-        [Route("getStatistic/{year}")]
-        public async Task<IActionResult> Statistic(int year)
+        [Route("getSupportedChildrenStatistics/{year}")]
+        public async Task<IActionResult> GetSupportedChildrenStatistics(int year)
         {
-            var apiResponse = await _childrenProfileService.GetChildrenProfileStatistics(year);
+            var apiResponse = await _childrenProfileService.GetSupportedChildrenStatistics(year);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
     }

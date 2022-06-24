@@ -1,10 +1,9 @@
-import { IReportModel } from './../models/IReportModel';
+import { IReportModel } from "./../models/IReportModel";
 import Result from "@Core/Result";
 import { ServiceBase } from "@Core/ServiceBase";
 import { IFilterType } from "@Models/IFilterType";
 import { IQueryResult } from "@Models/IQueryResult";
-import { IDonationModel } from '@Models/IDonationModel';
-
+import { IDonationModel } from "@Models/IDonationModel";
 
 type Params = {
   fullNameOrEmail?: string;
@@ -13,44 +12,45 @@ type Params = {
   gender?: boolean;
   fromAge?: number;
   toAge?: number;
-  supportCategoryId?:number,
-  accountId?:number
+  supportCategoryId?: number;
+  accountId?: number;
 };
 export type ChildrenParams = Params & IFilterType;
 export default class ReportService extends ServiceBase {
   public async add(model: IReportModel): Promise<Result<IReportModel>> {
     var result = await this.requestJson<IReportModel>({
-      url: "/api/deports",
+      url: "/api/reports",
       method: "POST",
       data: model,
     });
     return result;
   }
 
-  public async getAll(param?:ChildrenParams): Promise<Result<IQueryResult<IReportModel>>> {
+  public async getAll(
+    param?: ChildrenParams
+  ): Promise<Result<IQueryResult<IReportModel>>> {
     const result = await this.requestJson<IQueryResult<IReportModel>>({
-      url: `/api/deports`,
+      url: `/api/reports`,
       method: "GET",
-      data: param
+      data: param,
     });
     return result;
   }
 
-  
   public async search(
-    value:IFilterType
+    value: IFilterType
   ): Promise<Result<IQueryResult<IReportModel>>> {
     const result = await this.requestJson<IQueryResult<IReportModel>>({
-      url: `/api/deports`,
+      url: `/api/reports`,
       method: "GET",
-      data:value
+      data: value,
     });
     return result;
   }
 
   public async delete(id: number): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/${id}`,
+      url: `/api/reports/${id}`,
       method: "DELETE",
     });
     return result;
@@ -58,7 +58,7 @@ export default class ReportService extends ServiceBase {
 
   public async getReport(id: number): Promise<Result<IReportModel>> {
     const res = await this.requestJson<IReportModel>({
-      url: `/api/deports/${id}`,
+      url: `/api/reports/${id}`,
       method: "GET",
     });
     return res;
@@ -66,7 +66,7 @@ export default class ReportService extends ServiceBase {
 
   public async update(model: IReportModel): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/${model.id}`,
+      url: `/api/reports/${model.id}`,
       method: "PUT",
       data: model,
     });
@@ -75,7 +75,7 @@ export default class ReportService extends ServiceBase {
 
   public async getReportStatistc(): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/getStatistic`,
+      url: `/api/reports/getStatistics`,
       method: "PUT",
     });
     return result;
@@ -83,7 +83,7 @@ export default class ReportService extends ServiceBase {
 
   public async cancelReport(id): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/cancel/${id}`,
+      url: `/api/reports/cancel/${id}`,
       method: "PUT",
     });
     return result;
@@ -91,7 +91,7 @@ export default class ReportService extends ServiceBase {
 
   public async approveReport(id): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/approve/${id}`,
+      url: `/api/reports/approve/${id}`,
       method: "PUT",
     });
     return result;
@@ -99,10 +99,9 @@ export default class ReportService extends ServiceBase {
 
   public async rejectReport(id): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/deports/reject/${id}`,
+      url: `/api/reports/reject/${id}`,
       method: "PUT",
     });
     return result;
   }
-
 }
