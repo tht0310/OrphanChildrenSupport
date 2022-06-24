@@ -35,7 +35,7 @@ const UpdateStatusModal: React.FC<IProps> = ({
   }
 
   function initilizeForm() {
-    const name = isDonation ? "donationDetailStatus" : "status";
+    const name = isDonation ? "status" : "status";
 
     form.setFieldsValue({ [name]: dataNumber.toString() });
   }
@@ -53,7 +53,7 @@ const UpdateStatusModal: React.FC<IProps> = ({
         message.error("Unsucessful");
       }
     } else {
-      item.donationDetailStatus = values.donationDetailStatus;
+      item.status = values.status;
       const res = await donationDetailsService.update(item);
       if (!res.hasErrors) {
         message.success("Sucessfull");
@@ -83,7 +83,7 @@ const UpdateStatusModal: React.FC<IProps> = ({
         </div>
         <Form form={form} onFinish={onFinish}>
           <Form.Item
-            name={isDonation ? "donationDetailStatus" : "status"}
+            name={isDonation ? "status" : "status"}
             label=""
             rules={[{ required: true, message: "Please pick an item!" }]}
           >

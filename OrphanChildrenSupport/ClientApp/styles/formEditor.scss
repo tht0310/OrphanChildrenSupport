@@ -498,3 +498,7 @@
 .no-seen-content {
     font-weight: 400;
 }
+.disable-btn:hover {
+  cursor:not-allowed !important;
+  color:rgba(0, 0, 0, 0.6) !important;
+}

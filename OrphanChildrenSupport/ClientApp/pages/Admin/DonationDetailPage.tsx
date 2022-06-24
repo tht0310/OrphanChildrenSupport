@@ -74,7 +74,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   React.useEffect(() => {
     if (donation) {
       fetchData();
-      form.setFieldsValue({ status: donation?.donationStatus });
+      form.setFieldsValue({ status: donation?.status });
     }
   }, [donation]);
 
@@ -120,7 +120,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   async function onUpdateStatus(value) {
     const tempValue = donation;
-    tempValue.donationStatus = value;
+    tempValue.status = value;
     const res = await donationService.update(tempValue);
     if (!res.hasErrors) {
       message.success("Update donation status successfully");
@@ -240,16 +240,14 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     {
       title: "Status",
       align: "center",
-      dataIndex: "donationDetailStatus",
-      key: "donationDetailStatus",
+      dataIndex: "status",
+      key: "status",
       width: "20%",
       render: (text, row: IDonationDetailModel, index) =>
         getStatus(text) === "" ? (
           <></>
         ) : (
-          <Tag color={getTagColor(row.donationDetailStatus)}>
-            {getStatus(text)}
-          </Tag>
+          <Tag color={getTagColor(row.status)}>{getStatus(text)}</Tag>
         ),
     },
     {
@@ -270,11 +268,11 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     {
       title: "",
       dataIndex: "",
-      width: donation?.donationStatus === 1 ? "10%" : "0%",
+      width: donation?.status === 1 ? "10%" : "0%",
       key: "",
       render: (text, row: IDonationDetailModel) => (
         <>
-          {donation?.donationStatus !== 0 && donation?.donationStatus !== 2 && (
+          {donation?.status !== 0 && donation?.status !== 2 && (
             <Space className="actions">
               <Popconfirm
                 title="Are you sure？"
@@ -348,7 +346,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     #DN{10000 + donation?.id}
                   </span>
                   <span style={{ color: "#707070", margin: "0px 10px" }}>
-                    - {getStatus(donation?.donationStatus)}
+                    - {getStatus(donation?.status)}
                   </span>
                 </span>
               </Col>
@@ -359,17 +357,11 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Steps
           style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
           status={
-            donation?.donationStatus === 3 || donation?.donationStatus === 4
+            donation?.status === 3 || donation?.status === 4
               ? "error"
               : "process"
           }
-          current={
-            donation?.donationStatus === 2
-              ? 3
-              : donation?.donationStatus === 0
-              ? 1
-              : 2
-          }
+          current={donation?.status === 2 ? 3 : donation?.status === 0 ? 1 : 2}
           progressDot={customDot}
         >
           <Steps.Step title="Send" />
@@ -442,7 +434,10 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {children?.guardianPhoneNumber.substring(1)}
+                    (+84){" "}
+                    {children?.guardianPhoneNumber
+                      ? children?.guardianPhoneNumber.substring(1)
+                      : ""}
                   </div>
                   <div
                     style={{
@@ -458,7 +453,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             <Table
               className="custom-table"
               rowClassName={(record: IDonationDetailModel, index) =>
-                renderClassName(record?.donationDetailStatus)
+                renderClassName(record?.status)
               }
               columns={requestColumns}
               dataSource={donation?.donationDetails}
@@ -502,33 +497,32 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Row>
           <Col span={24}>
             <Space style={{ marginTop: "8px", float: "right" }}>
-              {donation?.donationStatus !== 1 &&
-                donation?.donationStatus !== 2 && (
-                  <>
-                    <span style={{ paddingRight: "8px" }}>
-                      <Popconfirm
-                        title="Are you sure？"
-                        okText="Yes"
-                        cancelText="No"
-                        onConfirm={() => onApproveDonation(donation?.id)}
+              {donation?.status !== 1 && donation?.status !== 2 && (
+                <>
+                  <span style={{ paddingRight: "8px" }}>
+                    <Popconfirm
+                      title="Are you sure？"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => onApproveDonation(donation?.id)}
+                    >
+                      <Button
+                        style={{
+                          paddingLeft: "8px",
+                          width: "100%",
+                          color: "white",
+                          background: "#2eb85c",
+                          border: "1px solid #2eb85c",
+                        }}
                       >
-                        <Button
-                          style={{
-                            paddingLeft: "8px",
-                            width: "100%",
-                            color: "white",
-                            background: "#2eb85c",
-                            border: "1px solid #2eb85c",
-                          }}
-                        >
-                          Approve
-                        </Button>
-                      </Popconfirm>
-                    </span>
-                  </>
-                )}
+                        Approve
+                      </Button>
+                    </Popconfirm>
+                  </span>
+                </>
+              )}
 
-              {donation?.donationStatus !== 2 && (
+              {donation?.status !== 2 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm

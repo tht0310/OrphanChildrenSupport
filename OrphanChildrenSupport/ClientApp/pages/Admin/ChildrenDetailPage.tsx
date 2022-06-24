@@ -267,12 +267,12 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               {convertAddressToString(children?.publicAddress)}
             </div>
             <div className="support">
-              <div className="option-title">Support</div>
               <Row>
                 {supportCategories.map((s) => {
                   return (
                     <Col span={7}>
                       <Button
+                        className={!isEnable(s.id) ? "disable-btn" : ""}
                         disabled={isEnable(s.id) ? false : true}
                         onClick={(e) => {
                           handleOnClickButton(e);

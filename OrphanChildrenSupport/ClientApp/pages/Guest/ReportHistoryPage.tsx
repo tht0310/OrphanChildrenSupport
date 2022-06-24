@@ -146,7 +146,7 @@ const ReportHistoryPage: React.FC<Props> = () => {
                   </Form.Item>
                 </Col>
                 <Col xs={22} lg={8}>
-                  <Form.Item name="donationStatus">
+                  <Form.Item name="status">
                     <Select defaultValue={"null"}>
                       <Select.Option value="null">All status</Select.Option>
                       <Select.Option value="0">Send</Select.Option>

@@ -55,9 +55,9 @@ const ChildrenHistoryDrawer: React.FC<IProps> = ({
     const res = await donationService.getAll({ childrenProfileId: childrenId });
     const result = res.value.items;
     result.map((v) => {
-      if (v.donationStatus === 2) {
+      if (v.status === 2) {
         v.donationDetails.map((v1) => {
-          if (v1.donationDetailStatus === 2) {
+          if (v1.status === 2) {
             const index = user.findIndex((item) => v.accountId === item.id);
             v1.accountName = user[index].fullName;
             temp.push(v1);

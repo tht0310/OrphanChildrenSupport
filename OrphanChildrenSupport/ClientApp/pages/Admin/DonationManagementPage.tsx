@@ -104,8 +104,8 @@ const DonationManagementPage: React.FC<Props> = () => {
     },
     {
       title: "Status",
-      dataIndex: "donationStatus",
-      key: "donationStatus",
+      dataIndex: "status",
+      key: "status",
       align: "center",
       width: "18%",
       render: (text, row, index) => (

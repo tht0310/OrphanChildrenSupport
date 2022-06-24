@@ -50,7 +50,9 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchChildrenProfile(filterParams);
+    if (filterParams !== null) {
+      fetchChildrenProfile(filterParams);
+    }
   }, [filterParams]);
 
   async function fetchData() {
@@ -70,7 +72,10 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
         name: "childrenProfileStatus",
         value: 0,
       };
+    } else {
+      filterParams = { ...filterParams, childrenProfileStatus: 0 };
     }
+
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;

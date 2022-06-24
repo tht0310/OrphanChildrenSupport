@@ -77,7 +77,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
   };
 
   async function onCancelDonation() {
-    data.donationStatus = 3;
+    data.status = 3;
     const res = await donationService.update(data);
     if (!res.hasErrors) {
       message.success("Cancel donation successfully");
@@ -144,8 +144,8 @@ const DonationHistoryModal: React.FC<IProps> = ({
     {
       title: "Status",
       align: "center",
-      dataIndex: "donationDetailStatus",
-      key: "donationDetailStatus",
+      dataIndex: "status",
+      key: "status",
       width: "22%",
       render: (text, row, index) => (
         <Tag color={getTagColor(text)}>{getStatus(text)}</Tag>
@@ -197,7 +197,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
                   <Space>
                     Processing -
                     <span style={{ color: "#686868", paddingRight: "5px" }}>
-                      {getStatus(data?.donationStatus).toLocaleLowerCase()}
+                      {getStatus(data?.status).toLocaleLowerCase()}
                     </span>
                   </Space>
                 }
@@ -206,17 +206,11 @@ const DonationHistoryModal: React.FC<IProps> = ({
                 <Steps
                   style={{ marginTop: "12px", padding: "25px 0 10px 0" }}
                   status={
-                    data?.donationStatus === 3 || data?.donationStatus === 4
+                    data?.status === 3 || data?.status === 4
                       ? "error"
                       : "process"
                   }
-                  current={
-                    data?.donationStatus === 2
-                      ? 3
-                      : data?.donationStatus === 0
-                      ? 1
-                      : 2
-                  }
+                  current={data?.status === 2 ? 3 : data?.status === 0 ? 1 : 2}
                   progressDot={customDot}
                 >
                   <Steps.Step title="Send" />
@@ -330,7 +324,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
             >
               <Button
                 onClick={onCancelDonation}
-                disabled={data?.donationStatus === 0 ? false : true}
+                disabled={data?.status === 0 ? false : true}
                 style={{
                   marginTop: "15px",
                   width: "100%",

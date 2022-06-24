@@ -130,7 +130,7 @@ const DonationDetailModal: React.FC<IProps> = ({
       supportCategoryId: data.supportCategoryId,
       childrenProfileId: donation?.childrenProfileId,
       accountId: donation?.accountId,
-      donationDetailStatus: data?.donationDetailStatus,
+      status: data?.status,
       note: data?.note,
       donationId: donation?.id,
     });
@@ -288,7 +288,7 @@ const DonationDetailModal: React.FC<IProps> = ({
 
             <Form.Item
               label="Status"
-              name="donationDetailStatus"
+              name="status"
               {...inlineFormLayout}
               rules={[{ required: true, message: "Please enter status." }]}
             >
