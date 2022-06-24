@@ -341,7 +341,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
                   border: "none",
                 }}
               >
-                Cancel donation
+                Cancel
               </Button>
             </Popconfirm>
           </Col>

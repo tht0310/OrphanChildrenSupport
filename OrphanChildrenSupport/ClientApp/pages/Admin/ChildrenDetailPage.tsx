@@ -292,10 +292,13 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 <Col span={21}>
                   <Button
                     style={{ height: "105%" }}
-                    onClick={() => toggleChildrenModal()}
+                    onClick={() =>
+                      currentUser !== null
+                        ? toggleChildrenModal()
+                        : (window.location.href = "/login")
+                    }
                     disabled={selected.length > 0 ? false : true}
                   >
-                    {" "}
                     <GiftOutlined style={{ fontSize: "12px" }} />
                     Donate now
                   </Button>

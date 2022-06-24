@@ -237,10 +237,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                 }}
                 renderItem={(item) => (
                   <List.Item>
-                    <Link
-                      to={`${childrenDetailUrl}/${item.id}`}
-                      target="_blank"
-                    >
+                    <Link to={`${childrenDetailUrl}/${item.id}`}>
                       <div className="item">
                         <Image
                           preview={false}
