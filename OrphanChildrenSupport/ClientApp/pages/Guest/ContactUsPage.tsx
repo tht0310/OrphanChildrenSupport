@@ -10,7 +10,7 @@ const ContactUsPage: React.FC<Props> = () => {
     document.title = "Contact Us | FOR THE CHILDREN";
   }, []);
   return (
-    <div className="contact-page">
+    <div className="contact-page" style={{ marginBottom: "30px" }}>
       <h3>Contact Us</h3>
       <p>
         Follow us to find out how we're changing the lives of children – and how
