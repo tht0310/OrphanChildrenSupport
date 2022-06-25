@@ -329,7 +329,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     style={{
                       height: "105%",
                       background: "#FFF7E6",
-                      color: "red",
+                      color: isFavourite ? "red" : "#E57905",
                       border: "1px solid #FFF7E6",
                     }}
                     onClick={() =>
