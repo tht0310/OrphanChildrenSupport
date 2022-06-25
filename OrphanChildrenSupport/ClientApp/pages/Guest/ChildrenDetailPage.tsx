@@ -207,16 +207,25 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
-  // async function onDelete(id) {
-  //   const res = await favoriteChildrenService.delete(id);
-  //   if (!res.hasErrors) {
-  //     message.success("Remove sucessfully");
-  //     fetchData();
-  //     fetchFavourite();
-  //     fetchChildrenProfile();
-  //     fetchChildrenFavourite();
-  //   }
-  // }
+  async function handleFavouriteChildren() {
+    if (currentUser !== null) {
+      if (!isFavourite) {
+        favoriteChildren();
+      } else {
+        onDelete();
+      }
+    } else {
+      window.location.href = "/login";
+    }
+  }
+
+  async function onDelete() {
+    const res = await favoriteChildrenService.delete(children?.id);
+    if (!res.hasErrors) {
+      message.success("Remove sucessfully");
+      setIsFavourite(false);
+    }
+  }
 
   function findSupportCategoriesById(id) {
     const index = supportCategories.findIndex((x) => x.id === id);
@@ -333,11 +342,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       color: isFavourite ? "red" : "#E57905",
                       border: "1px solid #FFF7E6",
                     }}
-                    onClick={() =>
-                      currentUser !== null
-                        ? favoriteChildren()
-                        : (window.location.href = "/login")
-                    }
+                    onClick={() => handleFavouriteChildren()}
                   >
                     {isFavourite ? (
                       <HeartFilled style={{ fontSize: "12px", color: "red" }} />
