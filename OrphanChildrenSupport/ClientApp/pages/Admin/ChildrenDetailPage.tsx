@@ -14,6 +14,7 @@ import {
   GiftOutlined,
   HeartOutlined,
   HomeOutlined,
+  PhoneOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -35,7 +36,7 @@ type Props = RouteComponentProps<{ id: string }>;
 const childrenService = new ChildrenProfileService();
 const supportCategoriesService = new SupportCategoryService();
 const reportFieldService = new ReportFieldService();
-const favouriteService = new FavoriteService();
+const favoriteService = new FavoriteService();
 const userService = new AccountService();
 
 const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
@@ -56,7 +57,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [imageData, setImageData] = React.useState<any[]>([]);
   React.useEffect(() => {
-    document.title = "Children Detail";
+    document.title = "Children - Detail | FOR THE CHILDREN";
     fetchSupportCategories();
     fetchReport();
     getLocalUser();
@@ -151,12 +152,12 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       childrenProfileId: children?.id,
       accountId: currentUser?.id,
     };
-    const res = await favouriteService.add(temp);
+    const res = await favoriteService.add(temp);
     console.log(res);
     if (!res.hasErrors) {
-      message.success("Add to favourites successfuly");
+      message.success("Add to favorites successfuly");
     } else {
-      message.warning("You added this child to favourite list.");
+      message.warning("You added this child to favorite list.");
     }
   }
 
@@ -261,10 +262,18 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <div className="details col-md-6" style={{ paddingLeft: "20px" }}>
             <div className="product-title">{children?.fullName}</div>
             <div className="rating">
+              <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
+              {children?.gender ? "Boy" : "Girl"} - {children?.age} years old
+            </div>
+            <div className="rating">
+              <CalendarOutlined style={{ color: "#b2b2b2" }} />{" "}
+              {displayDate(children?.dob)}
+            </div>
+            <div className="rating">
               <EnvironmentOutlined
                 style={{ fontSize: "12px", color: "#ff9f1a" }}
               />{" "}
-              {convertAddressToString(children?.publicAddress)}
+              {children?.publicAddress}
             </div>
             <div className="support">
               <Row>
@@ -279,7 +288,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                         }}
                         name={s.id + ""}
                       >
-                        <GiftOutlined style={{ fontSize: "12px" }} /> {s.title}
+                        {s.title}
                       </Button>
                     </Col>
                   );
@@ -300,7 +309,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     disabled={selected.length > 0 ? false : true}
                   >
                     <GiftOutlined style={{ fontSize: "12px" }} />
-                    Donate now
+                    Send Donation
                   </Button>
                 </Col>
               </Row>
@@ -320,7 +329,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     }
                   >
                     <HeartOutlined style={{ fontSize: "12px" }} />
-                    Favorite this child
+                    Add To Favorite
                   </Button>
                 </Col>
                 <Col span={10}>
@@ -339,7 +348,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   >
                     {" "}
                     <WarningOutlined style={{ fontSize: "12px" }} />
-                    Reports
+                    Report Incorrect Information
                   </Button>
                 </Col>
               </Row>
@@ -350,34 +359,16 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <Col span={12}>
             <Row>
               <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
-                Information{" "}
+                Guardian Information{" "}
               </h5>
             </Row>
             <div>
-              <span
-                style={{
-                  color: "#E57905",
-                }}
-              >
-                {children?.fullName}
-              </span>
-              <span style={{ margin: "0px 6px" }}>-</span>
-              <span>{children?.gender ? "boy" : "girl"}</span>
-            </div>
-
-            <div>
-              <div>
-                <CalendarOutlined style={{ color: "#b2b2b2" }} />{" "}
-                {displayDate(children?.dob)}
-              </div>
-            </div>
-            <div>
-              <HomeOutlined style={{ color: "#b2b2b2", marginRight: "5px" }} />
-              {convertPublicAddressToString(children?.publicAddress)}
-            </div>
-            <div>
               <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
               {children?.guardianName}
+            </div>
+            <div>
+              <PhoneOutlined style={{ color: "#b2b2b2" }} />{" "}
+              {children?.guardianPhoneNumber}
             </div>
           </Col>
           <Col span={12}>

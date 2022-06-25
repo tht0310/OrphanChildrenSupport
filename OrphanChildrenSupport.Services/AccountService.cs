@@ -800,7 +800,7 @@ namespace OrphanChildrenSupport.Services
             }
             _emailService.Send(
                 to: account.Email,
-                subject: "For The Children - Verify Email",
+                subject: "FOR THE CHILDREN - Verify Email",
                 html: $@"<h4>Verify Email</h4>
                          <p>Thanks for registering!</p>
                          {message}"
@@ -820,7 +820,7 @@ namespace OrphanChildrenSupport.Services
             }
             _emailService.Send(
                 to: email,
-                subject: "For The Children - Email already registered",
+                subject: "FOR THE CHILDREN - Email already registered",
                 html: $@"<h4>Email already registered</h4>
                          <p>Your email <strong>{email}</strong> is already registered.</p>
                          {message}"
@@ -843,7 +843,7 @@ namespace OrphanChildrenSupport.Services
             }
             _emailService.Send(
                 to: account.Email,
-                subject: "For The Children - Reset Password",
+                subject: "FOR THE CHILDREN - Reset Password",
                 html: $@"<h4>Reset Password Email</h4>
                          {message}"
             );

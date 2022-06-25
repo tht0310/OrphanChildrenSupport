@@ -21,7 +21,7 @@ export default function Section4() {
             marginTop: "20px",
           }}
         >
-          What we do ?
+          WHAT WE DO?
         </h2>
         <div
           style={{
@@ -36,11 +36,11 @@ export default function Section4() {
         ></div>
         <span key="line" className="separator" />
         <QueueAnim type="bottom" className="info-content" key="content">
-          <p className="main-info" style={{ fontSize: "16px" }} key="1">
+          <p style={{ fontSize: "16px" }} key="1">
             We are unrelenting in our service for the betterment of the
             individual, families, and society.
           </p>
-          <p className="main-info" style={{ fontSize: "16px" }} key="2">
+          <p style={{ fontSize: "16px" }} key="2">
             Our bold ambition is bringing communities, civil society,
             governments, and donors together to achieve lasting change for
             children.

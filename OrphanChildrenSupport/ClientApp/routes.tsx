@@ -61,7 +61,7 @@ export const routes = (
     <AdminRoute
       layout={AuthorizedLayout}
       exact
-      path="/admin/myaccount"
+      path="/admin/myAccount"
       component={AccountDetailPage}
     />
     <AdminRoute
@@ -123,13 +123,13 @@ export const routes = (
 
     <RegisteredUserRoute
       layout={GuestLayout}
-      path="/favourite"
+      path="/favorite"
       component={ChildrenCartPage}
     />
 
     <RegisteredUserRoute
       layout={GuestLayout}
-      path="/myaccount"
+      path="/myAccount"
       component={AccountDetailPage}
     />
 

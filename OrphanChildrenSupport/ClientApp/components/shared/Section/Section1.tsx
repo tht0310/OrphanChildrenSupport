@@ -15,42 +15,36 @@ const { TweenOneGroup } = TweenOne;
 const featuresCN = [
   {
     title: "Clothes",
-    content: "Clothes, uniforms, shoes and accessories.",
     src: Shirt,
     color: "#e57905",
     shadowColor: "rgba(19,194,194,.12)",
   },
   {
     title: "Food",
-    content: "Instant noodles, rice, snack, fruit or milk.",
     src: Food,
     color: "#e57905",
     shadowColor: "rgba(47,84,235,.12)",
   },
   {
-    title: "School things",
-    content: "School bag, book, crayons, board or pen.",
+    title: "School Stationery",
     src: School,
     color: "#e57905",
     shadowColor: "rgba(245,34,45,.12)",
   },
   {
-    title: "Medical",
-    content: "Medicine or treatment costs.",
+    title: "Medical Care",
     src: Medical,
     color: "#e57905",
     shadowColor: "rgba(26,196,77,.12)",
   },
   {
     title: "Money",
-    content: "Expenses for children living, studying or treating.",
     src: Money,
     color: "#e57905",
     shadowColor: "rgba(250,173,20,.12)",
   },
   {
-    title: "Family",
-    content: "Give children a family by adopting them.",
+    title: "Adoption",
     src: Family,
     color: "#e57905",
     shadowColor: "rgba(114,46,209,.12)",
@@ -207,17 +201,17 @@ class Section1 extends React.PureComponent {
                   fontSize: "32px",
                 }}
               >
-                Ways to Give ?
+                WHAT YOU CAN HELP?
               </h2>
 
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "17px",
+                  fontSize: "16px",
                   marginBottom: "15px",
                 }}
               >
-                Make a Contribution to Change a Child’s Life
+                Make a donation to change their lives
               </div>
               <div
                 style={{

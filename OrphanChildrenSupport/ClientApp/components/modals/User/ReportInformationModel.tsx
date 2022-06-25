@@ -322,7 +322,7 @@ const ReportInformationModal: React.FC<IProps> = ({
               size="small"
               title="Reporter Information"
               extra={
-                <Link to="/myaccount">
+                <Link to="/myAccount">
                   <EditOutlined style={{ color: "#e57905" }} />
                 </Link>
               }

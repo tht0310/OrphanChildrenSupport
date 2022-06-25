@@ -51,7 +51,7 @@ const ReportManagementPage: React.FC<Props> = () => {
   const [detailStatus, setDetailStatus] = React.useState<number>();
 
   useEffect(() => {
-    document.title = "Report Information";
+    document.title = "Report Incorrect Information";
     fetchData();
   }, []);
   useEffect(() => {

@@ -29,13 +29,13 @@ export interface IProps {
   reportField: IReportFieldModel[];
 }
 const options = [
-  { name: "Full Name", value: "fullName" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
+  { name: "Full Name", value: "FullName" },
+  { name: "Birthday", value: "DOB" },
+  { name: "Address", value: "PublicAddress" },
+  { name: "Gender", value: "Gender" },
+  { name: "Circumstance", value: "Circumstance" },
+  { name: "Guardian Name", value: "GuardianName" },
+  { name: "Guardian Phone Number", value: "GuardianPhoneNumber" },
 ];
 
 const reportService = new ReportService();
@@ -82,7 +82,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
     const tempList = [];
     v.map((v) => {
       switch (v) {
-        case "dob":
+        case "DOB":
           tempList.push(
             <Row style={{ marginBottom: "8px", marginTop: "8px" }}>
               <Col span={6}>
@@ -98,7 +98,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                   />
                   <ArrowRightOutlined style={{ color: "#e57905" }} />
                   <Form.Item
-                    name={findId("dob")[0].id}
+                    name={findId("DOB")[0].id}
                     label=""
                     style={{ marginBottom: 0 }}
                     rules={[{ required: true, message: "Field is required" }]}
@@ -113,7 +113,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
             </Row>
           );
           break;
-        case "circumstance":
+        case "Circumstance":
           tempList.push(
             <Row style={{ marginBottom: "8px" }}>
               <Col span={6}>
@@ -132,26 +132,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
             </Row>
           );
           break;
-        case "other":
-          tempList.push(
-            <Row style={{ marginBottom: "8px" }}>
-              <Col span={6}>
-                <div style={{ width: "100%" }}>{findName(v)}</div>
-              </Col>
-              <Col span={18}>
-                <Form.Item
-                  name={findId("other")[0].id}
-                  label=""
-                  style={{ marginBottom: 0 }}
-                  rules={[{ required: true, message: "Field is required" }]}
-                >
-                  <TextArea rows={2} />
-                </Form.Item>
-              </Col>
-            </Row>
-          );
-          break;
-        case "gender":
+        case "Gender":
           tempList.push(
             <Row style={{ marginBottom: "8px" }}>
               <Col span={6}>
@@ -163,10 +144,10 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                     <Input
                       style={{ width: "100%" }}
                       defaultValue={
-                        v === "gender"
+                        v === "Gender"
                           ? children[v]
-                            ? "boy"
-                            : "girl"
+                            ? "Boy"
+                            : "Girl"
                           : children[v]
                       }
                       disabled
@@ -210,15 +191,14 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                   <Input
                     style={{ width: "100%" }}
                     defaultValue={
-                      v === "gender"
+                      v === "Gender"
                         ? children[v]
-                          ? "boy"
-                          : "girl"
+                          ? "Boy"
+                          : "Girl"
                         : children[v]
                     }
                     disabled
                   />
-
                   <ArrowRightOutlined style={{ color: "#e57905" }} />
                   <Form.Item
                     name={findId(v)[0].id}
@@ -274,7 +254,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
           width={480}
           placement="right"
           size={size}
-          title={<Space>Report information</Space>}
+          title={<Space>Report Incorrect Information</Space>}
           onClose={handleCancel}
           visible={visible}
           extra={

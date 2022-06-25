@@ -129,13 +129,13 @@ const TopMenu: React.FC<Props> = () => {
               {currentUser ? (
                 <>
                   <Link
-                    to={"/favourite"}
+                    to={"/favorite"}
                     id="preview-button"
                     style={{ paddingRight: "30px" }}
                   >
                     <HeartFilled style={{ fontSize: "18px", color: "red" }} />
                   </Link>
-                  <Link to={"/myaccount"} id="preview-button">
+                  <Link to={"/myAccount"} id="preview-button">
                     <AntdDropdown overlay={menu}>
                       <Avatar style={{ backgroundColor: "#f56a00" }}>
                         {findName(currentUser?.fullName)}

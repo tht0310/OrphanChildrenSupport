@@ -111,12 +111,9 @@ const ChildrenBlock: React.FC<IProps> = ({
                       <div className="info">
                         <h3>{d.fullName}</h3>
                         <p className="descroption">
-                          {displayDate(d.dob)} | Gender:
-                          {d.gender ? " Boy" : " Girl"}
+                          {d.age + " y/o"} |{d.gender ? " Boy" : " Girl"}
                         </p>
-                        <p className="descroption">
-                          {convertAddressToString(d.publicAddress)}
-                        </p>
+                        <p className="descroption">{d.publicAddress}</p>
                       </div>
                     </div>
                   </Link>

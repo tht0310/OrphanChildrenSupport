@@ -144,12 +144,12 @@ const DonationHistoryPage: React.FC<Props> = () => {
                     <Select defaultValue={"null"}>
                       <Select.Option value="null">All status</Select.Option>
                       <Select.Option value="0">
-                        Waiting for Approve
+                        Waiting For Approval
                       </Select.Option>
                       <Select.Option value="1">Processing</Select.Option>
-                      <Select.Option value="2">Finish</Select.Option>
-                      <Select.Option value="3">Canceled</Select.Option>
-                      <Select.Option value="4">Rejected</Select.Option>
+                      <Select.Option value="2">Approved</Select.Option>
+                      <Select.Option value="3">Rejected</Select.Option>
+                      <Select.Option value="4">Cancelled</Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>

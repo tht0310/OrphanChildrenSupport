@@ -66,12 +66,12 @@ const Footer: FC<Props> = () => {
         </Row>
         <hr />
         <div className="detail">
-          For The Children - <EnvironmentOutlined /> Nam Ky Khoi Nghia - Hoa Phu
+          FOR THE CHILDREN - <EnvironmentOutlined /> Nam Ky Khoi Nghia - Hoa Phu
           - Thu Dau Mot - Binh Duong - <WhatsAppOutlined /> 0123456789
         </div>
         <Row className="content">
           <Col span={24} lg={24} xs={24} style={{ textAlign: "center" }}>
-            Copyright © 2022 For The Children
+            Copyright © 2022 FOR THE CHILDREN
           </Col>
         </Row>
       </div>
