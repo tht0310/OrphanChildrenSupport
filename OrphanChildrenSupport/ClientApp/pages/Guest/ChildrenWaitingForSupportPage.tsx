@@ -73,6 +73,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
   }
 
   async function fetchChildrenProfile(filterParams) {
+    setIsLoading(true);
     if (!filterParams) {
       filterParams = {
         name: "childrenProfileStatus",
@@ -91,6 +92,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
       }
       setChildrenProfiles(tempValue);
     }
+    setIsLoading(false);
   }
 
   async function getImage(id: number) {
@@ -114,6 +116,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
     return result;
   }
   async function onResetField() {
+    setIsLoading(true);
     const searchValue: ChildrenParams = {};
     searchValue.childrenProfileStatus = 0;
 
@@ -124,9 +127,11 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
       tempValue[index].imageId = tempId;
     }
     setChildrenProfiles(tempValue);
+    setIsLoading(false);
   }
 
   async function onSearch(value) {
+    setIsLoading(true);
     const searchValue: ChildrenParams = {};
     searchValue.childrenProfileStatus = 0;
 
@@ -162,10 +167,12 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
           }
         });
         setChildrenProfiles(temp);
+        setIsLoading(false);
         return;
       }
     }
     setChildrenProfiles(temp.length > 0 ? temp : resData);
+    setIsLoading(false);
   }
 
   return (
@@ -307,6 +314,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                   xxl: 4,
                 }}
                 dataSource={childrenProfiles}
+                loading={isLoading ? true : false}
                 pagination={{
                   defaultPageSize: 12,
                   showSizeChanger: true,

@@ -9,6 +9,7 @@ import {
 import { Col, Row, Space } from "antd";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import Logo from "@Images/logo.png";
 
 // routes config
 interface Props {}
@@ -20,6 +21,7 @@ const Footer: FC<Props> = () => {
         <Row>
           <Col span={10} lg={10} xs={0}>
             <div className="title">Stay connected</div>
+            {/* <img src={Logo} alt="" className="logo" /> */}
             {/* <div className="content">
               Join us to receive weekly information about children.
             </div> */}

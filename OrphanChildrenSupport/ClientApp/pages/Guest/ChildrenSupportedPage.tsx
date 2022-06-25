@@ -40,6 +40,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -67,6 +68,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   }
 
   async function fetchChildrenProfile(filterParams) {
+    setIsLoading(true);
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;
@@ -79,6 +81,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
 
       setChildrenProfiles(tempValue);
     }
+    setIsLoading(false);
   }
 
   function viewImg(id) {
@@ -109,6 +112,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   }
 
   async function onResetField() {
+    setIsLoading(true);
     const searchValue: ChildrenParams = {};
     searchValue.childrenProfileStatus = 1;
 
@@ -119,9 +123,11 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
       tempValue[index].imageId = tempId;
     }
     setChildrenProfiles(tempValue);
+    setIsLoading(false);
   }
 
   async function onSearch(value) {
+    setIsLoading(true);
     const searchValue: ChildrenParams = {};
     searchValue.childrenProfileStatus = 1;
 
@@ -157,10 +163,12 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
           }
         });
         setChildrenProfiles(temp);
+        setIsLoading(false);
         return;
       }
     }
     setChildrenProfiles(temp.length > 0 ? temp : resData);
+    setIsLoading(false);
   }
 
   return (
@@ -301,6 +309,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                   xl: 4,
                   xxl: 4,
                 }}
+                loading={isLoading ? true : false}
                 dataSource={childrenProfiles}
                 pagination={{
                   defaultPageSize: 12,
