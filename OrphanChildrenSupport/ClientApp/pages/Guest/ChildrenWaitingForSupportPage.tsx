@@ -114,8 +114,16 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
     return result;
   }
   async function onResetField() {
-    const res = await childrenProfileService.getAll();
-    setChildrenProfiles(res.value.items);
+    const searchValue: ChildrenParams = {};
+    searchValue.childrenProfileStatus = 0;
+
+    const res = await childrenProfileService.search(searchValue);
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+    setChildrenProfiles(tempValue);
   }
 
   async function onSearch(value) {
@@ -134,7 +142,13 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
       searchValue.toAge = value.age[1];
     }
     const res = await childrenProfileService.search(searchValue);
-    let resData = res.value.items;
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+
+    let resData = tempValue;
     let temp = [];
     if (value.supportCategories !== undefined) {
       if (value.supportCategories.length > 0) {

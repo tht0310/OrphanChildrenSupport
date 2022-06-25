@@ -97,22 +97,6 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
     }
   }
 
-  async function onSearchGender(value) {
-    fetchChildrenProfile({ gender: value, childrenProfileStatus: 1 });
-  }
-
-  async function onSearchFullName(value) {
-    fetchChildrenProfile({ fullName: value, childrenProfileStatus: 1 });
-  }
-
-  async function onSearchAge(value) {
-    fetchChildrenProfile({
-      fromAge: value[0],
-      toAge: value[1],
-      childrenProfileStatus: 1,
-    });
-  }
-
   function convertAddressToString(address: string) {
     const tempAddress = address.split("-");
     let result = "";
@@ -129,7 +113,12 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
     searchValue.childrenProfileStatus = 1;
 
     const res = await childrenProfileService.search(searchValue);
-    setChildrenProfiles(res.value.items);
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+    setChildrenProfiles(tempValue);
   }
 
   async function onSearch(value) {
@@ -148,7 +137,13 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
       searchValue.toAge = value.age[1];
     }
     const res = await childrenProfileService.search(searchValue);
-    let resData = res.value.items;
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+
+    let resData = tempValue;
     let temp = [];
     if (value.supportCategories !== undefined) {
       if (value.supportCategories.length > 0) {

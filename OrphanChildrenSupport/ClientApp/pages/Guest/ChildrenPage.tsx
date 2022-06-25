@@ -42,7 +42,6 @@ const ChildrenPage: React.FC<Props> = (props) => {
   >([]);
 
   const [form] = Form.useForm();
-  const [keyword, setKeyWord] = React.useState<String>("");
 
   useEffect(() => {
     document.title = "Children list";
@@ -79,7 +78,6 @@ const ChildrenPage: React.FC<Props> = (props) => {
       const tempValue = dataRes.value.items;
       for (let index = 0; index < tempValue.length; index++) {
         let tempId = await getImage(tempValue[index].id);
-
         tempValue[index].imageId = tempId;
       }
       setChildrenProfiles(tempValue);
@@ -102,22 +100,6 @@ const ChildrenPage: React.FC<Props> = (props) => {
     }
   }
 
-  async function onSearchGender(value) {
-    fetchChildrenProfile({ gender: value });
-  }
-
-  async function onSearchFullName(value) {
-    fetchChildrenProfile({ fullName: value });
-  }
-
-  async function onSearchAge(value) {
-    fetchChildrenProfile({
-      fromAge: value[0],
-      toAge: value[1],
-      childrenProfileStatus: 0,
-    });
-  }
-
   function convertAddressToString(address: string) {
     const tempAddress = address.split("-");
     let result = "";
@@ -131,10 +113,13 @@ const ChildrenPage: React.FC<Props> = (props) => {
 
   async function onResetField() {
     const searchValue: ChildrenParams = {};
-    searchValue.childrenProfileStatus = 0;
-
     const res = await childrenProfileService.search(searchValue);
-    setChildrenProfiles(res.value.items);
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+    setChildrenProfiles(tempValue);
   }
 
   async function onSearch(value) {
@@ -152,7 +137,14 @@ const ChildrenPage: React.FC<Props> = (props) => {
       searchValue.toAge = value.age[1];
     }
     const res = await childrenProfileService.search(searchValue);
-    let resData = res.value.items;
+
+    const tempValue = res.value.items;
+    for (let index = 0; index < tempValue.length; index++) {
+      let tempId = await getImage(tempValue[index].id);
+      tempValue[index].imageId = tempId;
+    }
+
+    let resData = tempValue;
     let temp = [];
     if (value.supportCategories !== undefined) {
       if (value.supportCategories.length > 0) {
