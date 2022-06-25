@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
 import ReportFieldModal from "@Components/modals/Admin/ReportFieldModel";
+import { options } from "@Components/shared/ReportFieldOptions";
 import { IFilterType } from "@Models/IFilterType";
 import { IReportFieldModel } from "@Models/IReportFieldModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
@@ -31,16 +32,6 @@ import React, { useEffect } from "react";
 import { Edit2, Trash2 } from "react-feather";
 
 type Props = {};
-
-const options = [
-  { name: "Full Name", value: "fullName" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
-];
 
 const reportFieldService = new ReportFieldService();
 

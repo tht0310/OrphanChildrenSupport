@@ -15,36 +15,42 @@ const { TweenOneGroup } = TweenOne;
 const featuresCN = [
   {
     title: "Clothes",
+    content: "Clothes, uniforms, shoes and accessories.",
     src: Shirt,
     color: "#e57905",
     shadowColor: "rgba(19,194,194,.12)",
   },
   {
     title: "Food",
+    content: "Instant noodles, rice, snack, fruit or milk.",
     src: Food,
     color: "#e57905",
     shadowColor: "rgba(47,84,235,.12)",
   },
   {
     title: "School Stationery",
+    content: "School bag, book, crayons, board or pen.",
     src: School,
     color: "#e57905",
     shadowColor: "rgba(245,34,45,.12)",
   },
   {
     title: "Medical Care",
+    content: "Medicine or treatment costs.",
     src: Medical,
     color: "#e57905",
     shadowColor: "rgba(26,196,77,.12)",
   },
   {
     title: "Money",
+    content: "Expenses for children living, studying or treating.",
     src: Money,
     color: "#e57905",
     shadowColor: "rgba(250,173,20,.12)",
   },
   {
-    title: "Adoption",
+    title: "Family",
+    content: "Give children a family by adopting them.",
     src: Family,
     color: "#e57905",
     shadowColor: "rgba(114,46,209,.12)",
@@ -122,7 +128,7 @@ class Section1 extends React.PureComponent {
         />
       ));
       const child = (
-        <Col xs={12} lg={8} key={i.toString()}>
+        <Col xs={12} lg={8} key={i.toString()} style={{ marginBottom: "30px" }}>
           <div
             className="page1-box"
             onMouseEnter={() => {
@@ -180,7 +186,10 @@ class Section1 extends React.PureComponent {
       </QueueAnim>
     ));
     return (
-      <div className="home-page page1" style={{ minHeight: "600px" }}>
+      <div
+        className="home-page page1"
+        style={{ minHeight: "600px", marginBottom: "40px" }}
+      >
         <div className="home-page-wrapper" id="page1-wrapper">
           <ScrollOverPack
             id="page3"
@@ -201,13 +210,13 @@ class Section1 extends React.PureComponent {
                   fontSize: "32px",
                 }}
               >
-                WHAT YOU CAN HELP?
+                What you can help?
               </h2>
 
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "16px",
+                  fontSize: "17px",
                   marginBottom: "15px",
                 }}
               >

@@ -17,8 +17,8 @@ const Section2: FC<Props> = () => {
         }}
         className="title"
       >
-        Join your peers in helping bring love, hope and safety to all of the
-        children in foster care
+        Join us in helping bring love, hope and safety to all of the children in
+        foster care
       </div>
       <div
         style={{

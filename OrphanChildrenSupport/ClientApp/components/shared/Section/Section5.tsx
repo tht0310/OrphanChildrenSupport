@@ -29,11 +29,18 @@ const Section5: React.FC<Props> = () => {
             type={isMobile ? "bottom" : "right"}
             leaveReverse
           >
-            <h2 key="h2" style={{ color: "#88181b", fontWeight: "bold" }}>
-              WHO ARE WE?
+            <h2
+              key="h2"
+              style={{
+                color: "#88181b",
+                fontWeight: "bold",
+                marginBottom: "15px",
+              }}
+            >
+              Who we are?
             </h2>
 
-            <p key="p" style={{ maxWidth: 550, paddingBottom: "20px" }}>
+            <p key="p" style={{ maxWidth: 550, paddingBottom: "5px" }}>
               We are volunteers to connect sponsors to orphan children. It's our
               desire for every child to experience unconditional love, hope and
               safety.
@@ -42,8 +49,8 @@ const Section5: React.FC<Props> = () => {
             <p key="p" style={{ maxWidth: 550, paddingBottom: "20px" }}>
               We are unrelenting in our service for the betterment of the
               individual, families, and society. Our bold ambition is bringing
-              communities, civil society, governments, and donors together to
-              achieve lasting change for children.
+              communities, civil society, and donors together to achieve lasting
+              change for children.
             </p>
           </QueueAnim>
         </Col>

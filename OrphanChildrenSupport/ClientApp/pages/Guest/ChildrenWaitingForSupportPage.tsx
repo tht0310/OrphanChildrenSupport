@@ -338,7 +338,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                         <div className="info">
                           <h3>{item.fullName}</h3>
                           <p className="descroption">
-                            {item.age + " y/o"} |
+                            {item.age + " years old"} |
                             {item.gender ? " Boy" : " Girl"}
                           </p>
                           <p className="descroption">{item.publicAddress}</p>

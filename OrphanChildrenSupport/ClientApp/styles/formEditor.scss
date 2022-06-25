@@ -401,10 +401,8 @@
 .message-layout {
   background-color: white;
   text-align: center !important;
-  min-height: 180px;
   margin-bottom: 5%;
-  padding-top: 30px;
-  padding-bottom: 50px;
+  padding-top: 40px;
   h4 {
     font-size: 20px !important;
   }
@@ -555,5 +553,17 @@ p {
       padding: 60px 0;
       color: white;
     }
+  }
+}
+.accept-terms .ant-form-item-required {
+  display: none;
+}
+.accept-terms {
+  font-family: RobotoRegular, Arial;
+  font-size: 14px;
+}
+.gender-options {
+  .ant-form-item-label {
+    text-align: right !important;
   }
 }

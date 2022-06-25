@@ -4,17 +4,9 @@ import { Button, Col, Form, Input, message, Modal, Row, Select } from "antd";
 import { displayDateTime } from "@Services/FormatDateTimeService";
 import { IReportFieldModel } from "@Models/IReportFieldModel";
 import ReportFieldService from "@Services/ReportFieldService";
+import { options } from "@Components/shared/ReportFieldOptions";
 
 const { TextArea } = Input;
-
-let options = [
-  { name: "Full Name", value: "fullName", valueNumber: "" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "PublicAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-];
 
 const reportFieldService = new ReportFieldService();
 

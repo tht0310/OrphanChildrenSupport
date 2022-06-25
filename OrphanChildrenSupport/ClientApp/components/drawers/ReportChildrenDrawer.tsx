@@ -20,6 +20,10 @@ import TextArea from "antd/lib/input/TextArea";
 import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import { IReportFieldModel } from "@Models/IReportFieldModel";
 import ReportService from "@Services/ReportService";
+import {
+  lowercaseFirstLetter,
+  options,
+} from "@Components/shared/ReportFieldOptions";
 
 export interface IProps {
   visible?: boolean;
@@ -28,15 +32,6 @@ export interface IProps {
   currentUser: IRegisterModel;
   reportField: IReportFieldModel[];
 }
-const options = [
-  { name: "Full Name", value: "FullName" },
-  { name: "Birthday", value: "DOB" },
-  { name: "Address", value: "PublicAddress" },
-  { name: "Gender", value: "Gender" },
-  { name: "Circumstance", value: "Circumstance" },
-  { name: "Guardian Name", value: "GuardianName" },
-  { name: "Guardian Phone Number", value: "GuardianPhoneNumber" },
-];
 
 const reportService = new ReportService();
 
@@ -49,7 +44,6 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
 }: IProps) => {
   const [size, setSize] = useState<DrawerProps["size"]>();
   const [selectList, setSelectList] = useState([]);
-  const [reportList, setReportList] = useState<any>([]);
 
   React.useEffect(() => {
     if (visible) {
@@ -74,12 +68,12 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
   }
 
   function handleCancel() {
-    //form.resetFields();
     onCancel();
   }
 
   function renderOptions(v) {
     const tempList = [];
+
     v.map((v) => {
       switch (v) {
         case "DOB":
@@ -93,7 +87,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                   <DatePicker
                     style={{ width: "100%" }}
                     format={"DD/MM/YYYY"}
-                    defaultValue={moment(children[v])}
+                    defaultValue={moment(children.dob)}
                     disabled
                   />
                   <ArrowRightOutlined style={{ color: "#e57905" }} />
@@ -121,7 +115,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
               </Col>
               <Col span={18}>
                 <Form.Item
-                  name={findId("circumstance")[0].id}
+                  name={findId("Circumstance")[0].id}
                   label=""
                   style={{ marginBottom: 0 }}
                   rules={[{ required: true, message: "Field is required" }]}
@@ -132,6 +126,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
             </Row>
           );
           break;
+
         case "Gender":
           tempList.push(
             <Row style={{ marginBottom: "8px" }}>
@@ -143,13 +138,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                   <Col span={11}>
                     <Input
                       style={{ width: "100%" }}
-                      defaultValue={
-                        v === "Gender"
-                          ? children[v]
-                            ? "Boy"
-                            : "Girl"
-                          : children[v]
-                      }
+                      defaultValue={children.gender ? "Boy" : "Girl"}
                       disabled
                     />
                   </Col>
@@ -190,15 +179,10 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
                 <Space>
                   <Input
                     style={{ width: "100%" }}
-                    defaultValue={
-                      v === "Gender"
-                        ? children[v]
-                          ? "Boy"
-                          : "Girl"
-                        : children[v]
-                    }
+                    defaultValue={children[lowercaseFirstLetter(v)]}
                     disabled
                   />
+
                   <ArrowRightOutlined style={{ color: "#e57905" }} />
                   <Form.Item
                     name={findId(v)[0].id}
@@ -254,7 +238,7 @@ const ReporChildrenDrawer: React.FC<IProps> = ({
           width={480}
           placement="right"
           size={size}
-          title={<Space>Report Incorrect Information</Space>}
+          title={<Space>Report information</Space>}
           onClose={handleCancel}
           visible={visible}
           extra={

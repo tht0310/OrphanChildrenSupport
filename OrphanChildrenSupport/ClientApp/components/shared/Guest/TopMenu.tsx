@@ -1,12 +1,19 @@
 import React, { useState } from "react";
-import { Row, Col, Menu, Button, Input, Avatar, Form } from "antd";
+import { Row, Col, Menu, Button, Input, Avatar, Form, MenuProps } from "antd";
 import { Dropdown as AntdDropdown } from "antd";
 import Logo from "@Images/logo.png";
 import { Link } from "react-router-dom";
 import {
+  AppstoreOutlined,
+  ContainerOutlined,
+  DesktopOutlined,
   DownOutlined,
   DropboxOutlined,
   HeartFilled,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  PieChartOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { IRegisterModel } from "@Models/ILoginModel";
@@ -95,11 +102,6 @@ const TopMenu: React.FC<Props> = () => {
   return (
     <div id="customheader">
       <Row>
-        <Col className="menu-icon" span={2} lg={0} xs={2}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </Col>
         <Col span={7} lg={7} xs={14}>
           <Link to="/">
             <div id="logo">
@@ -158,7 +160,7 @@ const TopMenu: React.FC<Props> = () => {
                 </Link>
               )}
             </div>
-            <div id="menu">
+            <div id="menu" className="menu-container">
               <Menu mode="horizontal">
                 <Link className="ant-menu-item-custom" to={"/"}>
                   Home

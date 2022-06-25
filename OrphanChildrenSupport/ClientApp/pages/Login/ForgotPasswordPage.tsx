@@ -38,16 +38,13 @@ const ForgotPasswordPage: React.FC<Props> = ({
   }
 
   return (
-    <div className="container-fuild message-layout center ">
+    <div
+      className="container-fuild message-layout center "
+      style={{ paddingTop: "30px" }}
+    >
       <h4 style={{ marginBottom: "30px" }}>Forgot Password</h4>
 
-      <Form
-        style={{}}
-        form={form}
-        layout="inline"
-        onFinish={onFinish}
-        scrollToFirstError
-      >
+      <Form style={{}} form={form} onFinish={onFinish} scrollToFirstError>
         <Form.Item
           rules={[
             {
@@ -62,26 +59,28 @@ const ForgotPasswordPage: React.FC<Props> = ({
           name="email"
         >
           <Input
-            style={{ width: "360px" }}
+            style={{ width: "100%" }}
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="Email"
           />
         </Form.Item>
-        <Form.Item shouldUpdate>
-          {() => (
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={
-                !form.isFieldsTouched(true) ||
-                !!form.getFieldsError().filter(({ errors }) => errors.length)
-                  .length
-              }
-            >
-              Submit
-            </Button>
-          )}
-        </Form.Item>
+        <div style={{ padding: "0px 30%" }}>
+          <Form.Item shouldUpdate>
+            {() => (
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={
+                  !form.isFieldsTouched(true) ||
+                  !!form.getFieldsError().filter(({ errors }) => errors.length)
+                    .length
+                }
+              >
+                Submit
+              </Button>
+            )}
+          </Form.Item>
+        </div>
       </Form>
     </div>
   );

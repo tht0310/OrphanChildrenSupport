@@ -56,7 +56,7 @@ export default function Section3() {
             marginTop: "30px",
           }}
         >
-          OUR ACHIVEMENT
+          Our Achivement
         </h2>
         <div
           style={{

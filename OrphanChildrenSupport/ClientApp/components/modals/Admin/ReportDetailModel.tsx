@@ -20,6 +20,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import TextEditor from "@Components/shared/TextEditor";
 import ChildrenProfileService from "@Services/ChildrenProfileService";
 import ReportDetailService from "@Services/ReportDetailService";
+import { options } from "@Components/shared/ReportFieldOptions";
 
 const { TextArea } = Input;
 
@@ -45,15 +46,6 @@ export interface IProps {
   fetchData: () => void;
 }
 
-const options = [
-  { name: "Full Name", value: "fullName" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
-];
 const ReportDetailModal: React.FC<IProps> = ({
   visible,
   data,
@@ -114,7 +106,7 @@ const ReportDetailModal: React.FC<IProps> = ({
     let result = <></>;
 
     switch (name) {
-      case "dob":
+      case "DOB":
         result = (
           <>
             <Row>
@@ -141,7 +133,7 @@ const ReportDetailModal: React.FC<IProps> = ({
           </>
         );
         break;
-      case "circumstance":
+      case "Circumstance":
         result = (
           <>
             <Row>
@@ -166,7 +158,7 @@ const ReportDetailModal: React.FC<IProps> = ({
         );
         break;
 
-      case "gender":
+      case "Gender":
         result = (
           <>
             <Row>

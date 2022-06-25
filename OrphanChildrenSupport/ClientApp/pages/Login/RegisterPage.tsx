@@ -117,6 +117,7 @@ const RegisterPage: React.FC<Props> = () => {
               label="Gender"
               name="gender"
               {...inlineCol2FormLayout}
+              className="gender-options"
               rules={[{ required: true, message: "Please enter gender." }]}
             >
               <Select>
@@ -247,7 +248,8 @@ const RegisterPage: React.FC<Props> = () => {
         <Form.Item
           {...inlineFormLayout}
           name="acceptTerms"
-          label="Accept term"
+          label="a"
+          className="accept-terms"
           valuePropName="checked"
           required
           rules={[
@@ -259,7 +261,8 @@ const RegisterPage: React.FC<Props> = () => {
             },
           ]}
         >
-          <Checkbox />
+          <Checkbox style={{ paddingRight: "5px" }} /> I agree to the terms and
+          conditions and the privacy policy.
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>

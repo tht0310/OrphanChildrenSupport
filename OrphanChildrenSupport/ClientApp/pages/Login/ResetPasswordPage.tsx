@@ -69,7 +69,7 @@ const ResetPasswordPage: React.FC<Props> = ({
   async function resetPassword(values: IResetPasswordModel) {
     const res = await accService.resetPassword(values);
     if (!res.hasErrors) {
-      message.success("Reset password successfully");
+      window.location.href = "/login";
     } else {
       message.error("Reset password unsuccessfully");
     }
@@ -77,7 +77,9 @@ const ResetPasswordPage: React.FC<Props> = ({
 
   return (
     <div className="container-fuild message-layout center ">
-      <h4 style={{ marginLeft: "28px" }}>Reset Password</h4>
+      <h4 style={{ marginLeft: "28px", marginBottom: "30px" }}>
+        Reset Password
+      </h4>
 
       <Form
         form={form}

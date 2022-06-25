@@ -94,15 +94,22 @@ const GuestHomePage: React.FC<Props> = () => {
       <Section5 />
       {/* <Section4 /> */}
       <Section1 />
+      <Section2 />
       <ChildrenBlock
-        title={"Chidren have SPECIAL CIRCUMSTANCES"}
+        title={"Children"}
+        subTitle={"Have special circumstances"}
         children={specialChildren}
       />
       <ChildrenBlock
-        title={"Chidren need SCHOOL STATIONERY"}
+        title={"Children"}
         children={schoolChildren}
+        subTitle={"Need school stationery"}
       />
-      <ChildrenBlock title={"Chidren need FOOD "} children={foodChildren} />
+      <ChildrenBlock
+        title={"Children"}
+        children={foodChildren}
+        subTitle={"Need food"}
+      />
       <Section3 />
     </div>
   );

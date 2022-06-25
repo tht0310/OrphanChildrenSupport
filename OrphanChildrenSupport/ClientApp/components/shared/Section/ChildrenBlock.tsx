@@ -47,34 +47,34 @@ const ChildrenBlock: React.FC<IProps> = ({
           ease="easeOutQuart"
           leaveReverse
         >
+          <div
+            style={{
+              margin: "5px",
+              fontSize: "20px",
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
+            {title}
+          </div>
           <h2
             style={{
               color: "#88181b",
               fontWeight: "bold",
-              marginBottom: "5px",
-              marginTop: "10px",
+              marginBottom: "20px",
+              marginTop: "5px",
               textAlign: "center",
               fontSize: "28px",
             }}
           >
-            {title}
-          </h2>
-          <div
-            style={{
-              margin: "5px",
-              fontSize: "17px",
-              marginBottom: "15px",
-              textAlign: "center",
-            }}
-          >
             {subTitle}
-          </div>
+          </h2>
           <div
             style={{
               borderBottom: "1px solid red",
               width: "30px",
               margin: "auto",
-              marginBottom: "25px",
+              marginBottom: "20px",
               height: "5px",
               background: "#88181b",
               borderRadius: "5px",
@@ -111,7 +111,7 @@ const ChildrenBlock: React.FC<IProps> = ({
                       <div className="info">
                         <h3>{d.fullName}</h3>
                         <p className="descroption">
-                          {d.age + " y/o"} |{d.gender ? " Boy" : " Girl"}
+                          {d.age + " years old"} |{d.gender ? " Boy" : " Girl"}
                         </p>
                         <p className="descroption">{d.publicAddress}</p>
                       </div>

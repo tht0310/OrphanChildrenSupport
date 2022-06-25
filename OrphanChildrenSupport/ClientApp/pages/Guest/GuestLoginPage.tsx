@@ -35,8 +35,11 @@ const GuestLoginPage: React.FC<Props> = (props: Props) => {
   // }
 
   return (
-    <div className="container-fluid h-custom center login-page">
-      <h3>Login</h3>
+    <div
+      className="container-fluid h-custom center login-page"
+      style={{ paddingTop: "30px" }}
+    >
+      <h3 style={{ marginTop: "" }}>Login</h3>
 
       <Form form={form} name="register" onFinish={onFinish} scrollToFirstError>
         <Form.Item

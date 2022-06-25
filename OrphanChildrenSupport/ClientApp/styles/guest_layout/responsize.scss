@@ -72,29 +72,40 @@
     }
   }
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 667px) {
   #customheader {
-    #menu {
-      display: none;
-    }
+    
     .guest-menu-search-container {
       display: none;
     }
     #logo {
-      width: 85%;
-      height: 85%;
+      width: 80%;
+      height: 80%;
       padding-left: 10px;
+      padding-bottom: 40px;
     }
     .header-meta {
       padding-right: 10px;
     }
     .menu-icon {
+      display: block;
       div {
         width: 15px;
         height: 5px;
         background-color: black;
-       
       }
     }
+  }
+}
+@media only screen and (min-width: 992px) {
+  .menu-icon {
+    display: none;
+  }
+  #customheader {
+    
+    .guest-menu-search-container {
+      display: block;
+    }
+    
   }
 }

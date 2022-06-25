@@ -10,6 +10,10 @@ import {
 import { CustomColumnType } from "@Components/forms/Table";
 import ReportDetailModal from "@Components/modals/Admin/ReportDetailModel";
 import UpdateStatusModal from "@Components/modals/Admin/UpdateStatusModal";
+import {
+  lowercaseFirstLetter,
+  options,
+} from "@Components/shared/ReportFieldOptions";
 import TextEditor from "@Components/shared/TextEditor";
 import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import { IRegisterModel } from "@Models/ILoginModel";
@@ -44,21 +48,9 @@ import {
   Tag,
   Tooltip,
 } from "antd";
-import { bool } from "prop-types";
 
 import * as React from "react";
-import { Trash2 } from "react-feather";
 import { RouteComponentProps } from "react-router-dom";
-
-const options = [
-  { name: "Full Name", value: "fullName" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
-];
 
 type Props = RouteComponentProps<{ id: string }>;
 
@@ -220,9 +212,9 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   }
 
   function getCurrentValue(fieldId: number) {
-    const name = findNamebyId(fieldId);
-    if (name === "other") {
-      return "";
+    let name = lowercaseFirstLetter(findNamebyId(fieldId));
+    if (name === "dOB") {
+      name = "dob";
     }
     let oldValue = children ? children[name] : "";
 
@@ -231,9 +223,6 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
     if (name === "gender") {
       oldValue = oldValue ? "Boy" : "Girl";
-    }
-    if (name === "detailAddress") {
-      oldValue = convertPublicAddressToString(oldValue);
     }
     if (name === "circumstance") {
       return (
@@ -254,20 +243,17 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   function getRequestValue(fieldId: number, text: any) {
     const name = findNamebyId(fieldId);
-    if (name === "other") {
-      return "";
-    }
 
-    if (name === "dob") {
+    if (name === "DOB") {
       text = displayDate(text);
     }
-    if (name === "gender") {
+    if (name === "Gender") {
       text = text === "0" ? "Boy" : "Girl";
     }
-    if (name === "detailAddress") {
+    if (name === "DetailAddress") {
       text = convertPublicAddressToString(text);
     }
-    if (name === "circumstance") {
+    if (name === "Circumstance") {
       return (
         <div className="text-editor-read-only">
           <Tooltip

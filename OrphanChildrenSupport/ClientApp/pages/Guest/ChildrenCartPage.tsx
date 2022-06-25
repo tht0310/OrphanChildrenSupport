@@ -248,7 +248,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
                   <div className="info">
                     <h3>{item?.childrenProfile?.fullName}</h3>
                     <p className="descroption">
-                      {item?.childrenProfile?.age} y/o |{" "}
+                      {item?.childrenProfile?.age} years old |{" "}
                       {item?.childrenProfile?.gender ? " Boy" : " Girl"}
                     </p>
                     <p

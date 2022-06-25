@@ -35,6 +35,7 @@ import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import { displayDate } from "@Services/FormatDateTimeService";
 import TextEditor from "@Components/shared/TextEditor";
 import { getStatus, getTagColor } from "@Services/FormatStatusService";
+import { options } from "@Components/shared/ReportFieldOptions";
 
 export interface IProps {
   visible?: boolean;
@@ -42,15 +43,7 @@ export interface IProps {
   data?: IReportModel;
   currentUser: IRegisterModel;
 }
-const options = [
-  { name: "Full Name", value: "fullName" },
-  { name: "Birthday", value: "dob" },
-  { name: "Address", value: "detailAddress" },
-  { name: "Gender", value: "gender" },
-  { name: "Circumstance", value: "circumstance" },
-  { name: "Guardian Name", value: "guardianName" },
-  { name: "Other", value: "other" },
-];
+
 const childrenProfileService = new ChildrenProfileService();
 const reportService = new ReportService();
 const reportFieldService = new ReportFieldService();
@@ -140,20 +133,17 @@ const ReportInformationModal: React.FC<IProps> = ({
 
   function getRequestValue(fieldId: number, text: any) {
     const name = findNamebyId(fieldId);
-    if (name === "other") {
-      return "";
-    }
 
-    if (name === "dob") {
+    if (name === "DOB") {
       text = displayDate(text);
     }
-    if (name === "gender") {
+    if (name === "Gender") {
       text = text === "0" ? "Boy" : "Girl";
     }
-    if (name === "detailAddress") {
+    if (name === "DetailAddress") {
       text = convertPublicAddressToString(text);
     }
-    if (name === "circumstance") {
+    if (name === "Circumstance") {
       return (
         <div className="text-editor-read-only">
           <Tooltip

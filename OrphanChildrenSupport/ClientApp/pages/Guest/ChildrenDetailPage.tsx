@@ -153,7 +153,6 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       accountId: currentUser?.id,
     };
     const res = await favoriteService.add(temp);
-    console.log(res);
     if (!res.hasErrors) {
       message.success("Add to favorites successfuly");
     } else {
@@ -193,20 +192,6 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     if (!dataRes.hasErrors) {
       setSupportCategories(dataRes.value.items);
     }
-  }
-
-  function convertPublicAddressToString(address: string) {
-    let tempAddress = [];
-    let result = "";
-    if (address) {
-      tempAddress = address.split("-");
-      tempAddress.reverse();
-      tempAddress.map((v) => {
-        result += v + " ";
-      });
-    }
-
-    return result;
   }
 
   function handleOnClickButton(e) {
@@ -262,11 +247,11 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <div className="details col-md-6" style={{ paddingLeft: "20px" }}>
             <div className="product-title">{children?.fullName}</div>
             <div className="rating">
-              <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
-              {children?.gender ? "Boy" : "Girl"} - {children?.age} years old
+              <UserOutlined style={{ color: "#ff9f1a" }} />{" "}
+              {children?.gender ? "Boy" : "Girl"}
             </div>
             <div className="rating">
-              <CalendarOutlined style={{ color: "#b2b2b2" }} />{" "}
+              <CalendarOutlined style={{ color: "#ff9f1a" }} />{" "}
               {displayDate(children?.dob)}
             </div>
             <div className="rating">
@@ -362,14 +347,18 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                 Guardian Information{" "}
               </h5>
             </Row>
-            <div>
-              <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
-              {children?.guardianName}
-            </div>
-            <div>
-              <PhoneOutlined style={{ color: "#b2b2b2" }} />{" "}
-              {children?.guardianPhoneNumber}
-            </div>
+            {children?.guardianName && (
+              <div>
+                <UserOutlined style={{ color: "#b2b2b2" }} />{" "}
+                {children?.guardianName}
+              </div>
+            )}
+            {children?.guardianPhoneNumber && (
+              <div>
+                <PhoneOutlined style={{ color: "#b2b2b2" }} />{" "}
+                {children?.guardianPhoneNumber}
+              </div>
+            )}
           </Col>
           <Col span={12}>
             <Row>
