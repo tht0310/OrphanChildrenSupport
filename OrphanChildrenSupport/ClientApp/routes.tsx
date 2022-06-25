@@ -1,6 +1,5 @@
 import DefaultLayout from "@Layouts/DefaultLayout";
 import GuestLayout from "@Layouts/GuestLayout";
-import ChildrenDetailPage from "@Pages/Admin/ChildrenDetailPage";
 import AboutUsPage from "@Pages/Guest/AboutUsPage";
 import ChildrenSupportedPage from "@Pages/Guest/ChildrenSupportedPage";
 import ChildrenWaitingForSupportPage from "@Pages/Guest/ChildrenWaitingForSupportPage";
@@ -40,6 +39,8 @@ import AccountDetailPage from "@Pages/Guest/AccountDetailPage";
 import ForgotPasswordPage from "@Pages/Login/ForgotPasswordPage";
 import ResetPasswordPage from "@Pages/Login/ResetPasswordPage";
 import VerifyPage from "@Pages/VerifyPage";
+import NotificationPage from "@Pages/Guest/NotificationPage";
+import ChildrenDetailPage from "@Pages/Guest/ChildrenDetailPage";
 
 export const routes = (
   <Switch>
@@ -142,6 +143,12 @@ export const routes = (
       layout={GuestLayout}
       path="/activityHistory/"
       component={ActivityHistoryPage}
+    />
+
+    <RegisteredUserRoute
+      layout={GuestLayout}
+      path="/notification"
+      component={NotificationPage}
     />
 
     {/* Normal User Routes*/}

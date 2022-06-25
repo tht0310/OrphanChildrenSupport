@@ -382,9 +382,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           </Col>
           <Col span={12}>
             <Row>
-              <h5 style={{ fontSize: "16px", lineHeight: "20px" }}>
-                Circumstance{" "}
-              </h5>
+              <h5 style={{ fontSize: "16px" }}>Circumstance </h5>
             </Row>
             <div className="text-editor-read-only">
               {children?.circumstance && (

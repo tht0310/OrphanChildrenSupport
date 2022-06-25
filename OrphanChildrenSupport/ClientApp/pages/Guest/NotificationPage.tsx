@@ -1,4 +1,5 @@
 import { DeleteOutlined } from "@ant-design/icons";
+import { CustomColumnType } from "@Components/forms/Table";
 import NotificationModal from "@Components/modals/User/NotificationModal";
 
 import { ILoginModel, IRegisterModel } from "@Models/ILoginModel";
@@ -15,7 +16,7 @@ interface Props {}
 const service = new NotificationService();
 const userService = new AccountService();
 
-const NoficationPage: React.FC<Props> = () => {
+const NotificationPage: React.FC<Props> = () => {
   const [data, setData] = React.useState<INotificationModel[]>([]);
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>();
   const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
@@ -72,12 +73,12 @@ const NoficationPage: React.FC<Props> = () => {
     }
   }
 
-  const columns = [
+  const columns: CustomColumnType[] = [
     {
       title: "#",
       dataIndex: "age",
       key: "age",
-      width: "6%",
+      width: "8%",
       render: (text, row, index) => index + 1,
     },
     {
@@ -91,11 +92,12 @@ const NoficationPage: React.FC<Props> = () => {
       title: "Created date",
       dataIndex: "createdTime",
       key: "createdTime",
-      width: "25%",
+      width: "30%",
       render: (text, row, index) => displayDateTime(text),
     },
     {
       title: "",
+      align: "center",
       key: "action",
       render: (text, row) => (
         <Space size="middle">
@@ -105,7 +107,7 @@ const NoficationPage: React.FC<Props> = () => {
             cancelText="No"
             onConfirm={() => onDelete(row.id)}
           >
-            <DeleteOutlined style={{ color: "red" }} />
+            <DeleteOutlined style={{ color: "red", fontSize: "16px" }} />
           </Popconfirm>
         </Space>
       ),
@@ -113,7 +115,13 @@ const NoficationPage: React.FC<Props> = () => {
   ];
 
   return (
-    <div className={"notification-page"}>
+    <div
+      className={"notification-page"}
+      style={{ margin: "10px 80px 30px 80px" }}
+    >
+      <h4 style={{ textAlign: "center", color: "#484848", padding: "25px 0" }}>
+        Notification
+      </h4>
       <Table
         columns={columns}
         dataSource={data}
@@ -138,4 +146,4 @@ const NoficationPage: React.FC<Props> = () => {
   );
 };
 
-export default NoficationPage;
+export default NotificationPage;

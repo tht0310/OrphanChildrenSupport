@@ -52,7 +52,7 @@ const TopMenu: React.FC<Props> = () => {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to={`/activityHistory/${3}`} className="nav-links">
+        <Link to={`/notification`} className="nav-links">
           Notification
         </Link>
       </Menu.Item>
@@ -95,14 +95,19 @@ const TopMenu: React.FC<Props> = () => {
   return (
     <div id="customheader">
       <Row>
-        <Col span={7}>
+        <Col className="menu-icon" span={2} lg={0} xs={2}>
+          <div></div>
+          <div></div>
+          <div></div>
+        </Col>
+        <Col span={7} lg={7} xs={14}>
           <Link to="/">
             <div id="logo">
               <img src={Logo} />
             </div>
           </Link>
         </Col>
-        <Col span={5}>
+        <Col span={5} lg={5} xs={0} className="guest-menu-search-container">
           <Form form={form} onFinish={onFinish}>
             <Form.Item name="searchText">
               <Input
@@ -123,7 +128,7 @@ const TopMenu: React.FC<Props> = () => {
           </Form>
         </Col>
 
-        <Col span={11}>
+        <Col span={11} lg={11} xs={8}>
           <div className="header-meta">
             <div id="preview">
               {currentUser ? (

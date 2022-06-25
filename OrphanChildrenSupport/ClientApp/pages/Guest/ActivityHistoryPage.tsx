@@ -3,7 +3,7 @@ import { Tabs } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import DonationHistoryPage from "./DonationHistoryPage";
 import { HistoryOutlined, NotificationOutlined } from "@ant-design/icons";
-import NoficationPage from "./NoficationPage";
+
 import ReportHistoryPage from "./ReportHistoryPage";
 
 type Props = RouteComponentProps<{ key: string }>;
@@ -36,16 +36,6 @@ const ActivityHistoryPage: React.FC<Props> = ({ match, location }: Props) => {
           style={{ paddingLeft: "5%", paddingRight: "4%" }}
         >
           <ReportHistoryPage />
-        </Tabs.TabPane>
-        <Tabs.TabPane
-          tab={
-            <>
-              <NotificationOutlined /> Notification
-            </>
-          }
-          key="3"
-        >
-          <NoficationPage />
         </Tabs.TabPane>
       </Tabs>
     </div>

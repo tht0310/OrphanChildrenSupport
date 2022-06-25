@@ -235,15 +235,15 @@ const ChildrenPage: React.FC<Props> = (props) => {
                     <Form.Item name={"gender"}>
                       <Radio.Group style={{ width: "100%" }}>
                         <Radio.Button
-                          style={{ width: "44%" }}
+                          style={{ width: "50%" }}
                           value={undefined}
                         >
                           All gender
                         </Radio.Button>
-                        <Radio.Button style={{ width: "28%" }} value={true}>
+                        <Radio.Button style={{ width: "25%" }} value={true}>
                           Boys
                         </Radio.Button>
-                        <Radio.Button style={{ width: "28%" }} value={false}>
+                        <Radio.Button style={{ width: "25%" }} value={false}>
                           Girls
                         </Radio.Button>
                       </Radio.Group>
