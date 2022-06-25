@@ -98,15 +98,9 @@
   }
 }
 @media only screen and (min-width: 992px) {
-  .menu-icon {
-    display: none;
-  }
-  #customheader {
-    
-    .guest-menu-search-container {
-      display: block;
-    }
-    
+  
+  .menu-container {
+    display: block;
   }
 }
 @media only screen and (max-width: 700px) {
@@ -131,5 +125,5 @@
     transform: none;
     padding: 20px;
   }
-  
+
 }
