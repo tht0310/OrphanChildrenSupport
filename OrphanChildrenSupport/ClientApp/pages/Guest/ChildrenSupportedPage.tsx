@@ -44,7 +44,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    document.title = "Children list";
+    document.title = "Children - Supported | FOR THE CHILDREN";
     fetchData();
   }, []);
   const [supportCategories, setSupportCategories] = React.useState<
@@ -206,7 +206,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                 color: "#484848",
               }}
             >
-              Children supported
+              Children - Supported
             </Col>
           </Row>
 
@@ -230,34 +230,38 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                   </Form.Item>
                 </div>
                 <div className="card-container">
-                  <Card bodyStyle={{ padding: 0 }} bordered={false}>
+                  <Card
+                    bodyStyle={{ padding: 0 }}
+                    bordered={false}
+                    title="GENDER"
+                  >
                     <Form.Item name={"gender"}>
                       <Radio.Group style={{ width: "100%" }}>
                         <Radio.Button
-                          style={{ width: "44%" }}
+                          style={{ width: "34%" }}
                           value={undefined}
                         >
-                          All gender
+                          All
                         </Radio.Button>
-                        <Radio.Button style={{ width: "28%" }} value={true}>
-                          Boys
+                        <Radio.Button style={{ width: "33%" }} value={true}>
+                          Boy
                         </Radio.Button>
-                        <Radio.Button style={{ width: "28%" }} value={false}>
-                          Girls
+                        <Radio.Button style={{ width: "33%" }} value={false}>
+                          Girl
                         </Radio.Button>
                       </Radio.Group>
                     </Form.Item>
                   </Card>
                 </div>
                 <div className="card-container">
-                  <Card bodyStyle={{ padding: "10px" }} title="Age">
+                  <Card bodyStyle={{ padding: "10px" }} title="AGE">
                     <Form.Item name={"age"}>
                       <Slider min={1} max={20} range />
                     </Form.Item>
                   </Card>
                 </div>
                 <div className="card-container">
-                  <Card bodyStyle={{ padding: "10px" }} title="Filter by">
+                  <Card bodyStyle={{ padding: "10px" }} title="NEED SUPPORT">
                     <Form.Item name="supportCategories">
                       <Checkbox.Group
                         name="childrenCategory"
@@ -330,12 +334,10 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
                         <div className="info">
                           <h3>{item.fullName}</h3>
                           <p className="descroption">
-                            {displayDate(item.dob)} | Gender:
+                            {item.age + " y/o"} |
                             {item.gender ? " Boy" : " Girl"}
                           </p>
-                          <p className="descroption">
-                            {convertAddressToString(item.publicAddress)}
-                          </p>
+                          <p className="descroption">{item.publicAddress}</p>
                         </div>
                       </div>
                     </Link>

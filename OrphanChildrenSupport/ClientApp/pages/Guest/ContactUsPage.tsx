@@ -6,6 +6,9 @@ import { RouteComponentProps } from "react-router";
 type Props = RouteComponentProps<{}>;
 
 const ContactUsPage: React.FC<Props> = () => {
+  React.useEffect(() => {
+    document.title = "Contact Us | FOR THE CHILDREN";
+  }, []);
   return (
     <div className="contact-page">
       <h3>Contact Us</h3>

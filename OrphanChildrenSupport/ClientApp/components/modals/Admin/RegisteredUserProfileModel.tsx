@@ -94,7 +94,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
 
   async function onFinish(values: IRegisterModel | any) {
     values.address =
-      values.province + "-" + values.city + "-" + values.houseNumber;
+      values.houseNumber + " -" + values.city + " -" + values.province;
     if (data) {
       const res = await accountService.update(values);
       if (!res.hasErrors) {

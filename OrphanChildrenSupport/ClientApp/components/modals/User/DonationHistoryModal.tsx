@@ -243,7 +243,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
               size="small"
               title="Supporter"
               extra={
-                <Link to="/myaccount">
+                <Link to="/myAccount">
                   <EditOutlined style={{ color: "#e57905" }} />
                 </Link>
               }

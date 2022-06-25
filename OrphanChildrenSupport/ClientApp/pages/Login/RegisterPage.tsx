@@ -64,7 +64,7 @@ const RegisterPage: React.FC<Props> = () => {
 
   async function register(values: IRegisterModel | any) {
     values.address =
-      values.province + "-" + values.city + "-" + values.houseNumber;
+      values.houseNumber + " -" + values.city + " -" + values.province;
     const res = await accService.register(values);
 
     if (!res.hasErrors) {

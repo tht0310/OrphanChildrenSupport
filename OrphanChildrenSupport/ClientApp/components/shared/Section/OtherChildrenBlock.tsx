@@ -75,12 +75,9 @@ const OtherChildrenBlock: React.FC<IProps> = ({ children, id }: IProps) => {
                 <div className="info">
                   <h3>{item.fullName}</h3>
                   <p className="descroption">
-                    {displayDate(item.dob)} | Gender:
-                    {item.gender ? " Boy" : " Girl"}
+                    {item.age + " y/o"} | {item.gender ? " Boy" : " Girl"}
                   </p>
-                  <p className="descroption">
-                    {convertAddressToString(item.publicAddress)}
-                  </p>
+                  <p className="descroption">{item.publicAddress}</p>
                 </div>
               </div>
             </Link>

@@ -7,6 +7,10 @@ import Counter from "react-number-counter";
 type Props = RouteComponentProps<{}>;
 
 const AboutUsPage: React.FC<Props> = () => {
+  React.useEffect(() => {
+    document.title = "About Us | FOR THE CHILDREN";
+  }, []);
+
   return (
     <div className="aboutus-page">
       <main>
@@ -22,9 +26,9 @@ const AboutUsPage: React.FC<Props> = () => {
                 </p>
                 <div className="hero-cta">
                   <Link to="/children" style={{ paddingRight: "10px" }}>
-                    Donate now
+                    Send Donation
                   </Link>
-                  <Link to="/contactUs">Get in touch</Link>
+                  <Link to="/contactUs">Get In Touch</Link>
                 </div>
               </Col>
               <Col lg={12} xs={24} span={12}>

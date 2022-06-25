@@ -28,8 +28,8 @@ const data = [
   },
   {
     image: `${assets}/624106738c8f1ac9d185b642_FTC-RFK-icon.png`,
-    title: "Chapters",
-    number: "24",
+    title: "Top Community Websites",
+    number: "20",
   },
 ];
 export default function Section3() {
@@ -56,7 +56,7 @@ export default function Section3() {
             marginTop: "30px",
           }}
         >
-          Our Impact
+          OUR ACHIVEMENT
         </h2>
         <div
           style={{

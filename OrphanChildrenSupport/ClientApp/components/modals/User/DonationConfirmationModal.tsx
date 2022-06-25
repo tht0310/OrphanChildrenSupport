@@ -60,7 +60,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
     React.useState<IDonationDetailModel[]>();
 
   React.useEffect(() => {
-    document.title = "Children Detail";
+    document.title = "FOR THE CHILDREN";
   }, []);
 
   React.useEffect(() => {
@@ -282,7 +282,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             title="Supporter"
             style={{ marginTop: "15px" }}
             extra={
-              <Link to="/myaccount">
+              <Link to="/myAccount">
                 <EditOutlined style={{ color: "#e57905" }} />
               </Link>
             }

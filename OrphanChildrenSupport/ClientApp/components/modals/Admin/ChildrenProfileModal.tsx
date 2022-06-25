@@ -145,8 +145,8 @@ const ChildrenProfileModal: React.FC<IProps> = ({
 
   async function onFinish(values: IChildrenProfileModel | any) {
     values.detailAddress =
-      values.province + "-" + values.city + "-" + values.houseNumber;
-    values.publicAddress = values.province + "-" + values.city;
+      values.houseNumber + " -" + values.city + " -" + values.province;
+    values.publicAddress = values.city + " -" + values.province;
     if (data) {
       const tempList = [];
       if (values.childrenCategoryGroup) {

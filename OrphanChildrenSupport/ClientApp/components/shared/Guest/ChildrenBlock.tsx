@@ -21,7 +21,7 @@ const ChildrenBlock: FC<Props> = ({}: Props) => {
   >([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   useEffect(() => {
-    document.title = "Children list";
+    document.title = "FOR THE CHILDREN";
     fetchData();
   }, []);
   async function fetchData() {
@@ -72,12 +72,9 @@ const ChildrenBlock: FC<Props> = ({}: Props) => {
                 <div className="info">
                   <h3>{item.fullName}</h3>
                   <p className="descroption">
-                    {displayDate(item.dob)} | Gender:
-                    {item.gender ? " Boy" : " Girl"}
+                    {item.age + " y/o"} | {item.gender ? " Boy" : " Girl"}
                   </p>
-                  <p className="descroption">
-                    {convertAddressToString(item.publicAddress)}
-                  </p>
+                  <p className="descroption">{item.publicAddress}</p>
                 </div>
               </div>
             </Link>

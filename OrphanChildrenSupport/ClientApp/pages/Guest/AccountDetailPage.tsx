@@ -43,6 +43,7 @@ const AccountDetailPage: React.FC<Props> = () => {
   const [form2] = Form.useForm();
   React.useEffect(() => {
     getLocalUser();
+    document.title = "My Account | FOR THE CHILDREN";
   }, []);
   React.useEffect(() => {
     if (localUser) {
@@ -86,7 +87,7 @@ const AccountDetailPage: React.FC<Props> = () => {
   async function handleFinish(values) {
     const temp = values;
     temp.address =
-      values.province + "-" + values.city + "-" + values.houseNumber;
+      values.houseNumber + " -" + values.city + " -" + values.province;
     const res = await userService.update(temp);
     if (!res.hasErrors) {
       message.success("Change information sucessfully");

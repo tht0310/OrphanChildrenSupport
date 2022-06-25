@@ -29,6 +29,7 @@ const GuestHomePage: React.FC<Props> = () => {
   >([]);
 
   React.useEffect(() => {
+    document.title = "Home | FOR THE CHILDREN";
     fetchSpecialChildren();
     fetchSchoolChildren();
     fetchChildrenNeedFood();
@@ -41,6 +42,20 @@ const GuestHomePage: React.FC<Props> = () => {
       return imageData[0].id;
     } else {
       return -1;
+    }
+  }
+
+  async function fetchSpecialChildren() {
+    const dataRes = await childrenProfileService.getAll({
+      supportCategoryId: 6,
+    });
+    if (!dataRes.hasErrors) {
+      const tempValue = dataRes.value.items;
+      for (let index = 0; index < tempValue.length; index++) {
+        let tempId = await getImage(tempValue[index].id);
+        tempValue[index].imageId = tempId;
+      }
+      setSpecialChildren(tempValue);
     }
   }
 
@@ -58,23 +73,9 @@ const GuestHomePage: React.FC<Props> = () => {
     }
   }
 
-  async function fetchSpecialChildren() {
-    const dataRes = await childrenProfileService.getAll({
-      supportCategoryId: 4,
-    });
-    if (!dataRes.hasErrors) {
-      const tempValue = dataRes.value.items;
-      for (let index = 0; index < tempValue.length; index++) {
-        let tempId = await getImage(tempValue[index].id);
-        tempValue[index].imageId = tempId;
-      }
-      setSpecialChildren(tempValue);
-    }
-  }
-
   async function fetchSchoolChildren() {
     const dataRes = await childrenProfileService.getAll({
-      supportCategoryId: 2,
+      supportCategoryId: 4,
     });
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;
@@ -91,25 +92,17 @@ const GuestHomePage: React.FC<Props> = () => {
       <Slider />
       <Section />
       <Section5 />
-      <Section4 />
+      {/* <Section4 /> */}
       <Section1 />
-      {/* <Section1 /> */}
-      <Section2 />
       <ChildrenBlock
-        title={"Children"}
-        subTitle={"Have special circumstances"}
+        title={"Chidren have SPECIAL CIRCUMSTANCES"}
         children={specialChildren}
       />
       <ChildrenBlock
-        title={"Children"}
+        title={"Chidren need SCHOOL STATIONERY"}
         children={schoolChildren}
-        subTitle={"Need support school things"}
       />
-      <ChildrenBlock
-        title={"Children"}
-        children={foodChildren}
-        subTitle={"Need support food"}
-      />
+      <ChildrenBlock title={"Chidren need FOOD "} children={foodChildren} />
       <Section3 />
     </div>
   );

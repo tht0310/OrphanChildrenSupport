@@ -36,7 +36,7 @@ type Props = RouteComponentProps<{}>;
 
 const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children";
-const favouriteChildrenService = new FavoriteService();
+const favoriteChildrenService = new FavoriteService();
 
 const userService = new AccountService();
 
@@ -49,12 +49,12 @@ const ChildrenCartPage: React.FC<Props> = () => {
   const [form] = Form.useForm();
   const [filterParams, setFilterParams] = React.useState<FilterParams>([]);
 
-  const [favouriteChildren, setFavouriteChildren] = React.useState<
+  const [favoriteChildren, setFavouriteChildren] = React.useState<
     IFavoriteModel[]
   >([]);
-  const [favourites, setFavourites] = React.useState<IFavoriteModel[]>([]);
+  const [favorites, setFavourites] = React.useState<IFavoriteModel[]>([]);
   useEffect(() => {
-    document.title = "Children list";
+    document.title = "Favorite | FOR THE CHILDREN";
 
     fetchData();
   }, []);
@@ -90,10 +90,10 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   React.useEffect(() => {
-    if (childrenProfiles.length > 0 && favourites.length > 0) {
+    if (childrenProfiles.length > 0 && favorites.length > 0) {
       fetchChildrenFavourite();
     }
-  }, [childrenProfiles, favourites]);
+  }, [childrenProfiles, favorites]);
 
   React.useEffect(() => {
     fetchChildrenProfile(filterParams);
@@ -104,7 +104,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   async function fetchFavourite() {
-    const dataRes = await favouriteChildrenService.getAll({
+    const dataRes = await favoriteChildrenService.getAll({
       accountId: currentUser.id,
     });
     console.log(dataRes);
@@ -115,11 +115,11 @@ const ChildrenCartPage: React.FC<Props> = () => {
 
   async function fetchChildrenFavourite() {
     const tempData = [];
-    for (let index = 0; index < favourites.length; index++) {
+    for (let index = 0; index < favorites.length; index++) {
       const findIndex = childrenProfiles.findIndex(
-        (item) => favourites[index].childrenProfileId === item.id
+        (item) => favorites[index].childrenProfileId === item.id
       );
-      const temp: IFavoriteModel = favourites[index];
+      const temp: IFavoriteModel = favorites[index];
       temp.childrenProfile = childrenProfiles[findIndex];
       temp.imageId = await getImage(temp.childrenProfileId);
       tempData.push(temp);
@@ -150,7 +150,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   async function onDelete(id) {
-    const res = await favouriteChildrenService.delete(id);
+    const res = await favoriteChildrenService.delete(id);
     if (!res.hasErrors) {
       message.success("Remove sucessfully");
       fetchData();
@@ -161,11 +161,11 @@ const ChildrenCartPage: React.FC<Props> = () => {
   }
 
   return (
-    <div className="favourite-page">
+    <div className="favorite-page">
       <div className="vertical-center">
         <div>
           <HeartOutlined style={{ fontSize: "25px" }} />
-          <p>My favourite children</p>
+          <p>My Favorite Children</p>
         </div>
       </div>
 
@@ -192,7 +192,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
       </Form>
 
       <div
-        className="content-wrapper-custom favourite-page"
+        className="content-wrapper-custom favorite-page"
         style={{ paddingLeft: "5%", paddingRight: "5%", paddingTop: "5px" }}
       >
         <List
@@ -205,7 +205,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
             xl: 6,
             xxl: 6,
           }}
-          dataSource={favouriteChildren}
+          dataSource={favoriteChildren}
           pagination={{
             showSizeChanger: true,
             pageSizeOptions: ["5", "10", "20", "50"],
@@ -217,7 +217,9 @@ const ChildrenCartPage: React.FC<Props> = () => {
                   actions={[
                     <Row className="actions">
                       <Col span={12}>
-                        <Link to={`${childrenDetailUrl}/${item.id}`}>
+                        <Link
+                          to={`${childrenDetailUrl}/${item.childrenProfileId}`}
+                        >
                           <EyeOutlined />
                         </Link>
                       </Col>
@@ -246,7 +248,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
                   <div className="info">
                     <h3>{item?.childrenProfile?.fullName}</h3>
                     <p className="descroption">
-                      {displayDate(item?.childrenProfile?.dob)} | Gender:
+                      {item?.childrenProfile?.age} y/o |{" "}
                       {item?.childrenProfile?.gender ? " Boy" : " Girl"}
                     </p>
                     <p
@@ -258,7 +260,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
                       }}
                     >
                       {!item?.childrenProfile?.status
-                        ? "Waiting supporter"
+                        ? "Waiting For Support"
                         : "Supported"}
                     </p>
                   </div>

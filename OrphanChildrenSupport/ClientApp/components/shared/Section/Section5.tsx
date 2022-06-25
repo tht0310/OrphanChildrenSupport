@@ -30,30 +30,21 @@ const Section5: React.FC<Props> = () => {
             leaveReverse
           >
             <h2 key="h2" style={{ color: "#88181b", fontWeight: "bold" }}>
-              Who we are ?
+              WHO ARE WE?
             </h2>
 
             <p key="p" style={{ maxWidth: 550, paddingBottom: "20px" }}>
-              We are volunteers to connect sponsors to orphan children. Its our
+              We are volunteers to connect sponsors to orphan children. It's our
               desire for every child to experience unconditional love, hope and
               safety.
             </p>
 
-            <div key="button">
-              <a>
-                <Button
-                  style={{
-                    background: "#88181b",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "25px",
-                  }}
-                  danger
-                >
-                  View more
-                </Button>
-              </a>
-            </div>
+            <p key="p" style={{ maxWidth: 550, paddingBottom: "20px" }}>
+              We are unrelenting in our service for the betterment of the
+              individual, families, and society. Our bold ambition is bringing
+              communities, civil society, governments, and donors together to
+              achieve lasting change for children.
+            </p>
           </QueueAnim>
         </Col>
       </Row>

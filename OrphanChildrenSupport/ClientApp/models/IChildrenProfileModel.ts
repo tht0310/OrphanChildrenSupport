@@ -5,6 +5,7 @@ export interface IChildrenProfileModel extends IEngineEntity {
   fullName: string;
   gender: boolean;
   dob: Date | null;
+  age: number;
   address: string;
   guardianPhoneNumber?: string;
   guardianName?: string;
@@ -21,8 +22,6 @@ export interface IChildrenProfileModel extends IEngineEntity {
 }
 
 export interface IChildrenImage extends IEngineEntity {
-  childrenProfileId: number,
-  imagePath :string,
+  childrenProfileId: number;
+  imagePath: string;
 }
-
-
