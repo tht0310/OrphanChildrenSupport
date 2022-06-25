@@ -122,7 +122,7 @@ const ResetPasswordPage: React.FC<Props> = ({
         <Form.Item
           name="confirmPassword"
           {...inlineFormLayout}
-          label="Confirm "
+          label="Confirm Password "
           dependencies={["password"]}
           hasFeedback
           rules={[
