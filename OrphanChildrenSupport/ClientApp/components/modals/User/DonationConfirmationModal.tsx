@@ -2,8 +2,10 @@ import {
   CalendarOutlined,
   DeleteOutlined,
   EditOutlined,
+  EnvironmentOutlined,
   HomeOutlined,
   MailOutlined,
+  PhoneOutlined,
   UserOutlined,
   WhatsAppOutlined,
 } from "@ant-design/icons";
@@ -217,11 +219,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             wrapperCol={{ span: 20 }}
             layout="horizontal"
           >
-            <Card
-              size="small"
-              title="Donation Detail"
-              style={{ boxShadow: "none" }}
-            >
+            <Card size="small" title="Detail" style={{ boxShadow: "none" }}>
               <Table
                 columns={requestColumns}
                 dataSource={supportCategories}
@@ -230,17 +228,16 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             </Card>
             <Card
               size="small"
-              title="Note"
+              title="Other"
               style={{
                 marginTop: "15px",
-
                 boxShadow: "none",
               }}
             >
               <Form.Item name="note" label="Note">
                 <TextArea
                   rows={2}
-                  placeholder="Leave a message to us"
+                  placeholder="Leave a message for us"
                   style={{ fontSize: "13px", width: "100%" }}
                 />
               </Form.Item>
@@ -248,11 +245,15 @@ const DonationConfirmationModal: React.FC<IProps> = ({
           </Form>
         </Col>
         <Col span={7}>
-          <Card size="small" title="Children">
+          <Card size="small" title="Children Information">
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>
                 <div>{children?.fullName}</div>
-                <div>-</div>
+              </Space>
+            </div>
+            <div style={{ marginBottom: "5px" }}>
+              <Space size={10}>
+                <UserOutlined style={{ color: "#b2b2b2" }} />
                 <div>{children?.gender ? "Boy" : "Girl"}</div>
               </Space>
             </div>
@@ -264,22 +265,14 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             </div>
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>
-                <HomeOutlined style={{ color: "#b2b2b2" }} />
-                <div>
-                  {convertPublicAddressToString(children?.publicAddress)}
-                </div>
-              </Space>
-            </div>
-            <div>
-              <Space size={10}>
-                <UserOutlined style={{ color: "#b2b2b2" }} />
-                <div>{children?.guardianName}</div>
+                <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
+                <div>{children?.publicAddress}</div>
               </Space>
             </div>
           </Card>
           <Card
             size="small"
-            title="Supporter"
+            title="Supporter Information"
             style={{ marginTop: "15px" }}
             extra={
               <Link to="/myAccount">
@@ -294,20 +287,20 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             </div>
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>
-                <WhatsAppOutlined style={{ color: "#b2b2b2" }} />
+                <MailOutlined style={{ color: "#b2b2b2" }} />
+                <div>{currentUser?.email}</div>
+              </Space>
+            </div>
+            <div style={{ marginBottom: "5px" }}>
+              <Space size={10}>
+                <PhoneOutlined style={{ color: "#b2b2b2" }} />
                 <div>{currentUser?.phoneNumber}</div>
               </Space>
             </div>
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>
-                <HomeOutlined style={{ color: "#b2b2b2" }} />
-                <div>{convertPublicAddressToString(currentUser?.address)}</div>
-              </Space>
-            </div>
-            <div>
-              <Space size={10}>
-                <MailOutlined style={{ color: "#b2b2b2" }} />
-                <div>{currentUser?.email}</div>
+                <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
+                <div>{currentUser?.address}</div>
               </Space>
             </div>
           </Card>
@@ -323,7 +316,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
               border: "none",
             }}
           >
-            Place donation
+            Send
           </Button>
         </Col>
       </Row>

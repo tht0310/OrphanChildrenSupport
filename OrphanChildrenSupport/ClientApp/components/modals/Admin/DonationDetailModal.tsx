@@ -303,7 +303,7 @@ const DonationDetailModal: React.FC<IProps> = ({
                   Finish
                 </Select.Option>
                 <Select.Option value={3} key="3">
-                  Canceled
+                  Cancelled
                 </Select.Option>
                 <Select.Option value={4} key="4">
                   Rejected

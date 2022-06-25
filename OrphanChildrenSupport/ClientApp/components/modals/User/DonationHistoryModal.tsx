@@ -21,7 +21,11 @@ import { IChildrenProfileModel } from "@Models/IChildrenProfileModel";
 import {
   CalendarOutlined,
   EditOutlined,
+  EnvironmentOutlined,
   HomeOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
   WhatsAppOutlined,
 } from "@ant-design/icons";
 import { IRegisterModel } from "@Models/ILoginModel";
@@ -195,9 +199,9 @@ const DonationHistoryModal: React.FC<IProps> = ({
                 size="small"
                 title={
                   <Space>
-                    Processing -
+                    Progress:
                     <span style={{ color: "#686868", paddingRight: "5px" }}>
-                      {getStatus(data?.status).toLocaleLowerCase()}
+                      {getStatus(data?.status)}
                     </span>
                   </Space>
                 }
@@ -213,15 +217,15 @@ const DonationHistoryModal: React.FC<IProps> = ({
                   current={data?.status === 2 ? 3 : data?.status === 0 ? 1 : 2}
                   progressDot={customDot}
                 >
-                  <Steps.Step title="Send" />
+                  <Steps.Step title="Sent" />
                   <Steps.Step title="Waiting For Approval" />
                   <Steps.Step title="Processing" />
-                  <Steps.Step title="Finish" />
+                  <Steps.Step title="Finished" />
                 </Steps>
               </Card>
               <Card
                 size="small"
-                title="Support detail"
+                title="Detail"
                 style={{
                   marginRight: "15px",
                   boxShadow: "none",
@@ -239,46 +243,28 @@ const DonationHistoryModal: React.FC<IProps> = ({
           </Col>
 
           <Col span={7} style={{ paddingRight: "0" }}>
-            <Card
-              size="small"
-              title="Supporter"
-              extra={
-                <Link to="/myAccount">
-                  <EditOutlined style={{ color: "#e57905" }} />
-                </Link>
-              }
-            >
+            <Card size="small" title="Children Infomation">
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>{currentUser?.fullName}</div>
-                </Space>
-              </div>
-              <div style={{ marginBottom: "5px" }}>
-                <Space size={10}>
-                  <WhatsAppOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{currentUser?.phoneNumber}</div>
-                </Space>
-              </div>
-              <div style={{ marginBottom: "5px" }}>
-                <Space size={10}>
-                  <HomeOutlined style={{ color: "#b2b2b2" }} />
-                  <div>
-                    {convertPublicAddressToString(currentUser?.address)}
+                  <div style={{ marginBottom: "5px" }}>
+                    <Space size={10}>
+                      <div>
+                        {
+                          childrenProfiles[
+                            findUserbyId(
+                              data?.childrenProfileId,
+                              childrenProfiles
+                            )
+                          ]?.fullName
+                        }
+                      </div>
+                    </Space>
                   </div>
                 </Space>
               </div>
-            </Card>
-            <Card style={{ marginTop: "15px" }} size="small" title="Children">
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>
-                    {
-                      childrenProfiles[
-                        findUserbyId(data?.childrenProfileId, childrenProfiles)
-                      ]?.fullName
-                    }
-                  </div>
-                  <div>-</div>
+                  <UserOutlined style={{ color: "#b2b2b2" }} />
                   <div>
                     {childrenProfiles[
                       findUserbyId(data?.childrenProfileId, childrenProfiles)
@@ -302,18 +288,52 @@ const DonationHistoryModal: React.FC<IProps> = ({
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <HomeOutlined style={{ color: "#b2b2b2" }} />
+                  <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
                   <div>
-                    {convertPublicAddressToString(
+                    {
                       childrenProfiles[
                         findUserbyId(data?.childrenProfileId, childrenProfiles)
                       ]?.publicAddress
-                    )}
+                    }
                   </div>
                 </Space>
               </div>
             </Card>
-            <Card style={{ marginTop: "15px" }} size="small" title="Note">
+            <Card
+              style={{ marginTop: "5px" }}
+              size="small"
+              title="Supporter Information"
+              extra={
+                <Link to="/myAccount">
+                  <EditOutlined style={{ color: "#e57905" }} />
+                </Link>
+              }
+            >
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <div>{currentUser?.fullName}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <MailOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.email}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <PhoneOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.phoneNumber}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.address}</div>
+                </Space>
+              </div>
+            </Card>
+            <Card style={{ marginTop: "5px" }} size="small" title="Note">
               {data?.note}
             </Card>
             <Popconfirm

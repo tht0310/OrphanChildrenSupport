@@ -141,14 +141,14 @@ const ReportHistoryPage: React.FC<Props> = () => {
                   <Form.Item name="title">
                     <Input
                       style={{ fontSize: "14px" }}
-                      placeholder={"Enter children name"}
+                      placeholder={"Search by children name"}
                     />
                   </Form.Item>
                 </Col>
                 <Col xs={22} lg={8}>
                   <Form.Item name="status">
                     <Select defaultValue={"null"}>
-                      <Select.Option value="null">All status</Select.Option>
+                      <Select.Option value="null">All Status</Select.Option>
                       <Select.Option value="0">
                         Waiting For Approval
                       </Select.Option>
@@ -253,7 +253,7 @@ const ReportHistoryPage: React.FC<Props> = () => {
                       fontSize: "13px",
                     }}
                   >
-                    <div>Created date</div>
+                    <div>Created Time</div>
                     <div style={{ marginLeft: "2px", color: "#b2b2b2" }}>
                       {displayDate(item?.createdTime)}
                     </div>

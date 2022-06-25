@@ -353,7 +353,7 @@ const RegisteredProfilePage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Input user name"}
+                placeholder={"Search by name"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

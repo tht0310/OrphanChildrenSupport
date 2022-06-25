@@ -67,13 +67,13 @@ const DonationManagementPage: React.FC<Props> = () => {
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
     {
-      title: "Donation Code",
+      title: "Code",
       ellipsis: true,
       width: "16%",
       align: "center",
       render: (text, row, index) => (
         <Link to={`/admin/activityManagement/donations/${row.id}`}>
-          DC{10000 + row.id}
+          DN{10000 + row.id}
         </Link>
       ),
     },
@@ -215,7 +215,7 @@ const DonationManagementPage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Input title"}
+                placeholder={"Search by code"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

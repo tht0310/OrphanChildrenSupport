@@ -336,9 +336,8 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <h6>
             <Row>
               <Col span={16}>
-                {" "}
                 <span>
-                  Donation Number
+                  Donation
                   <span style={{ color: "red", margin: "0px 10px" }}>
                     #DN{10000 + donation?.id}
                   </span>
@@ -364,10 +363,10 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           current={donation?.status === 2 ? 3 : donation?.status === 0 ? 1 : 2}
           progressDot={customDot}
         >
-          <Steps.Step title="Send" />
+          <Steps.Step title="Sent" />
           <Steps.Step title="Waiting For Approval" />
           <Steps.Step title="Processing" />
-          <Steps.Step title="Finish" />
+          <Steps.Step title="Finished" />
         </Steps>
 
         <Row style={{ margin: "25px 0px" }}>
@@ -382,7 +381,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "10px",
                     }}
                   >
-                    Supporter
+                    Supporter Information
                   </h6>
                   <div
                     style={{
@@ -398,7 +397,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {user?.phoneNumber}
+                    {user?.phoneNumber}
                   </div>
                   <div
                     style={{
@@ -418,7 +417,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "10px",
                     }}
                   >
-                    Children
+                    Children Information
                   </h6>
                   <div
                     style={{
@@ -434,10 +433,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84){" "}
-                    {children?.guardianPhoneNumber
-                      ? children?.guardianPhoneNumber.substring(1)
-                      : ""}
+                    {children?.guardianPhoneNumber}
                   </div>
                   <div
                     style={{
@@ -488,7 +484,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   className="antd-icon-custom"
                 />
                 <span style={{ fontWeight: "normal", color: "black" }}>
-                  Note: {donation?.note}
+                  {donation?.note}
                 </span>
               </h6>
             </Card>

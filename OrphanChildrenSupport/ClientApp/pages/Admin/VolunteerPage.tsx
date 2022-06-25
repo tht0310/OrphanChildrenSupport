@@ -354,7 +354,7 @@ const VolunteerPage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Search by full name"}
+                placeholder={"Search by name"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

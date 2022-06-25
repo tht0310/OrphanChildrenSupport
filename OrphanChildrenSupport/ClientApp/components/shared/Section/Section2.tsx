@@ -34,7 +34,7 @@ const Section2: FC<Props> = () => {
             fontWeight: "bold",
           }}
         >
-          <Link to={"/register"}> Register now</Link>
+          <Link to={"/register"}> Register Now</Link>
         </Button>
       </div>
     </div>

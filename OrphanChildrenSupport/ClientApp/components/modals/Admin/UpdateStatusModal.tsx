@@ -91,7 +91,7 @@ const UpdateStatusModal: React.FC<IProps> = ({
               <Radio.Button value="1">Approved</Radio.Button>
               <Radio.Button value="0">Waiting for Approved</Radio.Button>
               <Radio.Button value="2">Rejected</Radio.Button>
-              <Radio.Button value="3">Canceled</Radio.Button>
+              <Radio.Button value="3">Cancelled</Radio.Button>
             </Radio.Group>
           </Form.Item>
         </Form>

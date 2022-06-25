@@ -320,7 +320,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                 dataSource={childrenProfiles}
                 loading={isLoading ? true : false}
                 pagination={{
-                  defaultPageSize: 12,
+                  defaultPageSize: 20,
                   showSizeChanger: true,
                   pageSizeOptions: ["10", "15", "20", "25"],
                 }}

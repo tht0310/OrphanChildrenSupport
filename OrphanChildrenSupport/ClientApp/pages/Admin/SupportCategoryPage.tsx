@@ -189,7 +189,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
                   fontSize: "14px",
                   borderRadius: "25px",
                 }}
-                placeholder="Search support category title"
+                placeholder="Search by title"
                 prefix={<SearchOutlined className="site-form-item-icon" />}
                 onChange={(e) => {
                   setFilterValue(e.target.value);

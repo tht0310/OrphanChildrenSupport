@@ -13,8 +13,8 @@ const ContactUsPage: React.FC<Props> = () => {
     <div className="contact-page" style={{ marginBottom: "30px" }}>
       <h3>Contact Us</h3>
       <p>
-        Follow us to find out how we're changing the lives of children – and how
-        you can help.
+        Follow us to find out how we are changing the lives of children and how
+        you can help them
       </p>
       <Row className="content-wrapper">
         <Col span={8} lg={8} xs={24}>

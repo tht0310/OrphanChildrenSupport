@@ -384,7 +384,7 @@ const ChildrenProfilePage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Input children name"}
+                placeholder={"Search by name"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

@@ -4,6 +4,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   CloseSquareOutlined,
+  DashboardOutlined,
   EditOutlined,
   StopOutlined,
 } from "@ant-design/icons";
@@ -430,10 +431,16 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
             <Row>
               <Col span={16}>
                 <span>
-                  Report Number <span style={{ color: "red" }}>#12345</span>
-                  <span style={{ color: "#707070", margin: "0px 10px" }}>
-                    - {getStatus(report?.status)}
+                  Report
+                  <span style={{ color: "red", margin: "0px 10px" }}>
+                    #RP{10000 + report?.id}
                   </span>
+                </span>
+              </Col>
+              <Col span={8} style={{ textAlign: "right" }}>
+                <span style={{ color: "#707070", margin: "0px 10px" }}>
+                  <DashboardOutlined className="antd-ic-custom" />
+                  {getStatus(report?.status)}
                 </span>
               </Col>
             </Row>
@@ -448,10 +455,10 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           current={report?.status === 2 ? 3 : report?.status === 0 ? 1 : 2}
           progressDot={customDot}
         >
-          <Steps.Step title="Send" />
+          <Steps.Step title="Sent" />
           <Steps.Step title="Waiting For Approval" />
           <Steps.Step title="Processing" />
-          <Steps.Step title="Finish" />
+          <Steps.Step title="Finished" />
         </Steps>
 
         <Row style={{ margin: "25px 0px" }}>
@@ -466,7 +473,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "10px",
                     }}
                   >
-                    Supporter
+                    Reporter Information
                   </h6>
                   <div
                     style={{
@@ -482,7 +489,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {user?.phoneNumber}
+                    {user?.phoneNumber}
                   </div>
                   <div
                     style={{
@@ -490,7 +497,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    Số 1a, đường Bến Than, xã Hòa Phú, huyện Củ Chi, TP.HCM
+                    {user?.address}
                   </div>
                 </Card>
               </Col>
@@ -502,7 +509,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "10px",
                     }}
                   >
-                    Children
+                    Children Information
                   </h6>
                   <div
                     style={{
@@ -518,7 +525,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                       marginBottom: "3px",
                     }}
                   >
-                    (+84) {children?.guardianPhoneNumber}
+                    {children?.guardianPhoneNumber}
                   </div>
                   <div
                     style={{
