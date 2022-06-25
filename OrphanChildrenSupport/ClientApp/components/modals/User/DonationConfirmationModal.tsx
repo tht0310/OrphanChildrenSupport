@@ -209,7 +209,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
       bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 130px)" }}
     >
       <Row>
-        <Col span={17}>
+        <Col span={17} style={{ paddingRight: "15px" }}>
           <Form
             form={form}
             onFinish={onFinish}
@@ -220,7 +220,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             <Card
               size="small"
               title="Donation Detail"
-              style={{ marginRight: "15px", boxShadow: "none" }}
+              style={{ boxShadow: "none" }}
             >
               <Table
                 columns={requestColumns}

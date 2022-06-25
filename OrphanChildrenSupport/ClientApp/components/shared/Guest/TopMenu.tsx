@@ -12,6 +12,7 @@ import {
   HeartFilled,
   MailOutlined,
   MenuFoldOutlined,
+  MenuOutlined,
   MenuUnfoldOutlined,
   PieChartOutlined,
   SearchOutlined,
@@ -102,7 +103,10 @@ const TopMenu: React.FC<Props> = () => {
   return (
     <div id="customheader">
       <Row>
-        <Col span={7} lg={7} xs={14}>
+        <Col span={2} lg={0} xs={4} className="menu-icon">
+          <MenuOutlined color="black" style={{ fontSize: "15px" }} />
+        </Col>
+        <Col span={7} lg={7} xs={12}>
           <Link to="/">
             <div id="logo">
               <img src={Logo} />
