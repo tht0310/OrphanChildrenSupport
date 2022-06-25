@@ -1,4 +1,5 @@
-﻿
+﻿import { IFavoriteModel } from "./IFavoriteModel";
+
 
 export interface IRegisterModel {
   id?:number
@@ -20,6 +21,7 @@ export interface IRegisterModel {
   role?:string;
   jwtToken?:string;
   isActive?:boolean;
+  favorites?:IFavoriteModel[];
 }
 
 export interface IVerifyModel { 

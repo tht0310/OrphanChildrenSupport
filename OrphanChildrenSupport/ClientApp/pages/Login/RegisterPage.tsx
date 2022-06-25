@@ -25,7 +25,7 @@ type Props = RouteComponentProps<{}>;
 const accService = new AccountService();
 const inlineCol2FormLayout = {
   labelCol: {
-    span: 10,
+    span: 12,
   },
   wrapperCol: {
     span: 12,
@@ -47,7 +47,7 @@ const tailFormItemLayout = {
 
 const inlineFormLayout = {
   labelCol: {
-    span: 5,
+    span: 6,
   },
   wrapperCol: {
     span: 18,
@@ -92,6 +92,11 @@ const RegisterPage: React.FC<Props> = () => {
         }}
         onFinish={onFinish}
         scrollToFirstError
+        labelCol={{ flex: "110px" }}
+        labelAlign="left"
+        labelWrap
+        wrapperCol={{ flex: 1 }}
+        colon={false}
       >
         <Form.Item
           {...inlineFormLayout}
