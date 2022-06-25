@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { CustomColumnType } from "@Components/forms/Table";
 import ReportFieldModal from "@Components/modals/Admin/ReportFieldModel";
-import { options } from "@Components/shared/ReportFieldOptions";
+//import { options } from "@Components/shared/ReportFieldOptions";
 import { IFilterType } from "@Models/IFilterType";
 import { IReportFieldModel } from "@Models/IReportFieldModel";
 import { ISupportCategoryModel } from "@Models/ISupportCategoryModel";
@@ -33,6 +33,16 @@ import { Edit2, Trash2 } from "react-feather";
 
 type Props = {};
 
+const options = [
+  { name: "Full Name", value: "FullName" },
+  { name: "Birthday", value: "DOB" },
+  { name: "Address", value: "PublicAddress" },
+  { name: "Gender", value: "Gender" },
+  { name: "Circumstance", value: "Circumstance" },
+  { name: "Guardian Name", value: "GuardianName" },
+  { name: "Guardian Phone Number", value: "GuardianPhoneNumber" },
+];
+
 const reportFieldService = new ReportFieldService();
 
 const ReportFieldCategoryPage: React.FC<Props> = () => {
@@ -45,7 +55,7 @@ const ReportFieldCategoryPage: React.FC<Props> = () => {
   const [filterBy, setFilterBy] = React.useState<string>("title");
 
   useEffect(() => {
-    document.title = "Report Field";
+    document.title = "Admin - Report Fields | FOR THE CHILDREN";
     fetchData();
   }, []);
   useEffect(() => {
@@ -190,7 +200,7 @@ const ReportFieldCategoryPage: React.FC<Props> = () => {
       <div className="option-panel">
         <Row justify="start">
           <Col span={14} className="table-title">
-            Report Field Category
+            Report Fields
           </Col>
           <Col span={7}>
             <div className="option-pannel">
@@ -200,7 +210,7 @@ const ReportFieldCategoryPage: React.FC<Props> = () => {
                   fontSize: "14px",
                   borderRadius: "25px",
                 }}
-                placeholder="Input support title"
+                placeholder="Input report field title"
                 prefix={<SearchOutlined className="site-form-item-icon" />}
                 onChange={(e) => {
                   setFilterValue(e.target.value);

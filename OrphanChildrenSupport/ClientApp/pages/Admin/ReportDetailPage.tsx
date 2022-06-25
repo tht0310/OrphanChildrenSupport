@@ -72,7 +72,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isUpdateStatus, setUpdateStatus] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    document.title = "Report Detail";
+    document.title = "Admin - Report Detail | FOR THE CHILDREN";
     fetchReport();
   }, []);
 
@@ -319,7 +319,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       ),
     },
     {
-      title: "Report value",
+      title: "Report Value",
       dataIndex: "reportInformation",
       align: "center",
       key: "reportInformation",
@@ -449,7 +449,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           progressDot={customDot}
         >
           <Steps.Step title="Send" />
-          <Steps.Step title="Waiting for approval" />
+          <Steps.Step title="Waiting For Approval" />
           <Steps.Step title="Processing" />
           <Steps.Step title="Finish" />
         </Steps>

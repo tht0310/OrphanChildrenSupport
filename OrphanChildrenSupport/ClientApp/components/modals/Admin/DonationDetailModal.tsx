@@ -294,7 +294,7 @@ const DonationDetailModal: React.FC<IProps> = ({
             >
               <Select disabled>
                 <Select.Option value={0} key="0">
-                  Waiting for approval
+                  Waiting For Approval
                 </Select.Option>
                 <Select.Option value={1} key="1">
                   Processing

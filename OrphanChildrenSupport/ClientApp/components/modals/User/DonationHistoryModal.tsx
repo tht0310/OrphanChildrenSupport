@@ -214,7 +214,7 @@ const DonationHistoryModal: React.FC<IProps> = ({
                   progressDot={customDot}
                 >
                   <Steps.Step title="Send" />
-                  <Steps.Step title="Waiting for approval" />
+                  <Steps.Step title="Waiting For Approval" />
                   <Steps.Step title="Processing" />
                   <Steps.Step title="Finish" />
                 </Steps>

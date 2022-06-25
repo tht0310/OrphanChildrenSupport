@@ -36,7 +36,9 @@ const ForgotPasswordPage: React.FC<Props> = ({
       message.error("Your email is not exist");
     }
   }
-
+  React.useEffect(() => {
+    document.title = "Forgot Password | FOR THE CHILDREN";
+  }, []);
   return (
     <div
       className="container-fuild message-layout center "

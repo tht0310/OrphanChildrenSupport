@@ -41,6 +41,10 @@ const ResetPasswordPage: React.FC<Props> = ({
     form.setFieldsValue({ token: token?.token });
   }, [token]);
 
+  React.useEffect(() => {
+    document.title = "Reset Password | FOR THE CHILDREN";
+  }, []);
+
   const onFinish = (values: IResetPasswordModel) => {
     resetPassword(values);
   };

@@ -110,20 +110,20 @@ const DonationConfirmationModal: React.FC<IProps> = ({
       title: "",
       dataIndex: "title",
       ellipsis: true,
-      width: "20%",
+      width: "30%",
       render: (text, row, index) => {
         return <Tag color={colors[index]}>{text}</Tag>;
       },
     },
     {
       title: "",
-      width: "58%",
+      width: "48%",
       render: (text, row, index) => (
         <>
           {row.title === "Money" ? (
             <InputNumber
               required
-              style={{ width: "100%", fontSize: "12px" }}
+              style={{ width: "85%", fontSize: "12px" }}
               placeholder="Input money "
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -219,7 +219,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
           >
             <Card
               size="small"
-              title="Donation detail"
+              title="Donation Detail"
               style={{ marginRight: "15px", boxShadow: "none" }}
             >
               <Table

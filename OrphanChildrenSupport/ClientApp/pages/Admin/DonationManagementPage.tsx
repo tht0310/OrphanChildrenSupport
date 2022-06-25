@@ -51,7 +51,7 @@ const DonationManagementPage: React.FC<Props> = () => {
   const [userProfiles, setUserProfiles] = React.useState<IRegisterModel[]>([]);
 
   useEffect(() => {
-    document.title = "Donation Page";
+    document.title = "Admin - Donations | FOR THE CHILDREN";
     fetchData();
   }, []);
   useEffect(() => {

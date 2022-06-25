@@ -67,7 +67,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    document.title = "Donation Detail";
+    document.title = "Admin - Donation Detail | FOR THE CHILDREN";
     fetchDonation();
     fetchSupportCategories();
   }, []);
@@ -365,7 +365,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           progressDot={customDot}
         >
           <Steps.Step title="Send" />
-          <Steps.Step title="Waiting for approval" />
+          <Steps.Step title="Waiting For Approval" />
           <Steps.Step title="Processing" />
           <Steps.Step title="Finish" />
         </Steps>

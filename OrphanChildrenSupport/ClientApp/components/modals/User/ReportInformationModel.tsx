@@ -190,7 +190,7 @@ const ReportInformationModal: React.FC<IProps> = ({
     },
 
     {
-      title: "Report value",
+      title: "Report Value",
       dataIndex: "reportInformation",
       align: "center",
       key: "reportInformation",
@@ -285,7 +285,7 @@ const ReportInformationModal: React.FC<IProps> = ({
                   progressDot={customDot}
                 >
                   <Step title="Send" />
-                  <Step title="Waiting for approval" />
+                  <Step title="Waiting For Approval" />
                   <Step title="Finish" />
                 </Steps>
               </Card>

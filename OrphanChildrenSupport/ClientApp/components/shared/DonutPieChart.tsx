@@ -16,7 +16,8 @@ const DonutPieChart: React.FC<IProps> = ({ data }: IProps) => {
     label: {
       type: "inner",
       offset: "-30%",
-      content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+      content: ({ percent }) =>
+        percent == 0 ? `` : `${(percent * 100).toFixed(0)}%`,
       style: {
         fontSize: 11,
         textAlign: "center",

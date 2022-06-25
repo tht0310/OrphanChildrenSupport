@@ -75,6 +75,11 @@ const RegisterPage: React.FC<Props> = () => {
       message.error("Fail adding");
     }
   }
+
+  React.useEffect(() => {
+    document.title = "Register | FOR THE CHILDREN";
+  }, []);
+
   return (
     <div className="container-fluid h-custom center">
       <h3>Register</h3>
@@ -261,8 +266,8 @@ const RegisterPage: React.FC<Props> = () => {
             },
           ]}
         >
-          <Checkbox style={{ paddingRight: "5px" }} /> I agree to the terms and
-          conditions and the privacy policy.
+          <Checkbox style={{ paddingRight: "5px" }} /> I agree to the terms &
+          conditions and the privacy policy
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>

@@ -20,8 +20,8 @@ namespace OrphanChildrenSupport.Services
 
             // send email
             using var smtp = new SmtpClient();
-            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("alvis.mayer26@ethereal.email", "VYXXH12D5CJ2xPqdUw");
+            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("forthechildrenwebsite@gmail.com", "msqnzdutsnncnmru");
             smtp.Send(email);
             smtp.Disconnect(true);
         }
