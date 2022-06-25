@@ -165,6 +165,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     const res = await favoriteService.add(temp);
     if (!res.hasErrors) {
       message.success("Add to favorites successfuly");
+      isChildrenFavourite();
     } else {
       message.warning("You added this child to favorite list.");
     }
