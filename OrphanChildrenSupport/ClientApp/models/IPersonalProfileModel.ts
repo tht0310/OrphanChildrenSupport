@@ -7,6 +7,7 @@ export interface IPersonalProfileModel extends IEngineEntity {
   address: string;
   mobile: string;
   email: string;
+  
 }
 
 export interface IAddPersonProfileModel extends IEngineEntity  {

@@ -12,6 +12,7 @@ import {
   CalendarOutlined,
   EnvironmentOutlined,
   GiftOutlined,
+  HeartFilled,
   HeartOutlined,
   HomeOutlined,
   PhoneOutlined,
@@ -56,6 +57,9 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [imageData, setImageData] = React.useState<any[]>([]);
+  const [isFavourite, setIsFavourite] = React.useState<boolean>(false);
+  const favoriteChildrenService = new FavoriteService();
+
   React.useEffect(() => {
     document.title = "Children - Detail | FOR THE CHILDREN";
     fetchSupportCategories();
@@ -69,6 +73,12 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       fetchUser(localUser.id);
     }
   }, [localUser]);
+
+  React.useEffect(() => {
+    if (currentUser !== null) {
+      isChildrenFavourite();
+    }
+  }, [currentUser]);
 
   function getLocalUser() {
     var retrievedObject = localStorage.getItem("currentUser");
@@ -155,6 +165,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     const res = await favoriteService.add(temp);
     if (!res.hasErrors) {
       message.success("Add to favorites successfuly");
+      isChildrenFavourite();
     } else {
       message.warning("You added this child to favorite list.");
     }
@@ -178,6 +189,41 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     const res = await userService.getAccount(id);
     if (!res.hasErrors) {
       setCurrentUser(res.value);
+    }
+  }
+
+  async function isChildrenFavourite() {
+    const res = await userService.getAccount(currentUser?.id);
+    if (!res.hasErrors) {
+      const favourite = res.value.favorites;
+      const temp = favourite.filter(
+        (c) => c.childrenProfileId === children?.id
+      );
+      if (temp.length > 0) {
+        setIsFavourite(true);
+      } else {
+        setIsFavourite(false);
+      }
+    }
+  }
+
+  async function handleFavouriteChildren() {
+    if (currentUser !== null) {
+      if (!isFavourite) {
+        favoriteChildren();
+      } else {
+        onDelete();
+      }
+    } else {
+      window.location.href = "/login";
+    }
+  }
+
+  async function onDelete() {
+    const res = await favoriteChildrenService.delete(children?.id);
+    if (!res.hasErrors) {
+      message.success("Remove sucessfully");
+      setIsFavourite(false);
     }
   }
 
@@ -210,17 +256,6 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       );
       setSelected(newSelected);
     }
-  }
-
-  function convertAddressToString(address: string) {
-    let tempAddress = [];
-    if (address) {
-      tempAddress = address.split("-");
-
-      tempAddress.reverse();
-    }
-
-    return tempAddress[1];
   }
 
   return (
@@ -304,16 +339,16 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     style={{
                       height: "105%",
                       background: "#FFF7E6",
-                      color: "#E57905",
+                      color: isFavourite ? "red" : "#E57905",
                       border: "1px solid #FFF7E6",
                     }}
-                    onClick={() =>
-                      currentUser !== null
-                        ? favoriteChildren()
-                        : (window.location.href = "/login")
-                    }
+                    onClick={() => handleFavouriteChildren()}
                   >
-                    <HeartOutlined style={{ fontSize: "12px" }} />
+                    {isFavourite ? (
+                      <HeartFilled style={{ fontSize: "12px", color: "red" }} />
+                    ) : (
+                      <HeartOutlined style={{ fontSize: "12px" }} />
+                    )}
                     Add To Favorite
                   </Button>
                 </Col>

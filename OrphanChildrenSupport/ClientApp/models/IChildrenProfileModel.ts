@@ -1,3 +1,4 @@
+import { IFavoriteModel } from './IFavoriteModel';
 import { IChildrenSupportCategoryModel } from "./IChildrenSupportCategoryModel";
 import { IEngineEntity } from "./IEngineEntity";
 
@@ -19,6 +20,8 @@ export interface IChildrenProfileModel extends IEngineEntity {
   province?: string;
   houseNumber?: string;
   childrenProfileSupportCategories?: IChildrenSupportCategoryModel[];
+  
+
 }
 
 export interface IChildrenImage extends IEngineEntity {
