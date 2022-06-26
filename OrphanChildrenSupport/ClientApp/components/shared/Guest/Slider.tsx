@@ -4,30 +4,33 @@ import { Carousel } from "antd";
 import React from "react";
 import Children2 from "@Images/test.jpg";
 
+import { Row, Col, Image } from "antd";
 interface Props {}
 
 const Slider: FC<Props> = () => {
   return (
-    <Carousel className="carousel">
-      <div>
-        <h3
-          style={{
-            height: "92%",
-            fontSize: "20px",
-            color: "#fff",
-            textAlign: "center",
-            backgroundImage: `url(${Children2})`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            filter: "brightness(90%)",
-          }}
-        >
-          {/* Our vision is to release the children from spiritual, economic,
+    <div className="slideshow-container">
+      <Carousel className="carousel">
+        <div>
+          <h3
+            style={{
+              color: "#fff",
+              height: "92%",
+              fontSize: "20px",
+              textAlign: "center",
+              backgroundImage: `url(${Children2})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              filter: "brightness(90%)",
+            }}
+          >
+            {/* {/* Our vision is to release the children from spiritual, economic,
             social, and physical poverty. */}
-        </h3>
-      </div>
-    </Carousel>
+          </h3>
+        </div>
+      </Carousel>
+    </div>
   );
 };
 

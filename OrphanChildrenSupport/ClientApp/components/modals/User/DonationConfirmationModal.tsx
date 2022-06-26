@@ -209,7 +209,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
       bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 130px)" }}
     >
       <Row>
-        <Col span={17} style={{ paddingRight: "15px" }}>
+        <Col span={17} lg={17} xs={24} style={{ paddingRight: "15px" }}>
           <Form
             form={form}
             onFinish={onFinish}
@@ -223,6 +223,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
               style={{ boxShadow: "none" }}
             >
               <Table
+                scroll={{ x: 600 }}
                 columns={requestColumns}
                 dataSource={supportCategories}
                 pagination={false}
@@ -247,7 +248,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
             </Card>
           </Form>
         </Col>
-        <Col span={7}>
+        <Col span={7} lg={7} xs={24}>
           <Card size="small" title="Children">
             <div style={{ marginBottom: "5px" }}>
               <Space size={10}>

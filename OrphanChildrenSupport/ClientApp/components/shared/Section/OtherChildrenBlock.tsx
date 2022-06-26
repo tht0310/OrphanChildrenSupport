@@ -59,7 +59,7 @@ const OtherChildrenBlock: React.FC<IProps> = ({ children, id }: IProps) => {
   return (
     <div className="content-wrapper-custom" style={{ padding: "0" }}>
       <List
-        grid={{ gutter: 16, column: 6 }}
+        grid={{ gutter: 16, column: 6, lg: 6, xs: 2 }}
         dataSource={data}
         renderItem={(item) => (
           <List.Item>

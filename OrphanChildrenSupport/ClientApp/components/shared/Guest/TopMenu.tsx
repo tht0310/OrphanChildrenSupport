@@ -18,6 +18,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { IRegisterModel } from "@Models/ILoginModel";
+import MenuDrawer from "@Components/drawers/MenuDrawer";
 
 interface Props {}
 
@@ -26,6 +27,11 @@ const TopMenu: React.FC<Props> = () => {
   const [dropdown, setDropdown] = useState(false);
   const [searchText, setSearchText] = React.useState<String>("");
   const [form] = Form.useForm();
+  const [visible, setVisible] = React.useState<boolean>(false);
+
+  function toggleMenu() {
+    setVisible(!visible);
+  }
 
   const menu2 = (
     <Menu>
@@ -104,7 +110,11 @@ const TopMenu: React.FC<Props> = () => {
     <div id="customheader">
       <Row>
         <Col span={2} lg={0} xs={4} className="menu-icon">
-          <MenuOutlined color="black" style={{ fontSize: "15px" }} />
+          <MenuOutlined
+            color="black"
+            style={{ fontSize: "15px" }}
+            onClick={toggleMenu}
+          />
         </Col>
         <Col span={7} lg={7} xs={12}>
           <Link to="/">
@@ -188,6 +198,11 @@ const TopMenu: React.FC<Props> = () => {
           </div>
         </Col>
       </Row>
+      <MenuDrawer
+        currentUser={currentUser}
+        visible={visible}
+        onCancel={toggleMenu}
+      ></MenuDrawer>
     </div>
   );
 };

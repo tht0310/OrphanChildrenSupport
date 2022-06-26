@@ -296,10 +296,10 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
               {children?.publicAddress}
             </div>
             <div className="support">
-              <Row>
+              <Row gutter={5}>
                 {supportCategories.map((s) => {
                   return (
-                    <Col span={7}>
+                    <Col span={7} lg={7} xs={12}>
                       <Button
                         className={!isEnable(s.id) ? "disable-btn" : ""}
                         disabled={isEnable(s.id) ? false : true}
@@ -318,7 +318,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
             <div className="actions">
               <Row>
-                <Col span={21}>
+                <Col span={24}>
                   <Button
                     style={{ height: "105%" }}
                     onClick={() =>
@@ -333,8 +333,8 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   </Button>
                 </Col>
               </Row>
-              <Row className="action2">
-                <Col span={10} style={{ marginRight: "4%" }}>
+              <Row className="action2" gutter={10}>
+                <Col span={12} lg={12} xs={24}>
                   <Button
                     style={{
                       height: "105%",
@@ -352,7 +352,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                     Add To Favorite
                   </Button>
                 </Col>
-                <Col span={10}>
+                <Col span={12} lg={12} xs={24} className="button-custom">
                   <Button
                     onClick={() =>
                       currentUser !== null

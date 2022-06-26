@@ -20,7 +20,7 @@ const ContactUsPage: React.FC<Props> = () => {
         <Col span={8} lg={8} xs={24}>
           <div className="content">
             <Row className="first-block" align="middle">
-              <Col span={10}>
+              <Col span={8}>
                 <Phone
                   className="suffix-icon"
                   style={{
@@ -31,7 +31,7 @@ const ContactUsPage: React.FC<Props> = () => {
                   }}
                 />
               </Col>
-              <Col span={12}>
+              <Col span={14}>
                 <div>Call Today</div>
                 <div className="main-content">0123456789</div>
               </Col>
