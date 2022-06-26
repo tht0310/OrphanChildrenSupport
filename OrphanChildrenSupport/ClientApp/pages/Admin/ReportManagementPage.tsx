@@ -51,7 +51,7 @@ const ReportManagementPage: React.FC<Props> = () => {
   const [detailStatus, setDetailStatus] = React.useState<number>();
 
   useEffect(() => {
-    document.title = "Report Incorrect Information";
+    document.title = "Admin - Reports | FOR THE CHILDREN";
     fetchData();
   }, []);
   useEffect(() => {
@@ -67,13 +67,13 @@ const ReportManagementPage: React.FC<Props> = () => {
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
     {
-      title: "Report Code",
+      title: "Code",
       ellipsis: true,
       width: "16%",
       align: "center",
       render: (text, row, index) => (
         <Link to={`/admin/activityManagement/reports/${row.id}`}>
-          RC{10000 + row.id}
+          RP{10000 + row.id}
         </Link>
       ),
     },
@@ -218,7 +218,7 @@ const ReportManagementPage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Input title"}
+                placeholder={"Search by code"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

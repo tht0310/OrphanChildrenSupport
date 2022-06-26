@@ -62,7 +62,7 @@ const TopMenu: React.FC<Props> = () => {
       </Menu.Item>
       <Menu.Item>
         <Link to={`/activityHistory`} className="nav-links">
-          History
+          Activity History
         </Link>
       </Menu.Item>
       <Menu.Item>
@@ -132,6 +132,7 @@ const TopMenu: React.FC<Props> = () => {
                   marginTop: "8px",
                   borderRadius: "25px",
                 }}
+                placeholder="Search children by name"
                 className="search-bar-custom"
                 prefix={<SearchOutlined style={{ color: "#B62A2A" }} />}
               />

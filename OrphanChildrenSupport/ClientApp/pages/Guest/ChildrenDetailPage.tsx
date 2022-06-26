@@ -368,7 +368,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   >
                     {" "}
                     <WarningOutlined style={{ fontSize: "12px" }} />
-                    Report Incorrect Information
+                    Report Incorrect Detail
                   </Button>
                 </Col>
               </Row>

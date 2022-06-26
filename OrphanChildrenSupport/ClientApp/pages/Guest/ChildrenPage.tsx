@@ -317,7 +317,7 @@ const ChildrenPage: React.FC<Props> = (props) => {
                 loading={isLoading ? true : false}
                 dataSource={childrenProfiles}
                 pagination={{
-                  defaultPageSize: 16,
+                  defaultPageSize: 20,
                   showSizeChanger: true,
                   pageSizeOptions: ["10", "15", "20", "25"],
                 }}

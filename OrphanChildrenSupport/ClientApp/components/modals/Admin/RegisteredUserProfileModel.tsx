@@ -142,8 +142,8 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
       fullName: item.fullName,
       gender: item.gender ? "true" : "false",
       dob: moment(item.dob),
-      city: item.address?.split("-")[0],
-      province: item.address?.split("-")[1],
+      city: item.address?.split("-")[1],
+      province: item.address?.split("-")[0],
       houseNumber: item.address?.split("-")[2],
       phoneNumber: item?.phoneNumber,
       email: item?.email,
@@ -221,7 +221,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
           <Col span={18}>
             <Form.Item
               name="fullName"
-              label="Full name"
+              label="Full Name"
               className="label-custom"
               {...inlineFormLayout}
               rules={[{ required: true, message: "Please enter full name." }]}
@@ -389,7 +389,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                 <Form.Item
                   name="confirmPassword"
                   {...inlineFormLayout}
-                  label="Confirm "
+                  label="Confirm Password "
                   dependencies={["password"]}
                   hasFeedback
                   rules={[

@@ -114,7 +114,7 @@ const ChangePasswordModal: React.FC<IProps> = ({
         <Form.Item
           name="confirmPassword"
           {...inlineFormLayout}
-          label="Confirm "
+          label="Confirm Password "
           dependencies={["password"]}
           hasFeedback
           rules={[

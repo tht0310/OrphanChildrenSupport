@@ -458,7 +458,7 @@ const ChildrenProfileModal: React.FC<IProps> = ({
             <Form.Item
               name="childrenCategoryGroup"
               {...inlineFormLayout}
-              label="Need support"
+              label="Need Support"
             >
               <Checkbox.Group>
                 <Row>

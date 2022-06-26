@@ -21,8 +21,11 @@ import { useState } from "react";
 import {
   CalendarOutlined,
   EditOutlined,
+  EnvironmentOutlined,
   HomeOutlined,
   MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
   WhatsAppOutlined,
 } from "@ant-design/icons";
 import { IRegisterModel } from "@Models/ILoginModel";
@@ -190,7 +193,7 @@ const ReportInformationModal: React.FC<IProps> = ({
     },
 
     {
-      title: "Report value",
+      title: "Report Value",
       dataIndex: "reportInformation",
       align: "center",
       key: "reportInformation",
@@ -266,9 +269,9 @@ const ReportInformationModal: React.FC<IProps> = ({
                 size="small"
                 title={
                   <Space>
-                    Processing -
+                    Progress:
                     <span style={{ color: "#686868", paddingRight: "5px" }}>
-                      {getStatus(data?.status).toLocaleLowerCase()}
+                      {getStatus(data?.status)}
                     </span>
                   </Space>
                 }
@@ -284,14 +287,15 @@ const ReportInformationModal: React.FC<IProps> = ({
                   current={data?.status === 1 ? 2 : 1}
                   progressDot={customDot}
                 >
-                  <Step title="Send" />
-                  <Step title="Waiting for approval" />
-                  <Step title="Finish" />
+                  <Steps.Step title="Sent" />
+                  <Steps.Step title="Waiting For Approval" />
+                  <Steps.Step title="Processing" />
+                  <Steps.Step title="Finished" />
                 </Steps>
               </Card>
               <Card
                 size="small"
-                title="Report detail"
+                title="Detail"
                 style={{
                   marginRight: "15px",
                   boxShadow: "none",
@@ -308,52 +312,28 @@ const ReportInformationModal: React.FC<IProps> = ({
           </Col>
 
           <Col span={7}>
-            <Card
-              size="small"
-              title="Reporter Information"
-              extra={
-                <Link to="/myAccount">
-                  <EditOutlined style={{ color: "#e57905" }} />
-                </Link>
-              }
-            >
+            <Card size="small" title="Children Information">
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>{currentUser?.fullName}</div>
-                </Space>
-              </div>
-              <div style={{ marginBottom: "5px" }}>
-                <Space size={10}>
-                  <WhatsAppOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{currentUser?.phoneNumber}</div>
-                </Space>
-              </div>
-              <div style={{ marginBottom: "5px" }}>
-                <Space size={10}>
-                  <HomeOutlined style={{ color: "#b2b2b2" }} />
-                  <div>
-                    {convertPublicAddressToString(currentUser?.address)}
+                  <div style={{ marginBottom: "5px" }}>
+                    <Space size={10}>
+                      <div>
+                        {
+                          childrenProfiles[
+                            findUserbyId(
+                              data?.childrenProfileId,
+                              childrenProfiles
+                            )
+                          ]?.fullName
+                        }
+                      </div>
+                    </Space>
                   </div>
                 </Space>
               </div>
-              <div>
-                <Space size={10}>
-                  <MailOutlined style={{ color: "#b2b2b2" }} />
-                  <div>{currentUser?.email}</div>
-                </Space>
-              </div>
-            </Card>
-            <Card style={{ marginTop: "15px" }} size="small" title="Children">
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <div>
-                    {
-                      childrenProfiles[
-                        findUserbyId(data?.childrenProfileId, childrenProfiles)
-                      ]?.fullName
-                    }
-                  </div>
-                  <div>-</div>
+                  <UserOutlined style={{ color: "#b2b2b2" }} />
                   <div>
                     {childrenProfiles[
                       findUserbyId(data?.childrenProfileId, childrenProfiles)
@@ -377,18 +357,52 @@ const ReportInformationModal: React.FC<IProps> = ({
               </div>
               <div style={{ marginBottom: "5px" }}>
                 <Space size={10}>
-                  <HomeOutlined style={{ color: "#b2b2b2" }} />
+                  <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
                   <div>
-                    {convertPublicAddressToString(
+                    {
                       childrenProfiles[
                         findUserbyId(data?.childrenProfileId, childrenProfiles)
                       ]?.publicAddress
-                    )}
+                    }
                   </div>
                 </Space>
               </div>
             </Card>
 
+            <Card
+              size="small"
+              style={{ marginTop: "5px" }}
+              title="Reporter Information"
+              extra={
+                <Link to="/myAccount">
+                  <EditOutlined style={{ color: "#e57905" }} />
+                </Link>
+              }
+            >
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <div>{currentUser?.fullName}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <MailOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.email}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <PhoneOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.phoneNumber}</div>
+                </Space>
+              </div>
+              <div style={{ marginBottom: "5px" }}>
+                <Space size={10}>
+                  <EnvironmentOutlined style={{ color: "#b2b2b2" }} />
+                  <div>{currentUser?.address}</div>
+                </Space>
+              </div>
+            </Card>
             <Button
               onClick={onCancelReport}
               disabled={data?.status === 0 ? false : true}
@@ -403,7 +417,7 @@ const ReportInformationModal: React.FC<IProps> = ({
                 padding: "5px 0px",
               }}
             >
-              Cancel report
+              Cancel
             </Button>
           </Col>
         </Row>

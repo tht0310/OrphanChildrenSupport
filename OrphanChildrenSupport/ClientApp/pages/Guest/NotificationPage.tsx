@@ -89,7 +89,7 @@ const NotificationPage: React.FC<Props> = () => {
       render: (text, row, index) => <a onClick={() => toggleModal()}>{text}</a>,
     },
     {
-      title: "Created date",
+      title: "Created Time",
       dataIndex: "createdTime",
       key: "createdTime",
       width: "30%",
@@ -120,7 +120,7 @@ const NotificationPage: React.FC<Props> = () => {
       style={{ margin: "10px 80px 30px 80px" }}
     >
       <h4 style={{ textAlign: "center", color: "#484848", padding: "25px 0" }}>
-        Notification
+        Notifications
       </h4>
       <Table
         columns={columns}

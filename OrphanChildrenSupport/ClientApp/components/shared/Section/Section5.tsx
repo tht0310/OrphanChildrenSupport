@@ -37,7 +37,7 @@ const Section5: React.FC<Props> = () => {
                 marginBottom: "15px",
               }}
             >
-              Who we are?
+              Who are we?
             </h2>
 
             <p key="p" style={{ maxWidth: 550, paddingBottom: "5px" }}>

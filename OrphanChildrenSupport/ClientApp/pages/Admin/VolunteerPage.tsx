@@ -58,9 +58,10 @@ const VolunteerPage: React.FC<Props> = () => {
   const [searchText, setSearchText] = React.useState("");
   const [searchedColumn, setSearchedColumn] = React.useState("");
   useEffect(() => {
-    document.title = "System User";
+    document.title = "Admin - System Users | FOR THE CHILDREN";
     fetchData();
   }, []);
+
   useEffect(() => {
     onSearch();
   }, [filterBy, filterValue]);
@@ -159,7 +160,7 @@ const VolunteerPage: React.FC<Props> = () => {
       render: (text, row, index) => index + 1 + (page - 1) * pageSize,
     },
     {
-      title: "Name",
+      title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
       ellipsis: true,
@@ -180,8 +181,8 @@ const VolunteerPage: React.FC<Props> = () => {
       width: "12%",
       columnSearchDataIndex: "gender",
       filters: [
-        { text: "Boy", value: true },
-        { text: "Girl", value: false },
+        { text: "Male", value: true },
+        { text: "Female", value: false },
       ],
       filterMode: "tree",
       filterSearch: true,
@@ -353,7 +354,7 @@ const VolunteerPage: React.FC<Props> = () => {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder={"Input user name"}
+                placeholder={"Search by name"}
                 onChange={(e) => {
                   setFilterValue(e.target.value);
                 }}

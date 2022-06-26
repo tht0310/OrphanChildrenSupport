@@ -13,8 +13,8 @@ const ContactUsPage: React.FC<Props> = () => {
     <div className="contact-page" style={{ marginBottom: "30px" }}>
       <h3>Contact Us</h3>
       <p>
-        Follow us to find out how we're changing the lives of children – and how
-        you can help.
+        Follow us to find out how we are changing the lives of children and how
+        you can help them
       </p>
       <Row className="content-wrapper">
         <Col span={8} lg={8} xs={24}>
@@ -31,8 +31,8 @@ const ContactUsPage: React.FC<Props> = () => {
                   }}
                 />
               </Col>
-              <Col span={14}>
-                <div>Call Today</div>
+              <Col span={12}>
+                <div>Phone Number</div>
                 <div className="main-content">0123456789</div>
               </Col>
             </Row>
@@ -52,8 +52,8 @@ const ContactUsPage: React.FC<Props> = () => {
               />
             </Col>
             <Col span={14}>
-              <div>Email Us</div>
-              <div className="main-content">forthechildren@gmail.com</div>
+              <div>Email</div>
+              <div className="main-content">support@forthechildren.com</div>
             </Col>
           </Row>
         </Col>
@@ -82,8 +82,8 @@ const ContactUsPage: React.FC<Props> = () => {
           <Col span={12} lg={12} xs={24} style={{ paddingTop: "10%" }}>
             <h3>Our home</h3>
             <div>
-              Nam Ky Khoi Nghia Street, Hoa Phu Village, Thu Dau Mot city, Binh
-              Duong Provice, VietNam.
+              Nam Ky Khoi Nghia Street - Hoa Phu Ward - Thu Dau Mot City - Binh
+              Duong Province
             </div>
           </Col>
           <Col span={12} lg={12} xs={24}>

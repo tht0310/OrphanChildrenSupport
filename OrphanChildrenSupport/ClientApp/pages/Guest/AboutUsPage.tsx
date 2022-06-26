@@ -49,7 +49,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   <span className="counter  text-dark font-weight-normal">
                     <Counter start={100} end={1000} delay={5} />
                   </span>
-                  <h5 className="text-uppercase mt-2">Our Children</h5>
+                  <h5 className="text-uppercase mt-2">Children</h5>
                 </div>
               </div>
               <div className="col-lg-3 col-md-6 col-sm-6">
@@ -61,7 +61,7 @@ const AboutUsPage: React.FC<Props> = () => {
                     <Counter start={100} end={400} delay={5} />
                   </span>
                   <h5 className="text-uppercase mt-2">
-                    Children need supported
+                    Children are supported
                   </h5>
                 </div>
               </div>
@@ -71,11 +71,11 @@ const AboutUsPage: React.FC<Props> = () => {
                   style={{ height: "160px" }}
                 >
                   <span className="counter text-dark font-weight-normal">
-                    <Counter start={0} end={40} delay={15} />
+                    <Counter start={0} end={400} delay={15} />
                   </span>
                   <h5 className="text-uppercase mt-2">
                     {" "}
-                    Children need adopted
+                    Children got happiness
                   </h5>
                 </div>
               </div>
@@ -85,11 +85,9 @@ const AboutUsPage: React.FC<Props> = () => {
                   style={{ height: "160px" }}
                 >
                   <span className="counter text-dark font-weight-normal">
-                    <Counter start={100} end={400} delay={8} />
+                    <Counter start={100} end={40} delay={8} />
                   </span>
-                  <h5 className="text-uppercase mt-2">
-                    Children recieved hapiness
-                  </h5>
+                  <h5 className="text-uppercase mt-2">Children are adopted</h5>
                 </div>
               </div>
             </Row>

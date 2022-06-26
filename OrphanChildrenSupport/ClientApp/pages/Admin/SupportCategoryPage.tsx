@@ -44,7 +44,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
   const [filterBy, setFilterBy] = React.useState<string>("title");
 
   useEffect(() => {
-    document.title = "Support Category";
+    document.title = "Admin - Support Categories | FOR THE CHILDREN";
     fetchData();
   }, []);
   useEffect(() => {
@@ -189,7 +189,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
                   fontSize: "14px",
                   borderRadius: "25px",
                 }}
-                placeholder="Input support title"
+                placeholder="Search by title"
                 prefix={<SearchOutlined className="site-form-item-icon" />}
                 onChange={(e) => {
                   setFilterValue(e.target.value);

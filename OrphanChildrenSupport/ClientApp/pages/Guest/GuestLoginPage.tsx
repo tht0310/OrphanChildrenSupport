@@ -28,11 +28,9 @@ const GuestLoginPage: React.FC<Props> = (props: Props) => {
     await props.login(values);
   }
 
-  // if (SessionManager.isAuthenticated && props.isLoginSuccess) {
-  //   return <Redirect to="/" />;
-  // } else {
-  //   props.loginWithoutData();
-  // }
+  React.useEffect(() => {
+    document.title = "Login | FOR THE CHILDREN";
+  }, []);
 
   return (
     <div

@@ -247,7 +247,7 @@ namespace OrphanChildrenSupport.Services
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == reportDetail.Report.ChildrenProfileId);
                     switch (reportDetail.ReportFieldCategory.Title)
                     {
-                        case "fullName":
+                        case "FullName":
                             childrenProfile.FullName = reportDetail.ReportInformation;
                             break;
                         case "Gender":

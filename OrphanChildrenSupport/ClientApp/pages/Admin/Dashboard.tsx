@@ -24,6 +24,7 @@ const Dashboard = () => {
   >([]);
 
   React.useEffect(() => {
+    document.title = "Admin - Dashboard | FOR THE CHILDREN";
     fetchDonation();
     fetchReport();
     fetchDonationTimes();
@@ -79,7 +80,7 @@ const Dashboard = () => {
                 marginBottom: "15px",
               }}
             >
-              Supported Children
+              Number Of Supported Children In 2022
             </div>
 
             <ChildrenSection data={donationTime} />
@@ -96,7 +97,7 @@ const Dashboard = () => {
                 margin: "0px 0px 15px 0px",
               }}
             >
-              Top Donation
+              Top Donation Users In Month
             </div>
 
             {topUser?.map((v, index) => {
@@ -125,19 +126,33 @@ const Dashboard = () => {
       <Row>
         <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
           <Card>
-            <div style={{ textAlign: "center", marginBottom: "10px" }}>
-              Donation
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#606060",
+                fontSize: "16px",
+                margin: "0px 0px 15px 0px",
+              }}
+            >
+              Donations
             </div>
-
             <DonutPieChart data={donations} />
           </Card>
         </Col>
         <Col span={12} xs={24} lg={12} style={{ padding: "10px 5px" }}>
           <Card>
-            <div style={{ textAlign: "center", marginBottom: "10px" }}>
-              Report
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#606060",
+                fontSize: "16px",
+                margin: "0px 0px 15px 0px",
+              }}
+            >
+              Reports
             </div>
-
             <DonutPieChart data={reports} />
           </Card>
         </Col>
