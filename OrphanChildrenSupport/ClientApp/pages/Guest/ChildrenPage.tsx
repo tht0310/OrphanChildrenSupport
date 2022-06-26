@@ -30,23 +30,27 @@ import SupportCategoryService from "@Services/SupportCategoryService";
 import { SearchOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
-type Props = RouteComponentProps<{}>;
+type Props = RouteComponentProps<{ search: string }>;
 
 const childrenProfileService = new ChildrenProfileService();
 const childrenDetailUrl = "children";
 const supportCategoriesService = new SupportCategoryService();
 
-const ChildrenPage: React.FC<Props> = (props) => {
+const ChildrenPage: React.FC<Props> = ({ match, history }: Props) => {
   const [childrenProfiles, setChildrenProfiles] = React.useState<
     IChildrenProfileModel[]
   >([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [search, setSearchText] = React.useState<string>("");
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     document.title = "Children - All | FOR THE CHILDREN";
-    fetchData();
+    console.log(match.params.search);
+    if (match.params.search === undefined) {
+      fetchData();
+    }
   }, []);
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
@@ -57,10 +61,16 @@ const ChildrenPage: React.FC<Props> = (props) => {
   }, []);
 
   React.useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const keyword = urlParams.get("keyword");
-    fetchChildrenProfile({ fullName: keyword });
-  }, [props.location]);
+    if (match.params.search !== undefined) {
+      setSearchText(match.params.search);
+    }
+  }, [match.params.search]);
+
+  React.useEffect(() => {
+    if (search !== "") {
+      onSearch({ fullName: search });
+    }
+  }, [search]);
 
   async function fetchData() {
     fetchChildrenProfile({ childrenProfileStatus: null });
@@ -82,8 +92,10 @@ const ChildrenPage: React.FC<Props> = (props) => {
         let tempId = await getImage(tempValue[index].id);
         tempValue[index].imageId = tempId;
       }
+      console.log(tempValue);
       setChildrenProfiles(tempValue);
     }
+
     setIsLoading(false);
   }
 
@@ -101,17 +113,6 @@ const ChildrenPage: React.FC<Props> = (props) => {
     } else {
       return -1;
     }
-  }
-
-  function convertAddressToString(address: string) {
-    const tempAddress = address.split("-");
-    let result = "";
-    tempAddress.reverse();
-    tempAddress.map((v) => {
-      result += v + " ";
-    });
-
-    return result;
   }
 
   async function onResetField() {
@@ -324,7 +325,7 @@ const ChildrenPage: React.FC<Props> = (props) => {
                 renderItem={(item) => {
                   return (
                     <List.Item>
-                      <Link to={`${childrenDetailUrl}/${item.id}`}>
+                      <Link to={`/children/${item.id}`}>
                         <div className="item">
                           <Image
                             preview={false}

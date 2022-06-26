@@ -140,7 +140,7 @@ const TopMenu: React.FC<Props> = () => {
 
             <Link
               id="button-submit"
-              to={{ pathname: `/children/search?keyword=${searchText}` }}
+              to={{ pathname: `/search/${searchText}` }}
             ></Link>
           </Form>
         </Col>

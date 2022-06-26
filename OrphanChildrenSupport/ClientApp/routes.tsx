@@ -196,8 +196,16 @@ export const routes = (
       path="/children/:id"
       component={ChildrenDetailPage}
     />
+
     <NormalUserRoute
       layout={GuestLayout}
+      path="/search/:search"
+      component={ChildrenPage}
+    />
+
+    <NormalUserRoute
+      layout={GuestLayout}
+      exact
       path="/children"
       component={ChildrenPage}
     />

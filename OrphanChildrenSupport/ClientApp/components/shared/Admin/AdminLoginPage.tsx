@@ -27,85 +27,94 @@ const AdminLoginPage: React.FC<Props> = () => {
     }
   }
   return (
-    <div className="admin-login-page" style={{ width: "100%", height: "100%" }}>
-      <div
-        style={{
-          margin: "auto",
-          width: "50%",
-          padding: "15px 40px",
-          top: "10%",
-          position: "absolute",
-          left: "30%",
-          background: "black",
-        }}
-        className="container-fluid h-custom  login-page admin-login-page"
-      >
-        <h3
+    <div
+      className="admin-login-page"
+      style={{ height: "100%", margin: 0, padding: 0, background: "#96d6ff" }}
+    >
+      <div style={{ display: "table", height: "100%", margin: "0 auto" }}>
+        <div
           style={{
-            textAlign: "center",
-            color: "#404040",
-            marginBottom: "20px",
+            verticalAlign: "middle",
+            display: "table-cell",
           }}
         >
-          Login
-        </h3>
-
-        <Form
-          form={form}
-          name="register"
-          onFinish={onFinish}
-          scrollToFirstError
-        >
-          <Form.Item
-            rules={[
-              {
-                type: "email",
-                message: "The input is not valid E-mail!",
-              },
-              {
-                required: true,
-                message: "Please input your E-mail!",
-              },
-            ]}
-            name="email"
+          <div
+            style={{
+              width: "500px",
+              background: "white",
+              padding: "20px",
+            }}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            className="spaceing-custom"
-            rules={[{ required: true, message: "Please input your Password!" }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="confirmPassword"
-              placeholder="Password"
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember Me</Checkbox>
-            </Form.Item>
-
-            <Link className="login-form-forgot" to={"/forgotPassword"}>
-              Forgot Password?
-            </Link>
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              onClick={form.submit}
-              className="login-form-button"
+            <h3
+              style={{
+                textAlign: "center",
+                color: "#404040",
+                paddingTop: "10px",
+              }}
             >
               Login
-            </Button>
-          </Form.Item>
-        </Form>
+            </h3>
+
+            <Form
+              form={form}
+              name="register"
+              onFinish={onFinish}
+              scrollToFirstError
+            >
+              <Form.Item
+                rules={[
+                  {
+                    type: "email",
+                    message: "The input is not valid E-mail!",
+                  },
+                  {
+                    required: true,
+                    message: "Please input your E-mail!",
+                  },
+                ]}
+                name="email"
+              >
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                className="spaceing-custom"
+                rules={[
+                  { required: true, message: "Please input your Password!" },
+                ]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="confirmPassword"
+                  placeholder="Password"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox>Remember Me</Checkbox>
+                </Form.Item>
+
+                <Link className="login-form-forgot" to={"/forgotPassword"}>
+                  Forgot Password?
+                </Link>
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  onClick={form.submit}
+                  className="login-form-button"
+                >
+                  Login
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
       </div>
     </div>
   );

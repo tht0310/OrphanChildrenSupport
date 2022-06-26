@@ -956,14 +956,11 @@ section {
   color: red !important;
 }
 .admin-login-page {
-    background:#508bfc;
-    .login-form-forgot {
-      float: right;
+    .login-form-forgot {   
       color: #0B52C5;
     }
     .login-form-button {
       width: 100%;
-      background-color: #0B52C5 !important;
       border: #0B52C5;
       margin-bottom: 5px;
       border-radius: 25px;

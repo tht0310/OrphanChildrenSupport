@@ -75,6 +75,9 @@ const ChildrenCartPage: React.FC<Props> = () => {
     }
   }, [currentUser]);
 
+  React.useEffect(() => {
+    fetchChildrenFavourite();
+  }, [favorites]);
   async function fetchUser(id) {
     const res = await userService.getAccount(id);
     if (!res.hasErrors) {
@@ -107,7 +110,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
     const dataRes = await favoriteChildrenService.getAll({
       accountId: currentUser.id,
     });
-    console.log(dataRes);
+
     if (!dataRes.hasErrors) {
       setFavourites(dataRes.value.items);
     }
@@ -123,6 +126,7 @@ const ChildrenCartPage: React.FC<Props> = () => {
       temp.childrenProfile = childrenProfiles[findIndex];
       temp.imageId = await getImage(temp.childrenProfileId);
       tempData.push(temp);
+      console.log(tempData);
     }
     setFavouriteChildren(tempData);
   }
@@ -153,10 +157,8 @@ const ChildrenCartPage: React.FC<Props> = () => {
     const res = await favoriteChildrenService.delete(id);
     if (!res.hasErrors) {
       message.success("Remove sucessfully");
-      fetchData();
+
       fetchFavourite();
-      fetchChildrenProfile();
-      fetchChildrenFavourite();
     }
   }
 
