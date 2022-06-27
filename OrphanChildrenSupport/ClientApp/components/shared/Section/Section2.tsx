@@ -1,3 +1,4 @@
+import { ILoginModel } from "@Models/ILoginModel";
 import { Button } from "antd";
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
@@ -5,6 +6,17 @@ import { Link } from "react-router-dom";
 interface Props {}
 
 const Section2: FC<Props> = () => {
+  const [localUser, setLocalUser] = React.useState<ILoginModel>(null);
+  React.useEffect(() => {
+    getLocalUser();
+  }, []);
+
+  function getLocalUser() {
+    var retrievedObject = localStorage.getItem("currentUser");
+    if (retrievedObject) {
+      setLocalUser(JSON.parse(retrievedObject));
+    }
+  }
   return (
     <div
       className="section2"
@@ -20,23 +32,25 @@ const Section2: FC<Props> = () => {
         Join us in helping bring love, hope and safety to all of the children in
         foster care
       </div>
-      <div
-        style={{
-          textAlign: "center",
-          fontSize: "18px",
-        }}
-      >
-        <Button
+      {localUser === null && (
+        <div
           style={{
-            color: "white",
-            background: "#B42121",
-            border: "#B42121",
-            fontWeight: "bold",
+            textAlign: "center",
+            fontSize: "18px",
           }}
         >
-          <Link to={"/register"}> Register Now</Link>
-        </Button>
-      </div>
+          <Button
+            style={{
+              color: "white",
+              background: "#B42121",
+              border: "#B42121",
+              fontWeight: "bold",
+            }}
+          >
+            <Link to={"/register"}> Register Now</Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

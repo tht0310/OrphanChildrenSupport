@@ -112,20 +112,20 @@ const DonationConfirmationModal: React.FC<IProps> = ({
       title: "",
       dataIndex: "title",
       ellipsis: true,
-      width: "30%",
+      width: "28%",
       render: (text, row, index) => {
         return <Tag color={colors[index]}>{text}</Tag>;
       },
     },
     {
       title: "",
-      width: "48%",
+      width: "52%",
       render: (text, row, index) => (
         <>
           {row.title === "Money" ? (
             <InputNumber
               required
-              style={{ width: "85%", fontSize: "12px" }}
+              style={{ width: "100%", fontSize: "12px" }}
               placeholder="Input money "
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -138,7 +138,7 @@ const DonationConfirmationModal: React.FC<IProps> = ({
                 onChange("note", index, e.target.value);
               }}
               placeholder="Input detail"
-              style={{ fontSize: "12px", width: "85%" }}
+              style={{ fontSize: "12px", width: "100%" }}
             />
           )}
         </>
@@ -180,20 +180,6 @@ const DonationConfirmationModal: React.FC<IProps> = ({
     }
   }
 
-  function convertPublicAddressToString(address: string) {
-    let tempAddress = [];
-    let result = "";
-    if (address) {
-      tempAddress = address.split("-");
-      tempAddress.reverse();
-      tempAddress.map((v) => {
-        result += v + " ";
-      });
-    }
-
-    return result;
-  }
-
   function onSubmit() {
     form.submit();
   }
@@ -221,7 +207,6 @@ const DonationConfirmationModal: React.FC<IProps> = ({
           >
             <Card size="small" title="Detail" style={{ boxShadow: "none" }}>
               <Table
-                scroll={{ x: 600 }}
                 columns={requestColumns}
                 dataSource={supportCategories}
                 pagination={false}

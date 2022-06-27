@@ -128,7 +128,7 @@ export abstract class ServiceBase {
         showErrors(...result.errors);
       }
     } catch (error) {
-      console.log(error)
+     
       result = new Result<T>(null, "Lỗi truy xuất");
     }
     return result;

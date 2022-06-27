@@ -198,22 +198,10 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       message.error("An error occured during reject");
     }
   }
-  function convertPublicAddressToString(address: string) {
-    let tempAddress = [];
-    let result = "";
-    if (address) {
-      tempAddress = address.split("-");
-      tempAddress.reverse();
-      tempAddress.map((v) => {
-        result += v + " ";
-      });
-    }
-
-    return result;
-  }
 
   function getCurrentValue(fieldId: number) {
     let name = lowercaseFirstLetter(findNamebyId(fieldId));
+
     if (name === "dOB") {
       name = "dob";
     }
@@ -243,18 +231,19 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   }
 
   function getRequestValue(fieldId: number, text: any) {
-    const name = findNamebyId(fieldId);
+    let name = lowercaseFirstLetter(findNamebyId(fieldId));
 
-    if (name === "DOB") {
+    if (name === "dOB") {
+      name = "dob";
+    }
+
+    if (name === "dob") {
       text = displayDate(text);
     }
-    if (name === "Gender") {
+    if (name === "gender") {
       text = text === "0" ? "Boy" : "Girl";
     }
-    if (name === "DetailAddress") {
-      text = convertPublicAddressToString(text);
-    }
-    if (name === "Circumstance") {
+    if (name === "circumstance") {
       return (
         <div className="text-editor-read-only">
           <Tooltip
@@ -327,9 +316,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       width: "30%",
       render: (text: string, row: IReportDetailModel) => (
         <>
-          {row.status !== 1 && (
-            <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
-          )}
+          <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
         </>
       ),
     },
@@ -402,26 +389,6 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       ),
     },
   ];
-
-  function onSubmit() {
-    form.submit();
-  }
-
-  async function handleOnSubmit(value) {
-    onUpdateStatus(value.status);
-  }
-
-  async function onUpdateStatus(value) {
-    const tempValue = report;
-    tempValue.status = value;
-    const res = await reportService.update(tempValue);
-    if (!res.hasErrors) {
-      message.success("Update donation status successfully");
-      fetchReport();
-    } else {
-      message.error("An error occured during update");
-    }
-  }
 
   return (
     <div className="table-container">

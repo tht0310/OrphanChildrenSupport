@@ -36,7 +36,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
   const [supportCategories, setSupportCategories] = React.useState<
     ISupportCategoryModel[]
   >([]);
-  const [filterValue, setFilterValue] = React.useState<string>();
+  const [filterValue, setFilterValue] = React.useState<string>("");
   const [isSupportCategoriesModal, setSupportCategoriesModal] =
     React.useState<boolean>(false);
   const [modelForEdit, setmodelForEdit] =
@@ -161,6 +161,7 @@ const SupportCategoryPage: React.FC<Props> = () => {
 
   async function onSearch() {
     const value: IFilterType = { [filterBy]: filterValue };
+    console.log(value);
     const res = await supportCategoriesService.search(value);
     if (!res.hasErrors) {
       setSupportCategories(res.value.items);

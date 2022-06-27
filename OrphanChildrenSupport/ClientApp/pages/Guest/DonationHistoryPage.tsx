@@ -98,6 +98,38 @@ const DonationHistoryPage: React.FC<Props> = () => {
     }
   }
 
+  function onSearch(value) {
+    const temp = [];
+    for (let index = 0; index < donation.length; index++) {
+      if (value.fullName && value.status) {
+        console.log(value);
+        if (
+          value.fullName.includes(donation[index].childrenProfile.fullName) &&
+          donation[index].status == value.status
+        ) {
+          temp.push(donation[index]);
+        }
+      } else {
+        if (value.fullName) {
+          if (
+            value.fullName.includes(donation[index].childrenProfile.fullName)
+          ) {
+            console.log("Sasas");
+            temp.push(donation[index]);
+          }
+        } else {
+          if (value.status) {
+            if (donation[index].status == value.status) {
+              temp.push(donation[index]);
+            }
+          }
+        }
+      }
+    }
+
+    setDonation(temp);
+  }
+
   async function fetchDonation() {
     const res = await donationService.getAll({ accountId: currentUser?.id });
     if (!res.hasErrors) {
@@ -129,7 +161,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
           }}
         >
           <Col span={24}>
-            <Form form={form}>
+            <Form form={form} onFinish={onSearch}>
               <Row>
                 <Col xs={22} lg={15} style={{ paddingRight: "15px" }}>
                   <Form.Item name="fullName">
@@ -155,6 +187,7 @@ const DonationHistoryPage: React.FC<Props> = () => {
                 </Col>
                 <Col span={1} xs={22} lg={1} style={{ paddingLeft: "11px" }}>
                   <Button
+                    onClick={form.submit}
                     style={{
                       fontSize: "14px",
                       background: "#e57905",

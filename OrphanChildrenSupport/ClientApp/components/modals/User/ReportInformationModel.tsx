@@ -38,7 +38,10 @@ import { IReportDetailModel, IReportModel } from "@Models/IReportModel";
 import { displayDate } from "@Services/FormatDateTimeService";
 import TextEditor from "@Components/shared/TextEditor";
 import { getStatus, getTagColor } from "@Services/FormatStatusService";
-import { options } from "@Components/shared/ReportFieldOptions";
+import {
+  lowercaseFirstLetter,
+  options,
+} from "@Components/shared/ReportFieldOptions";
 
 export interface IProps {
   visible?: boolean;
@@ -135,18 +138,19 @@ const ReportInformationModal: React.FC<IProps> = ({
   }
 
   function getRequestValue(fieldId: number, text: any) {
-    const name = findNamebyId(fieldId);
+    let name = lowercaseFirstLetter(findNamebyId(fieldId));
 
-    if (name === "DOB") {
+    if (name === "dOB") {
+      name = "dob";
+    }
+
+    if (name === "dob") {
       text = displayDate(text);
     }
-    if (name === "Gender") {
+    if (name === "gender") {
       text = text === "0" ? "Boy" : "Girl";
     }
-    if (name === "DetailAddress") {
-      text = convertPublicAddressToString(text);
-    }
-    if (name === "Circumstance") {
+    if (name === "circumstance") {
       return (
         <div className="text-editor-read-only">
           <Tooltip
@@ -200,9 +204,7 @@ const ReportInformationModal: React.FC<IProps> = ({
       width: "30%",
       render: (text: string, row: IReportDetailModel) => (
         <>
-          {row.status !== 1 && (
-            <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
-          )}
+          <div>{getRequestValue(row.reportFieldCategoryId, text)}</div>
         </>
       ),
     },

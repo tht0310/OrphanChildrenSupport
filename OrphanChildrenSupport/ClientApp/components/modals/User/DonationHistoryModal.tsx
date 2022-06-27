@@ -157,19 +157,6 @@ const DonationHistoryModal: React.FC<IProps> = ({
     },
   ];
 
-  function convertPublicAddressToString(address: string) {
-    let tempAddress = [];
-    let result = "";
-    if (address) {
-      tempAddress = address.split("-");
-      tempAddress.reverse();
-      tempAddress.map((v) => {
-        result += v + " ";
-      });
-    }
-
-    return result;
-  }
   const customDot = (dot, { status, index }) => <Popover>{dot}</Popover>;
 
   return (
