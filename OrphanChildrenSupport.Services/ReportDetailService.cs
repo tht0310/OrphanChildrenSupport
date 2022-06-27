@@ -241,7 +241,7 @@ namespace OrphanChildrenSupport.Services
                 {
                     var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id,
                                         include: source => source.Include(d => d.Report).ThenInclude(a => a.Account).Include(d => d.ReportFieldCategory));
-                    reportDetail.Status = ReportDetailStatus.Approved;
+                    reportDetail.Status = ReportDetailStatus.Finished;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
 
                     var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == reportDetail.Report.ChildrenProfileId);
@@ -276,8 +276,6 @@ namespace OrphanChildrenSupport.Services
                     }
                     unitOfWork.ChildrenProfileRepository.Update(childrenProfile);
                     await unitOfWork.SaveChanges();
-                    reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id,
-                                        include: source => source.Include(d => d.Report).ThenInclude(a => a.Account).Include(d => d.ReportFieldCategory));
                     apiResponse.Data = _mapper.Map<ReportDetail, ReportDetailResource>(reportDetail);
                     _logger.LogDebug($"{loggerHeader} - ApproveReportDetail successfully with Id: {apiResponse.Data.Id}");
 
@@ -321,7 +319,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
+                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                        include: source => source.Include(d => d.Report));
                     reportDetail.Status = ReportDetailStatus.Rejected;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
                     await unitOfWork.SaveChanges();
@@ -369,7 +368,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == id);
+                    var reportDetail = await unitOfWork.ReportDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                        include: source => source.Include(d => d.Report));
                     reportDetail.Status = ReportDetailStatus.Cancelled;
                     unitOfWork.ReportDetailRepository.Update(reportDetail);
                     await unitOfWork.SaveChanges();

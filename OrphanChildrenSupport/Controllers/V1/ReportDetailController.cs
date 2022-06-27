@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/reportDetails")]//required for default versioning
-    [Route("api/v{version:apiVersion}/reportDetails")]
+    //[Route("api/v{version:apiVersion}/reportDetails")]
     [ApiController]
     public class ReportDetailController : Controller
     {

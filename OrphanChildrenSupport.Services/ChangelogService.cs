@@ -11,6 +11,7 @@ using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -203,7 +204,7 @@ namespace OrphanChildrenSupport.Services
 
                     var query = await unitOfWork.ChangelogRepository.FindAll(predicate: d => d.IsDeleted == false,
                                                                         include: null,
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<Changelog>, QueryResultResource<ChangelogResource>>(query);

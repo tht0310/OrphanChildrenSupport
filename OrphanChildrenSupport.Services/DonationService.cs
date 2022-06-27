@@ -201,6 +201,12 @@ namespace OrphanChildrenSupport.Services
                 {
                     var donation = await unitOfWork.DonationRepository.FindFirst(predicate: d => d.Id == id,
                                                                         include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)));
+                    if (IsFinished(donation))
+                    {
+                        donation.Status = DonationStatus.Finished;
+                        unitOfWork.DonationRepository.Update(donation);
+                    }
+                    await unitOfWork.SaveChanges();
                     apiResponse.Data = _mapper.Map<Donation, DonationResource>(donation);
                     _logger.LogDebug($"{loggerHeader} - GetDonation successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -235,9 +241,18 @@ namespace OrphanChildrenSupport.Services
                                                                             && (!queryObj.DonationStatus.HasValue || d.Status == queryObj.DonationStatus)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.DonationDetails.Where(c => !c.IsDeleted)),
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
+                    foreach (var donation in query.Items)
+                    {
+                        if (IsFinished(donation))
+                        {
+                            donation.Status = DonationStatus.Finished;
+                            unitOfWork.DonationRepository.Update(donation);
+                        }
+                        await unitOfWork.SaveChanges();
+                    }
                     apiResponse.Data = _mapper.Map<QueryResult<Donation>, QueryResultResource<DonationResource>>(query);
                     _logger.LogDebug($"{loggerHeader} - Get Donations successfully");
                 }
@@ -455,8 +470,8 @@ namespace OrphanChildrenSupport.Services
                         statistics.Add(cancelled);
 
                         var approved = new StatusStatistics();
-                        var approvedDonations = donations.Where(d => d.Status == DonationStatus.Approved).ToList(); ;
-                        approved.Status = DonationStatus.Approved.ToString();
+                        var approvedDonations = donations.Where(d => d.Status == DonationStatus.Finished).ToList(); ;
+                        approved.Status = DonationStatus.Finished.ToString();
                         approved.Percentage = (approvedDonations != null && approvedDonations.Count() > 0) ? Math.Round((double)approvedDonations.Count() / donations.Count, 2) * 100 : 0;
                         statistics.Add(approved);
 
@@ -482,6 +497,32 @@ namespace OrphanChildrenSupport.Services
                 }
             }
             return apiResponse;
+        }
+
+        public bool IsFinished(Donation donation)
+        {
+            if (donation.Status == DonationStatus.Finished)
+            {
+                return true;
+            }
+            else if (donation.Status == DonationStatus.Rejected
+                || donation.Status == DonationStatus.Cancelled
+                || donation.Status == DonationStatus.WaitingForApproval)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var donationDetail in donation.DonationDetails)
+                {
+                    if (donationDetail.Status == DonationDetailStatus.WaitingForApproval
+                        || donationDetail.Status == DonationDetailStatus.Processing)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

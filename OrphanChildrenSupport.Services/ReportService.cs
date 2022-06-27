@@ -200,6 +200,12 @@ namespace OrphanChildrenSupport.Services
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
+                    if (IsFinished(report))
+                    {
+                        report.Status = ReportStatus.Finished;
+                        unitOfWork.ReportRepository.Update(report);
+                    }
+                    await unitOfWork.SaveChanges();
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - GetReport successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -233,9 +239,18 @@ namespace OrphanChildrenSupport.Services
                                                                             && (!queryObj.ReportStatus.HasValue || d.Status == queryObj.ReportStatus)
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.ChildrenProfile.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)),
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
+                    foreach (var report in query.Items)
+                    {
+                        if (IsFinished(report))
+                        {
+                            report.Status = ReportStatus.Finished;
+                            unitOfWork.ReportRepository.Update(report);
+                        }
+                        await unitOfWork.SaveChanges();
+                    }
                     apiResponse.Data = _mapper.Map<QueryResult<Report>, QueryResultResource<ReportResource>>(query);
                     _logger.LogDebug($"{loggerHeader} - GetReports successfully");
                 }
@@ -454,8 +469,8 @@ namespace OrphanChildrenSupport.Services
                         statistics.Add(cancelled);
 
                         var approved = new StatusStatistics();
-                        var approvedReports = reports.Where(d => d.Status == ReportStatus.Approved).ToList();
-                        approved.Status = ReportStatus.Approved.ToString();
+                        var approvedReports = reports.Where(d => d.Status == ReportStatus.Finished).ToList();
+                        approved.Status = ReportStatus.Finished.ToString();
                         approved.Percentage = (approvedReports != null && approvedReports.Count() > 0) ? Math.Round((double)approvedReports.Count() / reports.Count, 2) * 100 : 0;
                         statistics.Add(approved);
 
@@ -481,6 +496,32 @@ namespace OrphanChildrenSupport.Services
                 }
             }
             return apiResponse;
+        }
+
+        public bool IsFinished(Report report)
+        {
+            if (report.Status == ReportStatus.Finished)
+            {
+                return true;
+            }
+            else if (report.Status == ReportStatus.Rejected
+                || report.Status == ReportStatus.Cancelled
+                || report.Status == ReportStatus.WaitingForApproval)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var reportDetail in report.ReportDetails)
+                {
+                    if (reportDetail.Status == ReportDetailStatus.WaitingForApproval
+                        || reportDetail.Status == ReportDetailStatus.Processing)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

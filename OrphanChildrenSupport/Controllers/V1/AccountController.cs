@@ -13,7 +13,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/accounts")]
-    [Route("api/v{version:apiVersion}/accounts")]
+    ////[Route("api/v{version:apiVersion}/accounts")]
     [ApiController]
     public class AccountController : ControllerBase
     {

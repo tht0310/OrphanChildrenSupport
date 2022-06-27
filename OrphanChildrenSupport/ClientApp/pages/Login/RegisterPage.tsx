@@ -277,6 +277,7 @@ const RegisterPage: React.FC<Props> = () => {
 
         <Form.Item {...tailFormItemLayout}>
           <Button
+            className="center"
             style={{
               marginLeft: "15px",
               backgroundColor: "#88181b",

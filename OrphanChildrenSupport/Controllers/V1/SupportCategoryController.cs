@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/supportCategories")]//required for default versioning
-    [Route("api/v{version:apiVersion}/supportCategories")]
+    //[Route("api/v{version:apiVersion}/supportCategories")]
     [ApiController]
     public class SupportCategoryController : Controller
     {

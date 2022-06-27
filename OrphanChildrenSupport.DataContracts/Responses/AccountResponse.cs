@@ -17,5 +17,8 @@ namespace OrphanChildrenSupport.DataContracts.Responses
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
         public ICollection<Favorite> Favorites { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<Donation> Donations { get; set; }
+        public ICollection<Report> Reports { get; set; }
     }
 }

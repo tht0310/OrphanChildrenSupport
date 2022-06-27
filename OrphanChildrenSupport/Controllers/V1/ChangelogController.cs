@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/changelogs")]//required for default versioning
-    [Route("api/v{version:apiVersion}/changelogs")]
+    //[Route("api/v{version:apiVersion}/changelogs")]
     [ApiController]
     public class ChangelogController : Controller
     {

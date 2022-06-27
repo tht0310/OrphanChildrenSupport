@@ -69,7 +69,11 @@ namespace OrphanChildrenSupport.Services
                         account.IsActive = true;
                         await unitOfWork.AccountRepository.Add(account);
                         await unitOfWork.SaveChanges();
-                        account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                        account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                         apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                         _logger.LogDebug($"{loggerHeader} - CreateAccount successfully with Id: {account.Id}");
 
@@ -116,7 +120,11 @@ namespace OrphanChildrenSupport.Services
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
-                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - UpdateAccount successfully with Id: {account.Id}");
 
@@ -158,7 +166,11 @@ namespace OrphanChildrenSupport.Services
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
-                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - UpdateRole successfully with Id: {account.Id}");
 
@@ -200,7 +212,11 @@ namespace OrphanChildrenSupport.Services
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
-                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - DeactivateAccount successfully with Id: {account.Id}");
 
@@ -242,7 +258,11 @@ namespace OrphanChildrenSupport.Services
                     account.LastModified = DateTime.UtcNow;
                     unitOfWork.AccountRepository.Update(account);
                     await unitOfWork.SaveChanges();
-                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id);
+                    account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == account.Id,
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - ActivateAccount successfully with Id: {account.Id}");
 
@@ -326,7 +346,10 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var account = await unitOfWork.AccountRepository.FindFirst(predicate: d => d.Id == id,
-                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted)));
+                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Account, AccountResponse>(account);
                     _logger.LogDebug($"{loggerHeader} - GetAccount successfully with Id: {apiResponse.Data.Id}");
                 }
@@ -362,8 +385,11 @@ namespace OrphanChildrenSupport.Services
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))
                                                                             && ((String.IsNullOrEmpty(queryObj.Email)) || EF.Functions.Like(d.Email, $"%{queryObj.Email}%")))
                                                                             && (!queryObj.IsActive.HasValue || d.IsActive == queryObj.IsActive),
-                                                                        include: null,
-                                                                        orderBy: null,
+                                                                        include: source => source.Include(d => d.Favorites.Where(c => !c.IsDeleted))
+                                                                                                .Include(d => d.Notifications.Where(c => !c.IsDeleted))
+                                                                                                .Include(d => d.Reports.Where(c => !c.IsDeleted))
+                                                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted)),
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<Account>, QueryResultResource<AccountResponse>>(query);
