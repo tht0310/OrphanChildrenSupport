@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/childrenProfileSupportCategories")]//required for default versioning
-    [Route("api/v{version:apiVersion}/childrenProfileSupportCategories")]
+    //[Route("api/v{version:apiVersion}/childrenProfileSupportCategories")]
     [ApiController]
     public class ChildrenProfileSupportCategoryController : Controller
     {

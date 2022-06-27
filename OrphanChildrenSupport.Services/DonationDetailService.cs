@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -243,10 +244,12 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
-                    donationDetail.Status = DonationDetailStatus.Approved;
+                    donationDetail.Status = DonationDetailStatus.Finished;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
-                    donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
+                    donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id,
+                        include: source => source.Include(d => d.Donation));
+                    
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
                     _logger.LogDebug($"{loggerHeader} - FinishDonationDetail successfully with Id: {apiResponse.Data.Id}");
 
@@ -281,6 +284,54 @@ namespace OrphanChildrenSupport.Services
             return apiResponse;
         }
 
+        public async Task<ApiResponse<DonationDetailResource>> RejectDonationDetail(long id)
+        {
+            const string loggerHeader = "RejectDonationDetail";
+            var apiResponse = new ApiResponse<DonationDetailResource>();
+            _logger.LogDebug($"{loggerHeader} - Start to RejectDonationDetail with Id: {id}");
+            using (var unitOfWork = new UnitOfWork(_connectionString))
+            {
+                try
+                {
+                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                        include: source => source.Include(d => d.Donation));
+                    donationDetail.Status = DonationDetailStatus.Rejected;
+                    unitOfWork.DonationDetailRepository.Update(donationDetail);
+                    await unitOfWork.SaveChanges();
+                    apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
+                    _logger.LogDebug($"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}");
+
+                    var changelogResource = new ChangelogResource();
+                    changelogResource.Service = "DonationDetail";
+                    changelogResource.API = $"{loggerHeader} - RejectDonationDetail successfully with Id: {apiResponse.Data.Id}";
+                    changelogResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    changelogResource.CreatedTime = DateTime.UtcNow;
+                    changelogResource.IsDeleted = false;
+                    await _changelogService.CreateChangelog(changelogResource);
+
+                    var notificationResource = new NotificationResource();
+                    notificationResource.AccountId = donationDetail.Donation.AccountId;
+                    notificationResource.Content = $"{loggerHeader} - RejectDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    notificationResource.CreatedTime = DateTime.UtcNow;
+                    notificationResource.IsDeleted = false;
+                    await _notificationService.CreateNotification(notificationResource);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"{loggerHeader} have error: {ex.Message}");
+                    apiResponse.IsError = true;
+                    apiResponse.Message = ex.Message;
+                    await unitOfWork.SaveErrorLog(ex);
+                }
+                finally
+                {
+                    unitOfWork.Dispose();
+                }
+            }
+            return apiResponse;
+        }
+
         public async Task<ApiResponse<DonationDetailResource>> CancelDonationDetail(long id)
         {
             const string loggerHeader = "CancelDonationDetail";
@@ -290,11 +341,11 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
+                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                        include: source => source.Include(d => d.Donation));
                     donationDetail.Status = DonationDetailStatus.Cancelled;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
-                    donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id);
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
                     _logger.LogDebug($"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}");
 
@@ -305,6 +356,14 @@ namespace OrphanChildrenSupport.Services
                     changelogResource.CreatedTime = DateTime.UtcNow;
                     changelogResource.IsDeleted = false;
                     await _changelogService.CreateChangelog(changelogResource);
+
+                    var notificationResource = new NotificationResource();
+                    notificationResource.AccountId = donationDetail.Donation.AccountId;
+                    notificationResource.Content = $"{loggerHeader} - CancelDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
+                    notificationResource.CreatedTime = DateTime.UtcNow;
+                    notificationResource.IsDeleted = false;
+                    await _notificationService.CreateNotification(notificationResource);
                 }
                 catch (Exception ex)
                 {

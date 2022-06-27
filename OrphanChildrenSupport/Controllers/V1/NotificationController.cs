@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/notifications")]//required for default versioning
-    [Route("api/v{version:apiVersion}/notifications")]
+    //[Route("api/v{version:apiVersion}/notifications")]
     [ApiController]
     public class NotificationController : Controller
     {

@@ -8,8 +8,8 @@ namespace OrphanChildrenSupport.Services.Models.DBSets
         WaitingForApproval,
         [Description("Processing")]
         Processing,
-        [Description("Approved")]
-        Approved,
+        [Description("Finished")]
+        Finished,
         [Description("Rejected")]
         Rejected,
         [Description("Cancelled")]

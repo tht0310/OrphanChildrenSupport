@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/donations")]//required for default versioning
-    [Route("api/v{version:apiVersion}/donations")]
+    //[Route("api/v{version:apiVersion}/donations")]
     [ApiController]
     public class DonationController : Controller
     {

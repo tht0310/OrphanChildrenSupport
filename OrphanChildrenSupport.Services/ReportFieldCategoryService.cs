@@ -212,9 +212,10 @@ namespace OrphanChildrenSupport.Services
 
                 try
                 {
-                    var query = await unitOfWork.ReportFieldCategoryRepository.FindAll(predicate: d => d.IsDeleted == false,
+                    var query = await unitOfWork.ReportFieldCategoryRepository.FindAll(predicate: d => d.IsDeleted == false
+                                                                                        && ((String.IsNullOrEmpty(queryObj.Title)) || (EF.Functions.Like(d.Title, $"%{queryObj.Title}%"))),
                                                                         include: null,
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<ReportFieldCategory>, QueryResultResource<ReportFieldCategoryResource>>(query);

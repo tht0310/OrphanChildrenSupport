@@ -9,7 +9,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/childrenProfileImages")]//required for default versioning
-    [Route("api/v{version:apiVersion}/childrenProfileImages")]
+    //[Route("api/v{version:apiVersion}/childrenProfileImages")]
     [ApiController]
     public class ChildrenProfileImageController : Controller
     {

@@ -9,7 +9,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/donationDetails")]//required for default versioning
-    [Route("api/v{version:apiVersion}/donationDetails")]
+    //[Route("api/v{version:apiVersion}/donationDetails")]
     [ApiController]
     public class DonationDetailController : Controller
     {
@@ -75,6 +75,14 @@ namespace OrphanChildrenSupport.Controllers.V1
         public async Task<IActionResult> Finish(long id)
         {
             var apiResponse = await _donationDetailService.FinishDonationDetail(id);
+            return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
+        }
+
+        [HttpPut]
+        [Route("rejetc/{id}")]
+        public async Task<IActionResult> Reject(long id)
+        {
+            var apiResponse = await _donationDetailService.RejectDonationDetail(id);
             return apiResponse.IsError ? BadRequest(apiResponse.Message) : Ok(apiResponse.Data);
         }
 

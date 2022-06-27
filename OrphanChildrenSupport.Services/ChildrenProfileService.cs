@@ -54,7 +54,9 @@ namespace OrphanChildrenSupport.Services
                     await unitOfWork.SaveChanges();
                     childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == childrenProfile.Id,
                                         include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted))
-                                                                .ThenInclude(c => c.SupportCategory));
+                                                                .ThenInclude(c => c.SupportCategory)
+                                                                .Include(d => d.Donations.Where(c => !c.IsDeleted))
+                                                                .ThenInclude(c => c.DonationDetails));
                     apiResponse.Data = _mapper.Map<ChildrenProfile, ChildrenProfileResource>(childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - CreateChildrenProfile successfully with Id: {childrenProfile.Id}");
 
@@ -89,9 +91,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id,
-                                            include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted))
-                                                                    .ThenInclude(c => c.SupportCategory));
+                    var childrenProfile = await unitOfWork.ChildrenProfileRepository.FindFirst(predicate: d => d.Id == id);
                     childrenProfile = _mapper.Map<ChildrenProfileResource, ChildrenProfile>(childrenProfileResource, childrenProfile);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateChildrenProfile: {JsonConvert.SerializeObject(childrenProfile)}");
                     await unitOfWork.DeleteChildrenProfileSupportCategories(childrenProfile.Id);
@@ -227,7 +227,7 @@ namespace OrphanChildrenSupport.Services
                                                                             && (!queryObj.SupportCategoryId.HasValue || d.ChildrenProfileSupportCategories.Any(s => s.SupportCategoryId == queryObj.SupportCategoryId && !s.IsDeleted))
                                                                             && ((String.IsNullOrEmpty(queryObj.FullName)) || (EF.Functions.Like(d.FullName, $"%{queryObj.FullName}%"))),
                                                                         include: source => source.Include(d => d.ChildrenProfileSupportCategories.Where(c => !c.IsDeleted)).ThenInclude(c => c.SupportCategory),
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<ChildrenProfile>, QueryResultResource<ChildrenProfileResponse>>(query);

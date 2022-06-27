@@ -8,7 +8,7 @@ namespace OrphanChildrenSupport.Controllers.V1
 {
     [ApiVersion("1.0")]
     [Route("api/favorites")]//required for default versioning
-    [Route("api/v{version:apiVersion}/favorites")]
+    //[Route("api/v{version:apiVersion}/favorites")]
     [ApiController]
     public class FavoriteController : Controller
     {
