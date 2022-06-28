@@ -119,18 +119,6 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     return index;
   }
 
-  async function onUpdateStatus(value) {
-    const tempValue = donation;
-    tempValue.status = value;
-    const res = await donationService.update(tempValue);
-    if (!res.hasErrors) {
-      message.success("Update donation status successfully");
-      fetchDonation();
-    } else {
-      message.error("An error occured during update");
-    }
-  }
-
   const customDot: StepsProps["progressDot"] = (dot, { status, index }) => (
     <Popover
       content={
@@ -199,6 +187,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   async function onRejectDonationDetail(id) {
     const res = await donationDetailService.rejectDonationDetail(id);
+
     if (!res.hasErrors) {
       fetchDonation();
       message.success("Reject donation sucessfully");
@@ -273,7 +262,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       key: "",
       render: (text, row: IDonationDetailModel) => (
         <>
-          {donation?.status !== 0 && donation?.status !== 2 && (
+          {row.status === 1 && (
             <Space className="actions">
               <Popconfirm
                 title="Are you sure？"
@@ -493,7 +482,7 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         <Row>
           <Col span={24}>
             <Space style={{ marginTop: "8px", float: "right" }}>
-              {donation?.status !== 1 && donation?.status !== 2 && (
+              {donation?.status === 0 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -517,8 +506,31 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   </span>
                 </>
               )}
+              {donation?.status === 0 && (
+                <>
+                  <span style={{ paddingRight: "8px" }}>
+                    <Popconfirm
+                      title="Are you sure？"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => onRejectDonation(donation?.id)}
+                    >
+                      <Button
+                        style={{
+                          width: "100%",
+                          border: "1px solid #e55353",
+                          color: "white",
+                          background: "#e55353",
+                        }}
+                      >
+                        Reject
+                      </Button>
+                    </Popconfirm>
+                  </span>
+                </>
+              )}
 
-              {donation?.status !== 2 && (
+              {donation?.status !== 2 && donation?.status !== 4 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -537,25 +549,6 @@ const DonationDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                         }}
                       >
                         Cancel
-                      </Button>
-                    </Popconfirm>
-                  </span>
-                  <span style={{ paddingRight: "8px" }}>
-                    <Popconfirm
-                      title="Are you sure？"
-                      okText="Yes"
-                      cancelText="No"
-                      onConfirm={() => onRejectDonation(donation?.id)}
-                    >
-                      <Button
-                        style={{
-                          width: "100%",
-                          border: "1px solid #e55353",
-                          color: "white",
-                          background: "#e55353",
-                        }}
-                      >
-                        Reject
                       </Button>
                     </Popconfirm>
                   </span>

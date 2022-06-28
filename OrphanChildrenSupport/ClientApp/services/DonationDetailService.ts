@@ -132,7 +132,7 @@ export default class DonationDetailService extends ServiceBase {
 
   public async rejectDonationDetail(id): Promise<Result<{}>> {
     var result = await this.requestJson({
-      url: `/api/donationDetails/reject/${id}`,
+      url: `/api/donationDetails/rejetc/${id}`,
       method: "PUT",
     });
     return result;

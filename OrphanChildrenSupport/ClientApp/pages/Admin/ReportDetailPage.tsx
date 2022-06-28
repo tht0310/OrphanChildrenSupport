@@ -191,6 +191,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
 
   async function onRejectReportDetail(id) {
     const res = await reportDetailService.rejectReportDetail(id);
+    console.log(res);
     if (!res.hasErrors) {
       fetchReport();
       message.success("Reject report sucessfully");
@@ -337,7 +338,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       width: "10%",
       render: (text, row) => (
         <>
-          {report?.status !== 0 && report?.status !== 2 && (
+          {row?.status === 1 && (
             <Space className="actions">
               <Popconfirm
                 title="Are you sure？"
@@ -527,7 +528,7 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
           <Col span={24}>
             {" "}
             <Space style={{ marginTop: "8px", float: "right" }}>
-              {report?.status !== 1 && report?.status !== 2 && (
+              {report?.status === 0 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -551,8 +552,29 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                   </span>
                 </>
               )}
+              {report?.status === 0 && (
+                <span style={{ paddingRight: "8px" }}>
+                  <Popconfirm
+                    title="Are you sure？"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => onRejectReport(report?.id)}
+                  >
+                    <Button
+                      style={{
+                        width: "100%",
+                        border: "1px solid #e55353",
+                        color: "white",
+                        background: "#e55353",
+                      }}
+                    >
+                      Reject
+                    </Button>
+                  </Popconfirm>
+                </span>
+              )}
 
-              {report?.status !== 2 && (
+              {report?.status !== 2 && report?.status !== 4 && (
                 <>
                   <span style={{ paddingRight: "8px" }}>
                     <Popconfirm
@@ -571,25 +593,6 @@ const ReportDetailPage: React.FC<Props> = ({ match, history }: Props) => {
                         }}
                       >
                         Cancel
-                      </Button>
-                    </Popconfirm>
-                  </span>
-                  <span style={{ paddingRight: "8px" }}>
-                    <Popconfirm
-                      title="Are you sure？"
-                      okText="Yes"
-                      cancelText="No"
-                      onConfirm={() => onRejectReport(report?.id)}
-                    >
-                      <Button
-                        style={{
-                          width: "100%",
-                          border: "1px solid #e55353",
-                          color: "white",
-                          background: "#e55353",
-                        }}
-                      >
-                        Reject
                       </Button>
                     </Popconfirm>
                   </span>

@@ -327,10 +327,10 @@ const DonationHistoryModal: React.FC<IProps> = ({
               title="Are you sure？"
               okText="Yes"
               cancelText="No"
+              disabled={data?.status === 0 ? false : true}
               onConfirm={() => onCancelDonation()}
             >
               <Button
-                onClick={onCancelDonation}
                 disabled={data?.status === 0 ? false : true}
                 style={{
                   marginTop: "15px",
