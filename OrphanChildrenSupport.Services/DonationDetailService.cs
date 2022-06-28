@@ -298,7 +298,7 @@ namespace OrphanChildrenSupport.Services
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
-                    _logger.LogDebug($"{loggerHeader} - CancelDonationDetail successfully with Id: {apiResponse.Data.Id}");
+                    _logger.LogDebug($"{loggerHeader} - RejectDonationDetail successfully with Id: {apiResponse.Data.Id}");
 
                     var changelogResource = new ChangelogResource();
                     changelogResource.Service = "DonationDetail";
@@ -340,7 +340,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id,
                         include: source => source.Include(d => d.Donation));
                     donationDetail.Status = DonationDetailStatus.Cancelled;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
