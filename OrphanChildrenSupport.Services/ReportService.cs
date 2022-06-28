@@ -395,7 +395,7 @@ namespace OrphanChildrenSupport.Services
                     var reportDetails = report.ReportDetails;
                     foreach (var reportDetail in reportDetails)
                     {
-                        if (reportDetail.Status != ReportDetailStatus.Finished || reportDetail.Status != ReportDetailStatus.Rejected)
+                        if (reportDetail.Status != ReportDetailStatus.Finished)
                         {
                             reportDetail.Status = ReportDetailStatus.Cancelled;
                             unitOfWork.ReportDetailRepository.Update(reportDetail);
