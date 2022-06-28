@@ -58,7 +58,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [imageData, setImageData] = React.useState<any[]>([]);
   const [isFavourite, setIsFavourite] = React.useState<boolean>(false);
-  const favoriteChildrenService = new FavoriteService();
+  const [tempFavourite, setTempFavourite] = React.useState<IFavoriteModel>();
 
   React.useEffect(() => {
     document.title = "Children - Detail | FOR THE CHILDREN";
@@ -73,6 +73,8 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
       fetchUser(localUser.id);
     }
   }, [localUser]);
+
+  let tempId = null;
 
   React.useEffect(() => {
     if (currentUser !== null) {
@@ -157,20 +159,6 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     setIsChildrenDrawer(!isChildrenDrawer);
   }
 
-  async function favoriteChildren() {
-    const temp: IFavoriteModel = {
-      childrenProfileId: children?.id,
-      accountId: currentUser?.id,
-    };
-    const res = await favoriteService.add(temp);
-    if (!res.hasErrors) {
-      message.success("Add to favorites successfuly");
-      isChildrenFavourite();
-    } else {
-      message.warning("You added this child to favorite list.");
-    }
-  }
-
   async function fetchReport() {
     const dataRes = await reportFieldService.getAll();
     if (!dataRes.hasErrors) {
@@ -200,6 +188,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
         (c) => c.childrenProfileId === children?.id
       );
       if (temp.length > 0) {
+        setTempFavourite(temp[0]);
         setIsFavourite(true);
       } else {
         setIsFavourite(false);
@@ -210,7 +199,7 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
   async function handleFavouriteChildren() {
     if (currentUser !== null) {
       if (!isFavourite) {
-        favoriteChildren();
+        handlefavoriteChildren();
       } else {
         onDelete();
       }
@@ -219,8 +208,24 @@ const ChildrenDetailPage: React.FC<Props> = ({ match, history }: Props) => {
     }
   }
 
+  async function handlefavoriteChildren() {
+    const temp: IFavoriteModel = {
+      childrenProfileId: children?.id,
+      accountId: currentUser?.id,
+    };
+    const res = await favoriteService.add(temp);
+    tempId = res.value.id;
+    setTempFavourite(res.value);
+    if (!res.hasErrors) {
+      message.success("Add to favorites successfuly");
+      isChildrenFavourite();
+    } else {
+      message.warning("You added this child to favorite list.");
+    }
+  }
   async function onDelete() {
-    const res = await favoriteChildrenService.delete(children?.id);
+    const res = await favoriteService.delete(tempFavourite?.id);
+
     if (!res.hasErrors) {
       message.success("Remove sucessfully");
       setIsFavourite(false);

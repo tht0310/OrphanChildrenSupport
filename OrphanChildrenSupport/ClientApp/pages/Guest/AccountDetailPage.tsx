@@ -23,6 +23,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import AccountService from "@Services/AccountService";
+import { IFavoriteModel } from "@Models/IFavoriteModel";
 interface Props {}
 
 const userService = new AccountService();
@@ -41,6 +42,7 @@ const AccountDetailPage: React.FC<Props> = () => {
   const [currentUser, setCurrentUser] = React.useState<IRegisterModel>(null);
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
+
   React.useEffect(() => {
     getLocalUser();
     document.title = "My Account | FOR THE CHILDREN";
