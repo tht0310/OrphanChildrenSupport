@@ -395,8 +395,11 @@ namespace OrphanChildrenSupport.Services
                     var donationDetails = donation.DonationDetails;
                     foreach (var donationDetail in donationDetails)
                     {
-                        donationDetail.Status = DonationDetailStatus.Cancelled;
-                        unitOfWork.DonationDetailRepository.Update(donationDetail);
+                        if(donationDetail.Status != DonationDetailStatus.Finished || donationDetail.Status != DonationDetailStatus.Rejected)
+                        {
+                            donationDetail.Status = DonationDetailStatus.Cancelled;
+                            unitOfWork.DonationDetailRepository.Update(donationDetail);
+                        }
                     }
                     unitOfWork.DonationRepository.Update(donation);
                     await unitOfWork.SaveChanges();

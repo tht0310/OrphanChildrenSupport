@@ -391,12 +391,15 @@ namespace OrphanChildrenSupport.Services
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
                                                                         include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
-                    report.Status = ReportStatus.Rejected;
+                    report.Status = ReportStatus.Cancelled;
                     var reportDetails = report.ReportDetails;
                     foreach (var reportDetail in reportDetails)
                     {
-                        reportDetail.Status = ReportDetailStatus.Rejected;
-                        unitOfWork.ReportDetailRepository.Update(reportDetail);
+                        if (reportDetail.Status != ReportDetailStatus.Finished || reportDetail.Status != ReportDetailStatus.Rejected)
+                        {
+                            reportDetail.Status = ReportDetailStatus.Cancelled;
+                            unitOfWork.ReportDetailRepository.Update(reportDetail);
+                        }
                     }
                     unitOfWork.ReportRepository.Update(report);
                     await unitOfWork.SaveChanges();
