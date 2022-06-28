@@ -54,7 +54,7 @@ namespace OrphanChildrenSupport.Services
                     await unitOfWork.ReportRepository.Add(report);
                     await unitOfWork.SaveChanges();
                     report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == report.Id,
-                                                                        include: null);
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - CreateReport successfully with Id: {report.Id}");
 
@@ -97,7 +97,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
+                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     report = _mapper.Map<ReportResource, Report>(reportResource, report);
                     _logger.LogDebug($"{loggerHeader} - Start to UpdateReport: {JsonConvert.SerializeObject(report)}");
                     await unitOfWork.DeleteReportDetails(report.Id);
@@ -105,8 +106,6 @@ namespace OrphanChildrenSupport.Services
                     report.LastModified = DateTime.UtcNow;
                     unitOfWork.ReportRepository.Update(report);
                     await unitOfWork.SaveChanges();
-                    report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: null);
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - UpdateReport successfully with Id: {report.Id}");
 
@@ -150,7 +149,8 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var report = await unitOfWork.ReportRepository.FindFirst(d => d.Id == id);
+                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     if (removeFromDB)
                     {
                         unitOfWork.ReportRepository.Remove(report);
@@ -199,7 +199,7 @@ namespace OrphanChildrenSupport.Services
                 try
                 {
                     var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                       include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     if (IsFinished(report))
                     {
                         report.Status = ReportStatus.Finished;
@@ -278,9 +278,10 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
+                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     report.Status = ReportStatus.Processing;
-                    var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.ReportId == id && d.IsDeleted == false).ToListAsync();
+                    var reportDetails = report.ReportDetails;
                     foreach (var reportDetail in reportDetails)
                     {
                         reportDetail.Status = ReportDetailStatus.Processing;
@@ -288,8 +289,6 @@ namespace OrphanChildrenSupport.Services
                     }
                     unitOfWork.ReportRepository.Update(report);
                     await unitOfWork.SaveChanges();
-                    report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: null);
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - ApproveReport successfully with Id: {apiResponse.Data.Id}");
 
@@ -303,7 +302,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = report.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - ApproveReport successfully with Id: {report.Id}";
+                    notificationResource.Content = $"Your report RP{report.Id + 10000} was approved";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
@@ -336,9 +335,10 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
+                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     report.Status = ReportStatus.Rejected;
-                    var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
+                    var reportDetails = report.ReportDetails;
                     foreach (var reportDetail in reportDetails)
                     {
                         reportDetail.Status = ReportDetailStatus.Rejected;
@@ -346,8 +346,6 @@ namespace OrphanChildrenSupport.Services
                     }
                     unitOfWork.ReportRepository.Update(report);
                     await unitOfWork.SaveChanges();
-                    report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: null);
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - RejectReport successfully with Id: {apiResponse.Data.Id}");
 
@@ -361,7 +359,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = report.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - RejectReport successfully with Id: {report.Id}";
+                    notificationResource.Content = $"Your report RP{report.Id + 10000} was rejected";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
@@ -391,9 +389,10 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id);
+                    var report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
+                                                                        include: source => source.Include(d => d.ReportDetails.Where(c => !c.IsDeleted)));
                     report.Status = ReportStatus.Rejected;
-                    var reportDetails = await unitOfWork.ReportDetailRepository.FindAll().Where(d => d.Id == id && d.IsDeleted == false).ToListAsync();
+                    var reportDetails = report.ReportDetails;
                     foreach (var reportDetail in reportDetails)
                     {
                         reportDetail.Status = ReportDetailStatus.Rejected;
@@ -401,8 +400,6 @@ namespace OrphanChildrenSupport.Services
                     }
                     unitOfWork.ReportRepository.Update(report);
                     await unitOfWork.SaveChanges();
-                    report = await unitOfWork.ReportRepository.FindFirst(predicate: d => d.Id == id,
-                                                                        include: null);
                     apiResponse.Data = _mapper.Map<Report, ReportResource>(report);
                     _logger.LogDebug($"{loggerHeader} - CancelReport successfully with Id: {apiResponse.Data.Id}");
 
@@ -416,7 +413,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = report.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - CancelReport successfully with Id: {report.Id}";
+                    notificationResource.Content = $"Your report RP{report.Id + 10000} was cancelled";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;

@@ -243,12 +243,11 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id);
+                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id,
+                        include: source => source.Include(d => d.Donation));
                     donationDetail.Status = DonationDetailStatus.Finished;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
                     await unitOfWork.SaveChanges();
-                    donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == donationDetail.Id,
-                        include: source => source.Include(d => d.Donation));
                     
                     apiResponse.Data = _mapper.Map<DonationDetail, DonationDetailResource>(donationDetail);
                     _logger.LogDebug($"{loggerHeader} - FinishDonationDetail successfully with Id: {apiResponse.Data.Id}");
@@ -263,7 +262,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = donationDetail.Donation.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - FinishDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.Content = $"Your report detail of DN{donationDetail.DonationId + 10000} was finished";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
@@ -293,7 +292,7 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == d.Id,
+                    var donationDetail = await unitOfWork.DonationDetailRepository.FindFirst(predicate: d => d.Id == id,
                         include: source => source.Include(d => d.Donation));
                     donationDetail.Status = DonationDetailStatus.Rejected;
                     unitOfWork.DonationDetailRepository.Update(donationDetail);
@@ -311,7 +310,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = donationDetail.Donation.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - RejectDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.Content = $"Your report detail of DN{donationDetail.DonationId + 10000} was rejected";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
@@ -359,7 +358,7 @@ namespace OrphanChildrenSupport.Services
 
                     var notificationResource = new NotificationResource();
                     notificationResource.AccountId = donationDetail.Donation.AccountId;
-                    notificationResource.Content = $"{loggerHeader} - CancelDonationDetail successfully with Id: {donationDetail.Id}";
+                    notificationResource.Content = $"Your report detail of DN{donationDetail.DonationId + 10000} was cancelled";
                     notificationResource.CreatedBy = _httpContextHelper.GetCurrentAccountEmail();
                     notificationResource.CreatedTime = DateTime.UtcNow;
                     notificationResource.IsDeleted = false;
