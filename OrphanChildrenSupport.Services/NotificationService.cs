@@ -10,6 +10,7 @@ using OrphanChildrenSupport.Services.Contracts;
 using OrphanChildrenSupport.Services.Models.DBSets;
 using OrphanChildrenSupport.Tools.HttpContextExtensions;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OrphanChildrenSupport.Services
@@ -200,9 +201,10 @@ namespace OrphanChildrenSupport.Services
             {
                 try
                 {
-                    var query = await unitOfWork.NotificationRepository.FindAll(predicate: d => d.IsDeleted == false,
+                    var query = await unitOfWork.NotificationRepository.FindAll(predicate: d => d.IsDeleted == false
+                                                                            && (!queryObj.AccountId.HasValue || d.AccountId == queryObj.AccountId),
                                                                         include: null,
-                                                                        orderBy: null,
+                                                                        orderBy: source => source.OrderByDescending(d => d.CreatedTime),
                                                                         disableTracking: true,
                                                                         pagingSpecification: pagingSpecification);
                     apiResponse.Data = _mapper.Map<QueryResult<Notification>, QueryResultResource<NotificationResource>>(query);
