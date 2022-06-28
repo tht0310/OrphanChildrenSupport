@@ -8,13 +8,13 @@ export const getStatus = (id: number) => {
       name = "Processing";
       break;
     case 2:
-      name = "Finish";
+      name = "Finished";
       break;
     case 3:
-      name = "Cancelled";
+      name = "Rejected";
       break;
     case 4:
-      name = "Rejected";
+      name = "Cancelled";
       break;
   }
   return name;

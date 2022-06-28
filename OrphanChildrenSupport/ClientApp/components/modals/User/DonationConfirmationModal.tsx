@@ -193,8 +193,8 @@ const DonationConfirmationModal: React.FC<IProps> = ({
       width={1000}
       title={"Donation Confimation"}
       className="childrenConfirmation--model"
-      style={{ top: 30, height: "280px" }}
-      bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 130px)" }}
+      style={{ top: 20, height: "280px" }}
+      bodyStyle={{ overflowY: "scroll", height: "calc(100vh - 110px)" }}
     >
       <Row>
         <Col span={17} lg={17} xs={24} style={{ paddingRight: "15px" }}>
