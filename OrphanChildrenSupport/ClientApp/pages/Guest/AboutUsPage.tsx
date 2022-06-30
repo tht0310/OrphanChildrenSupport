@@ -61,7 +61,7 @@ const AboutUsPage: React.FC<Props> = () => {
                     <Counter start={100} end={400} delay={5} />
                   </span>
                   <h5 className="text-uppercase mt-2">
-                    Children are supported
+                    Children will be supported
                   </h5>
                 </div>
               </div>
@@ -75,7 +75,7 @@ const AboutUsPage: React.FC<Props> = () => {
                   </span>
                   <h5 className="text-uppercase mt-2">
                     {" "}
-                    Children got happiness
+                    Children will get happiness
                   </h5>
                 </div>
               </div>
@@ -87,7 +87,9 @@ const AboutUsPage: React.FC<Props> = () => {
                   <span className="counter text-dark font-weight-normal">
                     <Counter start={100} end={40} delay={8} />
                   </span>
-                  <h5 className="text-uppercase mt-2">Children are adopted</h5>
+                  <h5 className="text-uppercase mt-2">
+                    Children will be adopted
+                  </h5>
                 </div>
               </div>
             </Row>

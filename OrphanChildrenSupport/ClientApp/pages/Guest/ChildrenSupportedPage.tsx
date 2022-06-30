@@ -69,6 +69,7 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
 
   async function fetchChildrenProfile(filterParams) {
     setIsLoading(true);
+
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;
@@ -98,17 +99,6 @@ const ChildrenSupportedPage: React.FC<Props> = () => {
     } else {
       return -1;
     }
-  }
-
-  function convertAddressToString(address: string) {
-    const tempAddress = address.split("-");
-    let result = "";
-    tempAddress.reverse();
-    tempAddress.map((v) => {
-      result += v + " ";
-    });
-
-    return result;
   }
 
   async function onResetField() {

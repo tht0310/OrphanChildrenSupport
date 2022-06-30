@@ -74,25 +74,25 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
 
   async function fetchChildrenProfile(filterParams) {
     setIsLoading(true);
-    if (!filterParams) {
-      filterParams = {
-        name: "childrenProfileStatus",
-        value: 0,
-      };
-    } else {
-      filterParams = { ...filterParams, childrenProfileStatus: 0 };
-    }
 
     const dataRes = await childrenProfileService.getAll(filterParams);
     if (!dataRes.hasErrors) {
       const tempValue = dataRes.value.items;
       for (let index = 0; index < tempValue.length; index++) {
-        let tempId = await getImage(tempValue[index].id);
-        tempValue[index].imageId = tempId;
+        if (tempValue[index].status === 0) {
+          let tempId = await getImage(tempValue[index].id);
+          tempValue[index].imageId = tempId;
+        }
       }
+
       setChildrenProfiles(tempValue);
     }
     setIsLoading(false);
+  }
+
+  function viewImg(id) {
+    const imageRes = childrenProfileService.getImageUrl(id);
+    return imageRes.toString();
   }
 
   async function getImage(id: number) {
@@ -106,15 +106,6 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
     }
   }
 
-  function convertAddressToString(address: string) {
-    const tempAddress = address.split("-");
-    let result = "";
-    tempAddress.reverse();
-    tempAddress.map((v) => {
-      result += v + " ";
-    });
-    return result;
-  }
   async function onResetField() {
     setIsLoading(true);
     const searchValue: ChildrenParams = {};
@@ -331,7 +322,7 @@ const ChildrenWaitingForSupportPage: React.FC<Props> = () => {
                         <Image
                           preview={false}
                           className="img-item"
-                          src={childrenProfileService.getImageUrl(item.id)}
+                          src={viewImg(item.imageId)}
                           fallback={FallBackImage}
                           alt={"img" + item.id}
                         />

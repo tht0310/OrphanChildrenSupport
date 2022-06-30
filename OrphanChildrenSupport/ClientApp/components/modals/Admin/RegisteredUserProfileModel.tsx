@@ -98,8 +98,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
     if (data) {
       const res = await accountService.update(values);
       if (!res.hasErrors) {
-        let roleValue =
-          values.role === "Admin" ? 0 : values.role === "SystemUser" ? 1 : 2;
+        let roleValue = values.role === "1" ? 1 : 2;
         await accountService.updateRole(values.id, roleValue);
 
         if (values.isActive) {
@@ -117,8 +116,7 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
     } else {
       const res = await accountService.add(values);
       if (!res.hasErrors) {
-        let roleValue =
-          values.role === "Admin" ? 0 : values.role === "SystemUser" ? 1 : 2;
+        let roleValue = values.role === "1" ? 1 : 2;
         await accountService.updateRole(res.value.id, roleValue);
 
         if (values.isActive) {
@@ -338,10 +336,10 @@ const RegisteredUserProfileModal: React.FC<IProps> = ({
                   rules={[{ required: true, message: "Please enter role." }]}
                 >
                   <Select disabled={data ? false : true}>
-                    <Select.Option value="2" key="1">
+                    <Select.Option value="2" key="2">
                       Member
                     </Select.Option>
-                    <Select.Option value="1" key="0">
+                    <Select.Option value="1" key="1">
                       System User
                     </Select.Option>
                   </Select>
